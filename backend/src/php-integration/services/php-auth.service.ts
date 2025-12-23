@@ -108,8 +108,9 @@ export class PhpAuthService extends PhpApiService {
     // MOCK FOR TESTING
     const isTestMode = this.configService.get('app.testMode');
     const mockNumbers = ['8888777766', '9999888877'];
-    // Force mock for 8888777766 even if test mode is off, for E2E testing
-    if ((isTestMode || normalizedPhone.includes('8888777766')) && mockNumbers.some(n => normalizedPhone.includes(n)) && otp === '123456') {
+    // Force mock for both test numbers even if test mode is off, for E2E testing
+    const isMockNumber = mockNumbers.some(n => normalizedPhone.includes(n));
+    if ((isTestMode || isMockNumber) && isMockNumber && otp === '123456') {
       this.logger.log(`🔐 [MOCK] Verifying OTP for ${normalizedPhone}`);
       // 8888777766 = Existing User
       // 9999888877 = New User

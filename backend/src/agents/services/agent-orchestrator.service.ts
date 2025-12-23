@@ -350,14 +350,30 @@ export class AgentOrchestratorService {
       let prependResponse = '';
       let authMetadata = {};
 
+      // IMPORTANT: Skip profile completion for location messages - let the flow engine handle them
+      const isLocationMessage = message === '__LOCATION__' || 
+                                (message && message.includes('latitude') && message.includes('longitude'));
+      
       if (currentStep === 'awaiting_phone_number') {
         authResult = await this.handlePhoneNumberInput(phoneNumber, message, session, startTime);
       } else if (currentStep === 'awaiting_otp') {
         authResult = await this.handleOtpInput(phoneNumber, message, session, startTime);
-      } else if (currentStep === 'awaiting_name') {
+      } else if (currentStep === 'awaiting_name' && !isLocationMessage) {
         authResult = await this.handleNameInput(phoneNumber, message, session, startTime);
-      } else if (currentStep === 'awaiting_email') {
+      } else if (currentStep === 'awaiting_email' && !isLocationMessage) {
         authResult = await this.handleEmailInput(phoneNumber, message, session, startTime);
+      } else if (isLocationMessage && (currentStep === 'awaiting_name' || currentStep === 'awaiting_email')) {
+        // User sent location during profile completion - skip profile and continue with location
+        this.logger.log(`📍 Received location during profile completion - skipping profile step`);
+        // Clear the profile completion step
+        await this.sessionService.saveSession(phoneNumber, {
+          data: {
+            ...session?.data,
+            currentStep: null,
+            tempName: null,
+          }
+        });
+        // Fall through to let flow engine handle the location
       }
 
       if (authResult) {
@@ -2690,7 +2706,20 @@ ${systemPrompt}`;
             user: userProfile
           };
 
-          // Check if personal info is missing (is_personal_info === 0)
+          // Resume pending action FIRST - profile can be completed later
+          // This allows the parcel/food flow to continue even for new users
+          if (session.data.pendingAction || session.data.pendingIntent) {
+             this.logger.log(`🔄 Resuming pending action for new/incomplete user - profile will be completed later`);
+             return {
+               response: `Login successful! Resuming your request.`,
+               executionTime: Date.now() - startTime,
+               metadata: {
+                 auth_data: authData
+               }
+             };
+          }
+
+          // Check if personal info is missing (is_personal_info === 0) - only if no pending action
           if (authResult.data.is_personal_info === 0) {
             this.logger.log(`👤 User profile incomplete. Asking for name.`);
             
@@ -2708,18 +2737,6 @@ ${systemPrompt}`;
                 auth_data: authData // Send token so frontend updates UI immediately
               }
             };
-          }
-
-          // Resume pending action if any
-          if (session.data.pendingAction) {
-             // ... logic to resume action
-             return {
-               response: `Login successful! Resuming your request to ${session.data.pendingAction.replace('_', ' ')}.`,
-               executionTime: Date.now() - startTime,
-               metadata: {
-                 auth_data: authData
-               }
-             };
           }
           
           return {
