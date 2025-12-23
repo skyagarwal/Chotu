@@ -522,7 +522,26 @@ export class AgentOrchestratorService {
         },
       }).catch(err => this.logger.error(`Failed to log user message: ${err.message}`));
 
-      // 🔐 AUTH CHECK: Determine if this intent requires authentication
+      // � FLOW PRIORITY: Check if modern flow engine has an active flow BEFORE auth check
+      // This prevents NLU misclassification from interrupting data collection
+      const activeFlowRunEarly = await this.flowEngineService.getActiveFlow(phoneNumber);
+      const isInWaitStateEarly = activeFlowRunEarly ? await this.flowEngineService.isInWaitState(phoneNumber) : false;
+      
+      if (activeFlowRunEarly && isInWaitStateEarly) {
+        this.logger.log(`🔒 Active flow in wait state - continuing flow instead of auth check`);
+        const result = await this.flowEngineService.processMessage(phoneNumber, message);
+        this.logger.log(`🔄 Flow continuation result: ${JSON.stringify(result).substring(0, 200)}...`);
+        return {
+          response: result.response,
+          executionTime: Date.now() - startTime,
+          metadata: { 
+            intent: 'resume_flow',
+            cards: result.metadata?.cards
+          }
+        };
+      }
+
+      // �🔐 AUTH CHECK: Determine if this intent requires authentication
       const isAuthenticated = session?.data?.authenticated === true;
       const intentStr = String(routing.intent || 'unknown').toLowerCase();
       
