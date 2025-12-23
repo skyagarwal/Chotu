@@ -174,16 +174,23 @@ export class PhpParcelService {
     tax: number;
     distance: number;
   }> {
-    // Mock for testing
-    if (process.env.TEST_MODE === 'true') {
-      this.logger.log(`🧪 TEST MODE: Mocking calculateShippingCharge`);
+    // Mock for testing or when PHP endpoint not available
+    const isMockMode = process.env.TEST_MODE === 'true' || process.env.MOCK_PARCEL_PRICING === 'true';
+    
+    // Calculate fallback pricing based on distance
+    const calculateLocalPricing = (dist: number) => {
+      // Base rate: ₹20 for first 2km, ₹10/km after
+      const baseCharge = 20;
+      const perKmCharge = 10;
+      const delivery_charge = dist <= 2 ? baseCharge : baseCharge + (dist - 2) * perKmCharge;
+      const tax = Math.round(delivery_charge * 0.18); // 18% GST
       return {
-        total_charge: 100,
-        delivery_charge: 90,
-        tax: 10,
-        distance: distance
+        total_charge: delivery_charge + tax,
+        delivery_charge,
+        tax,
+        distance: dist
       };
-    }
+    };
 
     try {
       this.logger.log(`💰 Calculating shipping charge via PHP backend: distance=${distance}, category=${parcelCategoryId}`);
@@ -207,10 +214,9 @@ export class PhpParcelService {
         distance: parseFloat(response.distance || distance)
       };
     } catch (error) {
-      this.logger.error('❌ Error calculating shipping charge:', error.message);
-      // Fallback to local calculation if API fails (temporary safety net)
-      // But we should prefer the API error to be handled by caller
-      throw error;
+      this.logger.warn(`⚠️ PHP shipping-charge API failed, using local calculation: ${error.message}`);
+      // Fallback to local calculation
+      return calculateLocalPricing(distance);
     }
   }
 

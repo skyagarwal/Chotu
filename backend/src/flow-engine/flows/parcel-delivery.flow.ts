@@ -417,9 +417,9 @@ Which category ID did the user select?
 
     // Show order summary and ask for confirmation
     show_summary: {
-      type: 'action',
+      type: 'wait',
       description: 'Display order summary and request confirmation',
-      actions: [
+      onEntry: [
         {
           id: 'summary_message',
           executor: 'llm',
@@ -442,6 +442,7 @@ Please ask the user to confirm the order. Tell them to reply with "yes" to confi
           output: '_last_response',
         },
       ],
+      actions: [],
       transitions: {
         user_message: 'check_confirmation',
       },

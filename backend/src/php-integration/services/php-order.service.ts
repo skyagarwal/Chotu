@@ -52,6 +52,12 @@ export class PhpOrderService extends PhpApiService {
         order_type: 'parcel',  // CRITICAL: Must specify order type
         payment_method: orderData.paymentMethod === 'cash' ? 'cash_on_delivery' : (orderData.paymentMethod || 'cash_on_delivery'),
         
+        // Sender (user) contact info - REQUIRED by PHP
+        contact_person_name: orderData.senderName || orderData.userName || 'Customer',
+        contact_person_number: orderData.senderPhone || orderData.userPhone || '9999999999',
+        contact_person_email: orderData.senderEmail || orderData.userEmail || 'customer@mangwale.ai',
+        guest_id: orderData.guestId || orderData.userId?.toString() || 'guest_' + Date.now(),
+        
         // Sender location (pickup) - FLAT FIELDS
         address: orderData.pickupAddress.address,
         latitude: orderData.pickupAddress.latitude.toString(),  // Must be string
