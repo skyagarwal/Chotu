@@ -287,7 +287,7 @@ JSON:`,
           id: 'search_items_restaurant',
           executor: 'search',
           config: {
-            index: 'food_items_v3',  // Use v3 index with 768-dim item_vector embeddings
+            index: 'food_items',  // Use v3 index with 768-dim item_vector embeddings
             query: '{{extracted_food.search_query}}',
             size: 20,  // Get more results when filtering by restaurant
             fields: ['name', 'category_name', 'description', 'store_name'],
@@ -317,7 +317,7 @@ JSON:`,
           id: 'search_items',
           executor: 'search',
           config: {
-            index: 'food_items_v3',  // Use v3 index with 768-dim item_vector embeddings
+            index: 'food_items',  // Use v3 index with 768-dim item_vector embeddings
             query: '{{extracted_food.search_query}}',
             size: 10,
             fields: ['name', 'category_name', 'description', 'store_name'],
@@ -345,7 +345,7 @@ JSON:`,
           id: 'get_recommendations',
           executor: 'search',
           config: {
-            index: 'food_items_v3',  // Use v3 index with embeddings
+            index: 'food_items',  // Use v3 index with embeddings
             query: 'popular best trending top rated',
             size: 10,
             fields: ['name', 'category_name', 'description', 'store_name'],

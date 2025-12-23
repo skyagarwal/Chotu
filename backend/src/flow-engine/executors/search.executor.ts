@@ -130,6 +130,7 @@ export class SearchExecutor implements ActionExecutor {
           name: item.title || item.name,
           description: item.description || item.category,
           price: item.mrp ? `₹${item.mrp}` : (item.price ? `₹${item.price}` : undefined),
+          rawPrice: item.mrp || item.price, // Numeric price for order
           image: getImageUrl(item),
           rating: item.rating || item.avg_rating || 4.5,
           deliveryTime: item.delivery_time || '30-45 min',
@@ -137,6 +138,7 @@ export class SearchExecutor implements ActionExecutor {
           category: item.category || item.category_name,
           storeName: item.store_name,
           storeId: item.store_id,
+          moduleId: item.module_id, // Important for order placement
           // Store coordinates can be in store_location.lat/lon or store_latitude/store_longitude
           storeLat: item.store_location?.lat || item.store_latitude,
           storeLng: item.store_location?.lon || item.store_longitude,

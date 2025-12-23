@@ -107,13 +107,14 @@ class ChatWebSocketClient {
     console.log(`🔌 Connecting to WebSocket: ${wsUrl}/ai-agent`)
 
     this.socket = io(`${wsUrl}/ai-agent`, {
-      transports: ['websocket'], // Force websocket to avoid polling issues with proxies
+      transports: ['polling', 'websocket'], // Start with polling, upgrade to websocket
       path: '/socket.io',
       reconnection: true,
       reconnectionAttempts: this.maxReconnectAttempts,
       reconnectionDelay: 1000,
       reconnectionDelayMax: 5000,
       timeout: 20000, // Increased timeout
+      withCredentials: true,
     })
 
     this.setupEventListeners()

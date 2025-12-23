@@ -144,6 +144,9 @@ export class OrderExecutor implements ActionExecutor {
       };
     }
 
+    // Get moduleId from first item (all items should be from same module)
+    const moduleId = items[0]?.moduleId || 2; // Default to 2 (food) if not specified
+
     return this.phpOrderService.createFoodOrder(authToken, {
       items,
       deliveryAddress: {
@@ -155,6 +158,7 @@ export class OrderExecutor implements ActionExecutor {
       },
       paymentMethod,
       orderNote,
+      moduleId, // Pass moduleId from item data
     });
   }
 

@@ -178,7 +178,13 @@ export class PhpOrderService extends PhpApiService {
 
       // 2. Clear Cart
       this.logger.debug('Clearing existing cart');
-      await this.authenticatedRequest('delete', '/api/v1/customer/cart/remove', token);
+      await this.authenticatedRequest(
+        'delete', 
+        '/api/v1/customer/cart/remove?guest_id=0', 
+        token,
+        null,
+        { moduleId: String(moduleId) }
+      );
 
       // 3. Add Items to Cart
       this.logger.debug(`Adding ${orderData.items.length} items to cart`);
@@ -194,7 +200,10 @@ export class PhpOrderService extends PhpApiService {
           continue;
         }
         
-        this.logger.debug(`Adding item to cart: item_id=${itemId}, quantity=${item.quantity || 1}`);
+        // Get price from item data (supports multiple field names)
+        const itemPrice = item.price || item.item_price || 0;
+        
+        this.logger.debug(`Adding item to cart: item_id=${itemId}, quantity=${item.quantity || 1}, price=${itemPrice}`);
         
         await this.authenticatedRequest(
           'post',
@@ -206,6 +215,9 @@ export class PhpOrderService extends PhpApiService {
             variant: item.variant || [],
             addon_ids: item.addon_ids || [],
             addon_quantities: item.addon_quantities || [],
+            model: 'Item',               // PHP API expects just 'Item' (not full namespace)
+            price: itemPrice,            // Required by PHP API
+            guest_id: '0',               // Required by PHP API for authenticated users
           },
           { moduleId: String(moduleId) } // Pass moduleId in headers
         );

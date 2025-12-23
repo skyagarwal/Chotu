@@ -139,6 +139,9 @@ services:
       # PHP Backend (if needed)
       - PHP_API_BASE_URL=${PHP_API_BASE_URL:-http://host.docker.internal:8000}
       
+      # OpenSearch (external)
+      - OPENSEARCH_URL=http://search-opensearch:9200
+      
       # Session
       - SESSION_TTL=86400
       - OTP_TTL=600
@@ -150,6 +153,7 @@ services:
       - "host.docker.internal:host-gateway"
     networks:
       - mangwale-dev
+      - search_search-network
     depends_on:
       postgres:
         condition: service_healthy
@@ -238,6 +242,8 @@ services:
 networks:
   mangwale-dev:
     driver: bridge
+  search_search-network:
+    external: true
 
 volumes:
   postgres-dev-data:

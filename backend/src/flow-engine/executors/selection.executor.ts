@@ -5,7 +5,9 @@ interface CardItem {
   id: number | string;
   name: string;
   price: string | number;
+  rawPrice?: number;  // Numeric price for order
   storeId?: number;
+  moduleId?: number;  // Module ID for PHP API
   storeName?: string;
   storeLat?: number;
   storeLng?: number;
@@ -19,7 +21,9 @@ interface SelectionResult {
     itemName: string;
     quantity: number;
     price: number;
+    rawPrice?: number;
     storeId?: number;
+    moduleId?: number;
     storeName?: string;
     storeLat?: number;
     storeLng?: number;
@@ -206,7 +210,9 @@ export class SelectionExecutor implements ActionExecutor {
           itemName: card.name,
           quantity: 1,
           price: this.parsePrice(card.price),
+          rawPrice: card.rawPrice, // Numeric price for order
           storeId: card.storeId,
+          moduleId: card.moduleId, // Important for order placement
           storeName: card.storeName,
           storeLat: card.storeLat,
           storeLng: card.storeLng,
@@ -233,7 +239,9 @@ export class SelectionExecutor implements ActionExecutor {
           itemName: card.name,
           quantity: 1,
           price: this.parsePrice(card.price),
+          rawPrice: card.rawPrice,
           storeId: card.storeId,
+          moduleId: card.moduleId,
           storeName: card.storeName,
           storeLat: card.storeLat,
           storeLng: card.storeLng,
@@ -257,7 +265,9 @@ export class SelectionExecutor implements ActionExecutor {
               itemName: card.name,
               quantity: 1,
               price: this.parsePrice(card.price),
+              rawPrice: card.rawPrice,
               storeId: card.storeId,
+              moduleId: card.moduleId,
               storeName: card.storeName,
               storeLat: card.storeLat,
               storeLng: card.storeLng,
@@ -281,7 +291,9 @@ export class SelectionExecutor implements ActionExecutor {
           itemName: card.name,
           quantity,
           price: this.parsePrice(card.price),
+          rawPrice: card.rawPrice,
           storeId: card.storeId,
+          moduleId: card.moduleId,
           storeName: card.storeName,
           storeLat: card.storeLat,
           storeLng: card.storeLng,
@@ -310,7 +322,9 @@ export class SelectionExecutor implements ActionExecutor {
           itemName: card.name,
           quantity: 1,
           price: this.parsePrice(card.price),
+          rawPrice: card.rawPrice,
           storeId: card.storeId,
+          moduleId: card.moduleId,
           storeName: card.storeName,
           storeLat: card.storeLat,
           storeLng: card.storeLng,
@@ -351,7 +365,9 @@ export class SelectionExecutor implements ActionExecutor {
         itemName: card.name,
         quantity: 1,
         price: this.parsePrice(card.price),
+        rawPrice: card.rawPrice,
         storeId: card.storeId,
+        moduleId: card.moduleId,
         storeName: card.storeName,
         storeLat: card.storeLat,
         storeLng: card.storeLng,

@@ -44,10 +44,14 @@ async function bootstrap() {
   app.enableCors({
     origin: [
       'http://localhost:3000',
-      'http://localhost:3001', 
+      'http://localhost:3001',
+      'http://localhost:3005',
       'https://chat.mangwale.ai',
       'https://admin.mangwale.ai',
       /^https?:\/\/.*\.mangwale\.ai$/,
+      /^https?:\/\/192\.168\.\d+\.\d+:\d+$/, // LAN IPs
+      /^https?:\/\/100\.\d+\.\d+\.\d+:\d+$/, // Tailscale IPs
+      /^https?:\/\/10\.\d+\.\d+\.\d+:\d+$/, // Private network IPs
     ],
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
     credentials: true,

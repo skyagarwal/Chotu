@@ -16,6 +16,7 @@ import { PhpStoreService } from './services/php-store.service';
 import { PhpVendorAuthService } from './services/php-vendor-auth.service';
 import { PhpDeliveryAuthService } from './services/php-delivery-auth.service';
 import { UserTypeDetectorService } from './services/user-type-detector.service';
+import { VendorNotificationService } from './services/vendor-notification.service';
 import { RoutingModule } from '../routing/routing.module';
 
 @Module({
@@ -43,6 +44,7 @@ import { RoutingModule } from '../routing/routing.module';
     PhpVendorAuthService,
     PhpDeliveryAuthService,
     UserTypeDetectorService,
+    VendorNotificationService,
   ],
   exports: [
     PhpHttpClientService,
@@ -60,6 +62,7 @@ import { RoutingModule } from '../routing/routing.module';
     PhpVendorAuthService,
     PhpDeliveryAuthService,
     UserTypeDetectorService,
+    VendorNotificationService,
   ],
 })
 export class PhpIntegrationModule {}

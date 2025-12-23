@@ -35,10 +35,14 @@ interface MessagePayload {
     origin: [
       'http://localhost:3000',
       'http://localhost:3001',
+      'http://localhost:3005',
       'https://chat.mangwale.ai',
       'https://admin.mangwale.ai',
       'https://mangwale.ai',
       /^https?:\/\/.*\.mangwale\.ai$/,
+      /^https?:\/\/192\.168\.\d+\.\d+:\d+$/, // LAN IPs
+      /^https?:\/\/100\.\d+\.\d+\.\d+:\d+$/, // Tailscale IPs
+      /^https?:\/\/10\.\d+\.\d+\.\d+:\d+$/, // Private network IPs
     ],
     credentials: true,
   },
@@ -348,6 +352,20 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
         // Get fresh session for flowContext (may have been updated during processing)
         const currentSession = await this.sessionService.getSession(sessionId);
         const flowContext = currentSession?.data?.flowContext;
+        
+        // Check if user was just authenticated via flow (OTP verification)
+        // and emit auth:success event to frontend
+        const authData = currentSession?.data?.flowContext?.data;
+        if (authData?.authenticated && authData?.auth_token && !currentSession?.data?.authEmitted) {
+          this.logger.log(`🔐 User authenticated via flow, emitting auth:success`);
+          client.emit('auth:success', {
+            token: authData.auth_token,
+            user: authData.user || { phone: authData.phone, name: authData.name },
+            phone: authData.phone,
+          });
+          // Mark auth as emitted to avoid duplicate events
+          await this.sessionService.updateSessionData(sessionId, { authEmitted: true });
+        }
         try {
           await this.conversationLogger.logBotMessage({
             phone,

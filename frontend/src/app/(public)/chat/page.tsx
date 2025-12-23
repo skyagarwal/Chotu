@@ -181,9 +181,15 @@ function ChatContent() {
     wsClient.on({
       onConnect: () => {
         console.log('✅ WebSocket connected')
+        const wasDisconnected = !isConnected
         setIsConnected(true)
         // Pass authData to joinSession if available, otherwise just session ID
         wsClient.joinSession(sessionIdState, getJoinData())
+        
+        // Remove any "Connection lost" messages when reconnected
+        if (wasDisconnected) {
+          setMessages(prev => prev.filter(m => !m.content?.includes('Connection lost')))
+        }
         
         // Send initial greeting with user context if authenticated
         // This makes the chatbot aware of the user before they start talking
@@ -275,12 +281,23 @@ function ChatContent() {
       },
       onError: (error) => {
         console.error('❌ WebSocket error:', error)
-        setMessages(prev => [...prev, {
-          id: `error-${prev.length}`,
-          role: 'assistant',
-          content: 'Connection lost. Please refresh the page.',
-          timestamp: Date.now(),
-        }])
+        // Don't show error message for every error - socket.io will auto-reconnect
+        // Only show if we're completely disconnected and can't reconnect
+        if (!wsClientRef.current?.isConnected()) {
+          // Avoid duplicate error messages
+          setMessages(prev => {
+            const lastMsg = prev[prev.length - 1]
+            if (lastMsg?.content?.includes('Connection lost')) {
+              return prev // Don't add duplicate
+            }
+            return [...prev, {
+              id: `error-${Date.now()}`,
+              role: 'assistant',
+              content: 'Connection lost. Trying to reconnect...',
+              timestamp: Date.now(),
+            }]
+          })
+        }
       },
       // Centralized Auth Sync Handlers
       onAuthSynced: (data) => {
@@ -316,8 +333,23 @@ function ChatContent() {
           timestamp: Date.now(),
         }])
       },
-      onAuthSuccess: (data) => {
-        console.log('✅ Auth success:', data)
+      onAuthSuccess: (data: any) => {
+        console.log('✅ Auth success from flow:', data)
+        // Update auth store with token and user from flow-based authentication
+        if (data.token && data.user) {
+          const { setAuth } = useAuthStore.getState()
+          setAuth(data.user, data.token)
+          
+          // Update local profile
+          const profile = { 
+            name: data.user.f_name || data.user.name || 'User', 
+            phone: data.phone || data.user.phone 
+          }
+          setUserProfile(profile)
+          localStorage.setItem('mangwale-user-profile', JSON.stringify(profile))
+          
+          console.log('🔐 Frontend auth state updated from flow')
+        }
       },
       onAuthFailed: (data) => {
         console.error('❌ Auth failed:', data)

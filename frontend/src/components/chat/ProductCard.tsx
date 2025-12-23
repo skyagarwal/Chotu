@@ -196,6 +196,9 @@ export function ProductCard({ card, onAction, index = 0, compact = false, direct
         </div>
         {/* Content */}
         <h4 className="font-semibold text-[11px] sm:text-xs text-gray-900 truncate mb-0.5 leading-tight">{card.name}</h4>
+        {card.storeName && (
+          <p className="text-[9px] sm:text-[10px] text-gray-500 truncate mb-0.5">📍 {card.storeName}</p>
+        )}
         {card.rating !== undefined && card.rating > 0 && (
           <div className="flex items-center gap-0.5 sm:gap-1 mb-0.5 sm:mb-1">
             <Star className="w-2.5 h-2.5 sm:w-3 sm:h-3 fill-yellow-400 text-yellow-400" />
@@ -233,6 +236,12 @@ export function ProductCard({ card, onAction, index = 0, compact = false, direct
         {/* Left side - Content */}
         <div className="flex-1 min-w-0">
           <h3 className="font-bold text-base sm:text-lg text-gray-900 mb-1 sm:mb-2 truncate">{card.name}</h3>
+          
+          {card.storeName && (
+            <p className="text-xs sm:text-sm text-gray-500 mb-1 sm:mb-1.5 truncate">
+              📍 {card.storeName}
+            </p>
+          )}
           
           {card.rating !== undefined && card.rating > 0 && (
             <div className="mb-1.5 sm:mb-2">{renderStars(card.rating)}</div>

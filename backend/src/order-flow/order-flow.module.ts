@@ -5,6 +5,7 @@ import { DatabaseModule } from '../database/database.module';
 import { SearchModule } from '../search/search.module';
 import { NluModule } from '../nlu/nlu.module';
 import { OrderOrchestratorService } from './services/order-orchestrator.service';
+import { PostPaymentOrchestrationService } from './services/post-payment-orchestration.service';
 import { AddressService } from './services/address.service';
 import { OrderHistoryService } from './services/order-history.service';
 import { PaymentService } from './services/payment.service';
@@ -15,17 +16,28 @@ import { ReviewService } from './services/review.service';
 import { SmartOrderService } from '../order/services/smart-order.service';
 import { SmartRecommendationService } from '../order/services/smart-recommendation.service';
 import { OrderLearningService } from '../order/services/order-learning.service';
+import { OrderEventsWebhookController } from './controllers/order-events-webhook.controller';
+// Import Exotel services directly to avoid circular dependency
+import { ExotelService } from '../exotel/services/exotel.service';
+import { NerveService } from '../exotel/services/nerve.service';
 
 @Module({
   imports: [
     PhpIntegrationModule, 
-    HttpModule, 
+    HttpModule.register({
+      timeout: 30000,
+      maxRedirects: 5,
+    }), 
     DatabaseModule, 
     SearchModule,
     forwardRef(() => NluModule), // For SmartRecommendationService
   ],
+  controllers: [
+    OrderEventsWebhookController,
+  ],
   providers: [
     OrderOrchestratorService,
+    PostPaymentOrchestrationService,
     AddressService,
     OrderHistoryService,
     PaymentService,
@@ -36,9 +48,13 @@ import { OrderLearningService } from '../order/services/order-learning.service';
     SmartOrderService,
     SmartRecommendationService,
     OrderLearningService,
+    // Exotel services - provided directly to avoid circular dependency
+    ExotelService,
+    NerveService,
   ],
   exports: [
     OrderOrchestratorService,
+    PostPaymentOrchestrationService,
     AddressService,
     OrderHistoryService,
     PaymentService,
