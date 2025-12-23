@@ -277,7 +277,7 @@ export const parcelDeliveryFlow: FlowDefinition = {
     show_categories: {
       type: 'wait',
       description: 'Show vehicle categories and wait for selection',
-      actions: [
+      onEntry: [
         {
           id: 'show_vehicle_cards',
           executor: 'response',
@@ -285,8 +285,10 @@ export const parcelDeliveryFlow: FlowDefinition = {
             message: 'Please select a vehicle for your delivery:',
             cardsPath: 'vehicle_categories',
           },
+          output: '_last_response',
         },
       ],
+      actions: [],
       transitions: {
         user_message: 'handle_vehicle_selection',
       },
