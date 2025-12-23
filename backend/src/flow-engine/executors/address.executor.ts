@@ -48,9 +48,37 @@ export class AddressExecutor implements ActionExecutor {
         const pickup = context.data.pickup_address;
         const pickupInput = pickup.raw_input || pickup.metadata?.raw_input;
         
-        if (pickupInput && pickupInput === userMessage) {
+        // For location messages, check if coordinates are different
+        // Otherwise location-based deliveries would be blocked
+        if (userMessage === '__LOCATION__') {
+          const newLocation = context.data._user_location;
+          const pickupLat = pickup.latitude || pickup.lat;
+          const pickupLng = pickup.longitude || pickup.lng;
+          
+          // If we have a new location with different coordinates, it's a valid delivery location
+          if (newLocation && (newLocation.latitude !== pickupLat || newLocation.longitude !== pickupLng)) {
+            this.logger.log('New delivery location received (different from pickup)');
+            // Continue processing - don't block
+          } else if (newLocation && newLocation.latitude === pickupLat && newLocation.longitude === pickupLng) {
+            this.logger.log('Same location as pickup - asking for different delivery location...');
+            context.data._last_response = `📍 Please share a different delivery location:\n\n[BTN|📍 Share Location|__LOCATION__]\n\nThe delivery location should be different from pickup.`;
+            return {
+              success: true,
+              output: null,
+              event: 'waiting_for_input',
+            };
+          } else {
+            // No new location yet, ask for it
+            this.logger.log('Waiting for delivery location...');
+            context.data._last_response = `📍 Share your delivery location:\n\n[BTN|📍 Share Location|__LOCATION__]\n\nOr type address / paste Google Maps link`;
+            return {
+              success: true,
+              output: null,
+              event: 'waiting_for_input',
+            };
+          }
+        } else if (pickupInput && pickupInput === userMessage) {
           this.logger.log('Message already used for pickup, asking for delivery...');
-          // Skip to Step 5 (Ask for address)
           const locationLabel = 'delivery';
           context.data._last_response = `📍 Share your ${locationLabel} location:\n\n[BTN|📍 Share Location|__LOCATION__]\n\nOr type address / paste Google Maps link`;
 
