@@ -603,6 +603,42 @@ export class FlowEngineService {
     
     let flow: FlowDefinition | undefined;
     
+    // ========================================
+    // PRIORITY 1: Check message content for HELP/SERVICE INQUIRY keywords FIRST
+    // This must happen BEFORE intent matching to avoid NLU misclassification
+    // ========================================
+    if (message) {
+      const lowerMsg = message.toLowerCase();
+      
+      // Service inquiry / About Mangwale - Check message content for help-related queries
+      // This should match "What is Mangwale", "Tell me about services", "What can you do", etc.
+      const helpKeywords = ['what is mangwale', 'tell me about', 'your services', 'what can you do', 
+                            'what do you do', 'what services', 'how does it work', 'about mangwale',
+                            'about chotu', 'who are you', 'what is this', 'explain services', 'features',
+                            'services do you offer', 'services you offer',
+                            'mangwale kya hai', 'kya kar sakte ho', 'kya services', 'batao'];
+      if (helpKeywords.some(kw => lowerMsg.includes(kw))) {
+        flow = flows.find(f => f.trigger?.includes('help') && f.enabled !== false);
+        if (flow) {
+          this.logger.log(`✅ [PRIORITY] Service inquiry keyword match: ${flow.name}`);
+          return flow;
+        }
+      }
+      
+      // Login/Auth keywords - Check early
+      if (lowerMsg.includes('login') || lowerMsg.includes('sign in') || lowerMsg.includes('signin') || lowerMsg.includes('log in') || lowerMsg.includes('authenticate') || lowerMsg.includes('verify phone') || lowerMsg.includes('otp') || lowerMsg === 'login') {
+        flow = flows.find(f => f.trigger === 'login' && f.enabled !== false);
+        if (flow) {
+          this.logger.log(`✅ [PRIORITY] Login keyword match: ${flow.name}`);
+          return flow;
+        }
+      }
+    }
+    
+    // ========================================
+    // PRIORITY 2: Standard intent matching
+    // ========================================
+    
     // CRITICAL: If intent is 'default' or 'unknown', don't try to match it - fall through to keyword matching
     if (intent === 'default' || intent === 'unknown') {
       this.logger.warn(`⚠️ NLU returned ${intent} intent - using keyword/module fallback`);
