@@ -1,0 +1,268 @@
+# Authentication Flow - YAML Version
+# Handles user authentication with OTP verification
+
+name: auth
+version: "2.0"
+description: User authentication flow with phone number and OTP verification
+
+initial_state: check_auth_status
+
+context:
+  phoneNumber: null
+  otpCode: null
+  otpAttempts: 0
+  maxOtpAttempts: 3
+  isAuthenticated: false
+  userId: null
+
+states:
+  # Entry point - check if user is already authenticated
+  check_auth_status:
+    type: decision
+    on_entry:
+      - action: check_session_auth
+    transitions:
+      - event: authenticated
+        target: auth_complete
+        condition: "context.isAuthenticated === true"
+      - event: not_authenticated
+        target: request_phone
+        condition: "context.isAuthenticated === false"
+
+  # Request phone number from user
+  request_phone:
+    type: input
+    on_entry:
+      - action: speak
+        params:
+          text: "Please share your phone number to continue."
+          text_swahili: "Tafadhali shiriki nambari yako ya simu ili kuendelea."
+    transitions:
+      - event: input_received
+        target: validate_phone
+      - event: timeout
+        target: request_phone_retry
+      - event: cancel
+        target: auth_cancelled
+
+  # Retry phone request
+  request_phone_retry:
+    type: message
+    on_entry:
+      - action: speak
+        params:
+          text: "I didn't catch that. Please say or type your phone number."
+    transitions:
+      - event: next
+        target: request_phone
+
+  # Validate the phone number format
+  validate_phone:
+    type: decision
+    on_entry:
+      - action: validate_phone_number
+        params:
+          input: "{{input}}"
+    transitions:
+      - event: valid
+        target: send_otp
+      - event: invalid
+        target: invalid_phone
+
+  # Handle invalid phone number
+  invalid_phone:
+    type: message
+    on_entry:
+      - action: speak
+        params:
+          text: "That doesn't look like a valid phone number. Please enter a 10-digit number starting with 0 or include the country code."
+    transitions:
+      - event: next
+        target: request_phone
+
+  # Send OTP to the phone number
+  send_otp:
+    type: action
+    on_entry:
+      - action: send_otp_code
+        params:
+          phone: "{{context.phoneNumber}}"
+      - action: speak
+        params:
+          text: "I've sent a verification code to {{context.phoneNumber}}. Please enter the 6-digit code."
+          text_swahili: "Nimetuma nambari ya uthibitishaji kwa {{context.phoneNumber}}. Tafadhali ingiza nambari ya tarakimu 6."
+    transitions:
+      - event: otp_sent
+        target: request_otp
+      - event: send_failed
+        target: otp_send_error
+
+  # Handle OTP send failure
+  otp_send_error:
+    type: message
+    on_entry:
+      - action: speak
+        params:
+          text: "Sorry, I couldn't send the verification code. Please try again."
+    transitions:
+      - event: next
+        target: request_phone
+
+  # Request OTP from user
+  request_otp:
+    type: input
+    on_entry:
+      - action: listen
+        params:
+          timeout: 60
+          hint: "numeric"
+    transitions:
+      - event: input_received
+        target: validate_otp
+      - event: timeout
+        target: otp_timeout
+      - event: resend
+        target: send_otp
+
+  # Handle OTP input timeout
+  otp_timeout:
+    type: decision
+    on_entry:
+      - action: increment
+        params:
+          variable: "context.otpAttempts"
+    transitions:
+      - event: retry
+        target: request_otp
+        condition: "context.otpAttempts < context.maxOtpAttempts"
+      - event: max_attempts
+        target: auth_failed
+        condition: "context.otpAttempts >= context.maxOtpAttempts"
+
+  # Validate the OTP code
+  validate_otp:
+    type: action
+    on_entry:
+      - action: verify_otp
+        params:
+          phone: "{{context.phoneNumber}}"
+          code: "{{input}}"
+    transitions:
+      - event: valid
+        target: auth_complete
+      - event: invalid
+        target: invalid_otp
+      - event: expired
+        target: otp_expired
+
+  # Handle invalid OTP
+  invalid_otp:
+    type: decision
+    on_entry:
+      - action: increment
+        params:
+          variable: "context.otpAttempts"
+      - action: speak
+        params:
+          text: "That code doesn't match. You have {{remaining_attempts}} attempts left."
+    transitions:
+      - event: retry
+        target: request_otp
+        condition: "context.otpAttempts < context.maxOtpAttempts"
+      - event: max_attempts
+        target: auth_failed
+        condition: "context.otpAttempts >= context.maxOtpAttempts"
+
+  # Handle expired OTP
+  otp_expired:
+    type: message
+    on_entry:
+      - action: speak
+        params:
+          text: "That code has expired. Would you like me to send a new one?"
+    transitions:
+      - event: yes
+        target: send_otp
+      - event: no
+        target: auth_cancelled
+
+  # Authentication successful
+  auth_complete:
+    type: end
+    on_entry:
+      - action: set_context
+        params:
+          isAuthenticated: true
+      - action: speak
+        params:
+          text: "Great! You're now verified. How can I help you today?"
+          text_swahili: "Vizuri! Sasa umethibitishwa. Ninawezaje kukusaidia leo?"
+      - action: emit
+        params:
+          event: auth_success
+          data:
+            userId: "{{context.userId}}"
+            phoneNumber: "{{context.phoneNumber}}"
+
+  # Authentication failed after max attempts
+  auth_failed:
+    type: end
+    on_entry:
+      - action: speak
+        params:
+          text: "I'm sorry, but I wasn't able to verify your phone number. Please try again later or contact support."
+      - action: emit
+        params:
+          event: auth_failed
+          data:
+            reason: "max_attempts_exceeded"
+            phoneNumber: "{{context.phoneNumber}}"
+
+  # User cancelled authentication
+  auth_cancelled:
+    type: end
+    on_entry:
+      - action: speak
+        params:
+          text: "No problem. You can authenticate later when you're ready."
+      - action: emit
+        params:
+          event: auth_cancelled
+
+# Actions definitions (for documentation)
+actions:
+  check_session_auth:
+    description: Check if user session is already authenticated
+    executor: auth
+    
+  validate_phone_number:
+    description: Validate phone number format (Kenyan format)
+    executor: validation
+    
+  send_otp_code:
+    description: Send OTP via SMS
+    executor: auth
+    
+  verify_otp:
+    description: Verify the OTP code
+    executor: auth
+    
+  increment:
+    description: Increment a context variable
+    executor: context
+    
+  set_context:
+    description: Set context variables
+    executor: context
+    
+  speak:
+    description: Text-to-speech output
+    executor: tts
+    
+  listen:
+    description: Listen for user input
+    executor: asr
+    
+  emit:
+    description: Emit an event
+    executor: event

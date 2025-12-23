@@ -1,0 +1,643 @@
+# Complaints Flow - YAML Version
+# Handles customer complaints and support escalation
+
+name: complaints
+version: "1.0"
+description: Customer complaints handling with resolution tracking
+
+initial_state: start
+
+context:
+  complaintType: null
+  orderId: null
+  description: null
+  severity: "medium"
+  ticketId: null
+  resolution: null
+
+states:
+  start:
+    type: input
+    on_entry:
+      - action: speak
+        params:
+          text: "I'm sorry to hear you're having an issue. Can you tell me what happened?"
+          text_swahili: "Pole kusikia una tatizo. Unaweza kuniambia kilichotokea?"
+    transitions:
+      - event: input_received
+        target: analyze_complaint
+
+  analyze_complaint:
+    type: action
+    on_entry:
+      - action: classify_complaint
+        params:
+          text: "{{input}}"
+    transitions:
+      - event: order_issue
+        target: get_order_details
+      - event: delivery_issue
+        target: delivery_problem
+      - event: quality_issue
+        target: quality_problem
+      - event: payment_issue
+        target: payment_problem
+      - event: app_issue
+        target: app_problem
+      - event: other
+        target: general_complaint
+
+  get_order_details:
+    type: decision
+    on_entry:
+      - action: check_recent_orders
+        params:
+          userId: "{{userId}}"
+    transitions:
+      - event: has_recent_orders
+        target: confirm_order
+      - event: no_recent_orders
+        target: request_order_id
+
+  confirm_order:
+    type: input
+    on_entry:
+      - action: speak
+        params:
+          text: "Is this about your recent order from {{recent_order.restaurant}} on {{recent_order.date}}?"
+    transitions:
+      - event: yes
+        target: identify_order_issue
+      - event: no
+        target: request_order_id
+
+  request_order_id:
+    type: input
+    on_entry:
+      - action: speak
+        params:
+          text: "Please provide your order number. You can find it in your order confirmation SMS or email."
+    transitions:
+      - event: input_received
+        target: validate_order_id
+
+  validate_order_id:
+    type: action
+    on_entry:
+      - action: lookup_order
+        params:
+          orderId: "{{input}}"
+    transitions:
+      - event: found
+        target: identify_order_issue
+      - event: not_found
+        target: order_not_found
+
+  order_not_found:
+    type: input
+    on_entry:
+      - action: speak
+        params:
+          text: "I couldn't find that order. Please double-check the order number, or describe your issue and I'll help you."
+    transitions:
+      - event: input_received
+        target: analyze_complaint
+
+  identify_order_issue:
+    type: input
+    on_entry:
+      - action: speak
+        params:
+          text: "I found your order. What's the issue? Missing items, wrong order, late delivery, or something else?"
+    transitions:
+      - event: missing_items
+        target: missing_items_flow
+      - event: wrong_order
+        target: wrong_order_flow
+      - event: late_delivery
+        target: late_delivery_flow
+      - event: input_received
+        target: record_issue
+
+  missing_items_flow:
+    type: input
+    on_entry:
+      - action: set_context
+        params:
+          complaintType: "missing_items"
+      - action: speak
+        params:
+          text: "I'm sorry items were missing. Which items didn't you receive?"
+    transitions:
+      - event: input_received
+        target: verify_missing_items
+
+  verify_missing_items:
+    type: action
+    on_entry:
+      - action: check_order_items
+        params:
+          orderId: "{{context.orderId}}"
+          missingItems: "{{input}}"
+    transitions:
+      - event: verified
+        target: calculate_refund
+      - event: not_in_order
+        target: item_not_in_order
+
+  item_not_in_order:
+    type: input
+    on_entry:
+      - action: speak
+        params:
+          text: "I don't see {{input}} in your order. Your order contained: {{order_items}}. Which of these was missing?"
+    transitions:
+      - event: input_received
+        target: verify_missing_items
+
+  calculate_refund:
+    type: action
+    on_entry:
+      - action: calculate_item_refund
+        params:
+          items: "{{missing_items}}"
+    transitions:
+      - event: calculated
+        target: offer_resolution
+
+  wrong_order_flow:
+    type: input
+    on_entry:
+      - action: set_context
+        params:
+          complaintType: "wrong_order"
+      - action: speak
+        params:
+          text: "That's frustrating. What did you receive instead of what you ordered?"
+    transitions:
+      - event: input_received
+        target: record_wrong_order
+
+  record_wrong_order:
+    type: action
+    on_entry:
+      - action: log_wrong_order
+        params:
+          orderId: "{{context.orderId}}"
+          received: "{{input}}"
+    transitions:
+      - event: logged
+        target: offer_resolution
+
+  late_delivery_flow:
+    type: action
+    on_entry:
+      - action: set_context
+        params:
+          complaintType: "late_delivery"
+      - action: check_delivery_time
+        params:
+          orderId: "{{context.orderId}}"
+    transitions:
+      - event: significantly_late
+        target: apologize_late_delivery
+      - event: slightly_late
+        target: minor_delay_response
+
+  apologize_late_delivery:
+    type: message
+    on_entry:
+      - action: speak
+        params:
+          text: "I see your order was {{delay_minutes}} minutes late. I sincerely apologize for the inconvenience."
+    transitions:
+      - event: next
+        target: offer_resolution
+
+  minor_delay_response:
+    type: input
+    on_entry:
+      - action: speak
+        params:
+          text: "Your order was {{delay_minutes}} minutes past the estimated time. I understand that's frustrating. Would you like to provide additional feedback?"
+    transitions:
+      - event: yes
+        target: record_issue
+      - event: no
+        target: minor_compensation
+
+  minor_compensation:
+    type: message
+    on_entry:
+      - action: apply_small_credit
+        params:
+          amount: 50
+      - action: speak
+        params:
+          text: "I've added KES 50 credit to your account for your next order. Is there anything else I can help with?"
+    transitions:
+      - event: yes
+        target: start
+      - event: no
+        target: end_positive
+
+  record_issue:
+    type: action
+    on_entry:
+      - action: record_complaint_details
+        params:
+          description: "{{input}}"
+          type: "{{context.complaintType}}"
+          orderId: "{{context.orderId}}"
+    transitions:
+      - event: recorded
+        target: assess_severity
+
+  delivery_problem:
+    type: input
+    on_entry:
+      - action: set_context
+        params:
+          complaintType: "delivery_issue"
+      - action: speak
+        params:
+          text: "I'm sorry about the delivery issue. Was the rider rude, did they have trouble finding you, or was there another problem?"
+    transitions:
+      - event: input_received
+        target: record_issue
+
+  quality_problem:
+    type: input
+    on_entry:
+      - action: set_context
+        params:
+          complaintType: "quality_issue"
+      - action: speak
+        params:
+          text: "I'm sorry the food quality wasn't up to standard. Can you describe what was wrong? Was it cold, stale, or something else?"
+    transitions:
+      - event: input_received
+        target: record_issue
+
+  payment_problem:
+    type: input
+    on_entry:
+      - action: set_context
+        params:
+          complaintType: "payment_issue"
+      - action: speak
+        params:
+          text: "I'm sorry you're having payment issues. Were you double-charged, or is there a refund you haven't received?"
+    transitions:
+      - event: double_charge
+        target: investigate_double_charge
+      - event: refund_pending
+        target: check_refund_status
+      - event: input_received
+        target: record_issue
+
+  investigate_double_charge:
+    type: action
+    on_entry:
+      - action: check_payment_history
+        params:
+          userId: "{{userId}}"
+    transitions:
+      - event: double_charge_confirmed
+        target: process_refund
+      - event: no_double_charge
+        target: no_double_charge_found
+
+  no_double_charge_found:
+    type: message
+    on_entry:
+      - action: speak
+        params:
+          text: "I checked your payment history and don't see a duplicate charge. The pending authorization should disappear within 24-48 hours. Would you like me to escalate this to our payments team?"
+    transitions:
+      - event: yes
+        target: escalate_to_human
+      - event: no
+        target: end_neutral
+
+  check_refund_status:
+    type: action
+    on_entry:
+      - action: lookup_pending_refunds
+        params:
+          userId: "{{userId}}"
+    transitions:
+      - event: refund_found
+        target: show_refund_status
+      - event: no_refund
+        target: no_refund_found
+
+  show_refund_status:
+    type: message
+    on_entry:
+      - action: speak
+        params:
+          text: "Your refund of KES {{refund_amount}} was processed on {{refund_date}}. It should appear in your M-Pesa/account within 3-5 business days."
+    transitions:
+      - event: next
+        target: ask_more_help
+
+  no_refund_found:
+    type: message
+    on_entry:
+      - action: speak
+        params:
+          text: "I don't see a pending refund for your account. Let me look into this further."
+    transitions:
+      - event: next
+        target: escalate_to_human
+
+  app_problem:
+    type: input
+    on_entry:
+      - action: set_context
+        params:
+          complaintType: "app_issue"
+      - action: speak
+        params:
+          text: "I'm sorry you're having trouble with the app. Is it crashing, loading slowly, or is there a specific feature not working?"
+    transitions:
+      - event: input_received
+        target: log_app_issue
+
+  log_app_issue:
+    type: action
+    on_entry:
+      - action: log_technical_issue
+        params:
+          description: "{{input}}"
+          userId: "{{userId}}"
+    transitions:
+      - event: logged
+        target: app_troubleshoot
+
+  app_troubleshoot:
+    type: message
+    on_entry:
+      - action: speak
+        params:
+          text: "I've logged this issue. In the meantime, try restarting the app or clearing the cache. If the problem persists, our tech team will investigate."
+    transitions:
+      - event: next
+        target: ask_more_help
+
+  general_complaint:
+    type: input
+    on_entry:
+      - action: set_context
+        params:
+          complaintType: "general"
+      - action: speak
+        params:
+          text: "I want to make sure I understand. Can you give me more details about your concern?"
+    transitions:
+      - event: input_received
+        target: record_issue
+
+  assess_severity:
+    type: action
+    on_entry:
+      - action: assess_complaint_severity
+        params:
+          type: "{{context.complaintType}}"
+          description: "{{context.description}}"
+    transitions:
+      - event: high
+        target: escalate_to_human
+      - event: medium
+        target: offer_resolution
+      - event: low
+        target: quick_resolution
+
+  offer_resolution:
+    type: input
+    on_entry:
+      - action: generate_resolution_options
+        params:
+          complaintType: "{{context.complaintType}}"
+          orderValue: "{{order.total}}"
+      - action: speak
+        params:
+          text: "To make this right, I can offer you: {{resolution_options}}. Which would you prefer?"
+    transitions:
+      - event: refund
+        target: process_refund
+      - event: credit
+        target: apply_credit
+      - event: replacement
+        target: arrange_replacement
+      - event: escalate
+        target: escalate_to_human
+
+  process_refund:
+    type: action
+    on_entry:
+      - action: initiate_refund
+        params:
+          orderId: "{{context.orderId}}"
+          amount: "{{refund_amount}}"
+    transitions:
+      - event: success
+        target: refund_success
+      - event: error
+        target: refund_error
+
+  refund_success:
+    type: message
+    on_entry:
+      - action: speak
+        params:
+          text: "I've processed a refund of KES {{refund_amount}} to your original payment method. You should see it within 3-5 business days. Reference: {{refund_ref}}"
+    transitions:
+      - event: next
+        target: end_positive
+
+  refund_error:
+    type: message
+    on_entry:
+      - action: speak
+        params:
+          text: "I encountered an issue processing your refund. Let me connect you with a support agent who can help."
+    transitions:
+      - event: next
+        target: escalate_to_human
+
+  apply_credit:
+    type: action
+    on_entry:
+      - action: apply_account_credit
+        params:
+          amount: "{{credit_amount}}"
+    transitions:
+      - event: success
+        target: credit_applied
+
+  credit_applied:
+    type: message
+    on_entry:
+      - action: speak
+        params:
+          text: "I've added KES {{credit_amount}} credit to your account. It will be automatically applied to your next order."
+    transitions:
+      - event: next
+        target: end_positive
+
+  arrange_replacement:
+    type: action
+    on_entry:
+      - action: create_replacement_order
+        params:
+          originalOrderId: "{{context.orderId}}"
+    transitions:
+      - event: success
+        target: replacement_arranged
+      - event: restaurant_closed
+        target: replacement_not_available
+
+  replacement_arranged:
+    type: message
+    on_entry:
+      - action: speak
+        params:
+          text: "I've arranged a replacement order. New order number: {{new_order_id}}. Estimated arrival: {{eta}}."
+    transitions:
+      - event: next
+        target: end_positive
+
+  replacement_not_available:
+    type: input
+    on_entry:
+      - action: speak
+        params:
+          text: "Unfortunately, the restaurant is currently closed. Would you like a refund or account credit instead?"
+    transitions:
+      - event: refund
+        target: process_refund
+      - event: credit
+        target: apply_credit
+
+  quick_resolution:
+    type: message
+    on_entry:
+      - action: apply_small_credit
+        params:
+          amount: 100
+      - action: speak
+        params:
+          text: "I apologize for the inconvenience. I've added KES 100 to your account for your next order. Thank you for your feedback."
+    transitions:
+      - event: next
+        target: end_positive
+
+  escalate_to_human:
+    type: action
+    on_entry:
+      - action: create_support_ticket
+        params:
+          type: "{{context.complaintType}}"
+          description: "{{context.description}}"
+          orderId: "{{context.orderId}}"
+          severity: "{{context.severity}}"
+      - action: speak
+        params:
+          text: "I'm connecting you with a support agent who can better assist you. Ticket number: {{context.ticketId}}. Estimated wait time: {{wait_time}} minutes."
+      - action: request_human_handoff
+    transitions:
+      - event: connected
+        target: human_connected
+      - event: queued
+        target: human_queued
+
+  human_connected:
+    type: end
+    on_entry:
+      - action: speak
+        params:
+          text: "You're now connected with {{agent_name}}. They have all the details about your issue."
+
+  human_queued:
+    type: input
+    on_entry:
+      - action: speak
+        params:
+          text: "All agents are currently busy. You're number {{queue_position}} in the queue. Would you like to wait, or should I have an agent call you back?"
+    transitions:
+      - event: wait
+        target: waiting_for_agent
+      - event: callback
+        target: schedule_callback
+
+  waiting_for_agent:
+    type: action
+    on_entry:
+      - action: keep_in_queue
+    transitions:
+      - event: connected
+        target: human_connected
+      - event: timeout
+        target: queue_timeout
+
+  queue_timeout:
+    type: input
+    on_entry:
+      - action: speak
+        params:
+          text: "Sorry for the wait. Would you like to continue waiting or schedule a callback?"
+    transitions:
+      - event: wait
+        target: waiting_for_agent
+      - event: callback
+        target: schedule_callback
+
+  schedule_callback:
+    type: action
+    on_entry:
+      - action: schedule_agent_callback
+        params:
+          ticketId: "{{context.ticketId}}"
+          phone: "{{context.phoneNumber}}"
+      - action: speak
+        params:
+          text: "I've scheduled a callback. An agent will call you within {{callback_window}}. Is there anything else I can help with in the meantime?"
+    transitions:
+      - event: yes
+        target: start
+      - event: no
+        target: end_neutral
+
+  ask_more_help:
+    type: input
+    on_entry:
+      - action: speak
+        params:
+          text: "Is there anything else I can help you with?"
+    transitions:
+      - event: yes
+        target: start
+      - event: no
+        target: end_positive
+
+  end_positive:
+    type: end
+    on_entry:
+      - action: speak
+        params:
+          text: "Thank you for your patience. We value your feedback and will work to improve. Have a great day!"
+      - action: emit
+        params:
+          event: complaint_resolved
+          data:
+            ticketId: "{{context.ticketId}}"
+            resolution: "{{context.resolution}}"
+
+  end_neutral:
+    type: end
+    on_entry:
+      - action: speak
+        params:
+          text: "Thank you for reaching out. Don't hesitate to contact us if you need further assistance."

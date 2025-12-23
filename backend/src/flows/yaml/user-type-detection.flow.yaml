@@ -1,0 +1,234 @@
+# User Type Detection Flow (v1)
+# This flow runs at the start of every conversation to detect user type
+# and route them to the appropriate flow (customer, vendor, or delivery man)
+
+name: user_type_detection_v1
+version: '1.0'
+description: Detect if user is customer, vendor, or delivery man based on phone number
+
+# Trigger on any new conversation
+triggers:
+  - type: message
+    pattern: '.*'
+    conditions:
+      - session.user_type_detected != true
+
+# Variables to track
+variables:
+  phone: ''
+  user_type: ''  # customer, vendor, delivery_man, new_user
+  available_roles: []
+  vendor_store_name: ''
+  customer_name: ''
+  delivery_man_name: ''
+  has_active_work: false
+  needs_role_selection: false
+
+# Main flow
+nodes:
+  # Entry point - extract phone and detect type
+  - id: detect_user_type
+    type: action
+    action: detect_user_type
+    params:
+      phone: '{{session.phone}}'
+    outputs:
+      user_type: user_type
+      available_roles: available_roles
+      vendor_data: vendor_data
+      customer_data: customer_data
+      delivery_data: delivery_data
+      needs_role_selection: needs_role_selection
+    next: check_role_count
+
+  # Check if user has multiple roles
+  - id: check_role_count
+    type: condition
+    conditions:
+      - condition: '{{needs_role_selection}} == true'
+        next: ask_role_selection
+      - condition: '{{user_type}} == "vendor"'
+        next: route_to_vendor
+      - condition: '{{user_type}} == "delivery_man"'
+        next: route_to_delivery
+      - condition: '{{user_type}} == "customer"'
+        next: route_to_customer
+      - condition: '{{user_type}} == "new_user"'
+        next: greet_new_user
+    default: greet_new_user
+
+  # Ask user to select role when multiple roles exist
+  - id: ask_role_selection
+    type: message
+    message:
+      en: |
+        Hello! 👋 I see you have multiple accounts with us.
+
+        How would you like to continue today?
+
+        {{#if is_customer}}1. 🛒 Order food as a customer{{/if}}
+        {{#if is_vendor}}{{customer_option_num}}. 🏪 Manage my store ({{vendor_store_name}}){{/if}}
+        {{#if is_delivery_man}}{{delivery_option_num}}. 🚴 Check my deliveries{{/if}}
+
+        Please reply with the number of your choice.
+      hi: |
+        नमस्ते! 👋 मुझे दिखता है कि आपके पास हमारे साथ कई खाते हैं।
+
+        आज आप कैसे जारी रखना चाहेंगे?
+
+        {{#if is_customer}}1. 🛒 ग्राहक के रूप में खाना ऑर्डर करें{{/if}}
+        {{#if is_vendor}}{{customer_option_num}}. 🏪 मेरी दुकान ({{vendor_store_name}}) प्रबंधित करें{{/if}}
+        {{#if is_delivery_man}}{{delivery_option_num}}. 🚴 मेरी डिलीवरी देखें{{/if}}
+
+        कृपया अपनी पसंद का नंबर भेजें।
+      mr: |
+        नमस्कार! 👋 मला दिसते की तुमच्याकडे आमच्याकडे अनेक खाती आहेत.
+
+        आज तुम्ही कसे पुढे जाऊ इच्छिता?
+
+        {{#if is_customer}}1. 🛒 ग्राहक म्हणून जेवण ऑर्डर करा{{/if}}
+        {{#if is_vendor}}{{customer_option_num}}. 🏪 माझे दुकान ({{vendor_store_name}}) व्यवस्थापित करा{{/if}}
+        {{#if is_delivery_man}}{{delivery_option_num}}. 🚴 माझ्या डिलिव्हरी तपासा{{/if}}
+
+        कृपया तुमच्या निवडीचा क्रमांक पाठवा.
+    next: wait_for_role_selection
+
+  # Wait for user's role selection
+  - id: wait_for_role_selection
+    type: input
+    input_type: text
+    validation:
+      pattern: '^[1-3]$'
+      error_message:
+        en: "Please reply with 1, 2, or 3 to select your role."
+        hi: "कृपया अपनी भूमिका चुनने के लिए 1, 2 या 3 भेजें।"
+        mr: "कृपया तुमची भूमिका निवडण्यासाठी 1, 2 किंवा 3 पाठवा."
+    next: process_role_selection
+
+  # Process the selected role
+  - id: process_role_selection
+    type: action
+    action: set_selected_role
+    params:
+      selection: '{{input}}'
+      available_roles: '{{available_roles}}'
+    outputs:
+      selected_role: selected_role
+    next: route_by_selection
+
+  # Route based on selection
+  - id: route_by_selection
+    type: condition
+    conditions:
+      - condition: '{{selected_role}} == "vendor"'
+        next: route_to_vendor
+      - condition: '{{selected_role}} == "delivery_man"'
+        next: route_to_delivery
+      - condition: '{{selected_role}} == "customer"'
+        next: route_to_customer
+    default: route_to_customer
+
+  # Route to vendor flow
+  - id: route_to_vendor
+    type: action
+    action: set_session_context
+    params:
+      user_type: vendor
+      vendor_id: '{{vendor_data.id}}'
+      store_id: '{{vendor_data.storeId}}'
+      store_name: '{{vendor_data.storeName}}'
+      user_type_detected: true
+    next: vendor_greeting
+
+  - id: vendor_greeting
+    type: message
+    message:
+      en: "Welcome back, {{vendor_store_name}}! 🏪\n\nI can help you with:\n• 📦 View new orders\n• ✅ Accept/reject orders\n• 📜 Order history\n• 🍽️ Manage menu items\n\nWhat would you like to do?"
+      hi: "वापस स्वागत है, {{vendor_store_name}}! 🏪\n\nमैं इसमें मदद कर सकता हूं:\n• 📦 नए ऑर्डर देखें\n• ✅ ऑर्डर स्वीकार/अस्वीकार करें\n• 📜 ऑर्डर इतिहास\n• 🍽️ मेनू आइटम प्रबंधित करें\n\nआप क्या करना चाहेंगे?"
+      mr: "पुन्हा स्वागत, {{vendor_store_name}}! 🏪\n\nमी यात मदत करू शकतो:\n• 📦 नवीन ऑर्डर पहा\n• ✅ ऑर्डर स्वीकारा/नाकारा\n• 📜 ऑर्डर इतिहास\n• 🍽️ मेनू आयटम व्यवस्थापित करा\n\nतुम्हाला काय करायचे आहे?"
+    next: transfer_to_vendor_flow
+
+  - id: transfer_to_vendor_flow
+    type: flow_transfer
+    target_flow: vendor_orders_v1
+
+  # Route to delivery man flow
+  - id: route_to_delivery
+    type: action
+    action: set_session_context
+    params:
+      user_type: delivery_man
+      delivery_man_id: '{{delivery_data.id}}'
+      delivery_man_name: '{{delivery_data.name}}'
+      user_type_detected: true
+    next: delivery_greeting
+
+  - id: delivery_greeting
+    type: message
+    message:
+      en: "Hey {{delivery_man_name}}! 🚴\n\nI can help you with:\n• 📦 Current deliveries\n• ✅ Accept new orders\n• 💰 Today's earnings\n• 📍 Update status\n\nWhat do you need?"
+      hi: "हेय {{delivery_man_name}}! 🚴\n\nमैं इसमें मदद कर सकता हूं:\n• 📦 वर्तमान डिलीवरी\n• ✅ नए ऑर्डर स्वीकार करें\n• 💰 आज की कमाई\n• 📍 स्थिति अपडेट करें\n\nआपको क्या चाहिए?"
+      mr: "अरे {{delivery_man_name}}! 🚴\n\nमी यात मदत करू शकतो:\n• 📦 सध्याच्या डिलिव्हरी\n• ✅ नवीन ऑर्डर स्वीकारा\n• 💰 आजची कमाई\n• 📍 स्थिती अपडेट करा\n\nतुम्हाला काय हवे?"
+    next: transfer_to_delivery_flow
+
+  - id: transfer_to_delivery_flow
+    type: flow_transfer
+    target_flow: delivery_orders_v1
+
+  # Route to customer flow
+  - id: route_to_customer
+    type: action
+    action: set_session_context
+    params:
+      user_type: customer
+      customer_id: '{{customer_data.id}}'
+      customer_name: '{{customer_data.name}}'
+      user_type_detected: true
+    next: customer_greeting
+
+  - id: customer_greeting
+    type: message
+    message:
+      en: "Hello {{customer_name}}! 👋\n\nWelcome to Mangwale!\n\nI can help you:\n🍔 Order food\n📦 Track your orders\n🎁 Check rewards\n📍 Manage addresses\n\nWhat would you like to do today?"
+      hi: "नमस्ते {{customer_name}}! 👋\n\nMangwale में आपका स्वागत है!\n\nमैं आपकी मदद कर सकता हूं:\n🍔 खाना ऑर्डर करें\n📦 अपने ऑर्डर ट्रैक करें\n🎁 रिवॉर्ड्स देखें\n📍 पते प्रबंधित करें\n\nआज आप क्या करना चाहेंगे?"
+      mr: "नमस्कार {{customer_name}}! 👋\n\nMangwale मध्ये आपले स्वागत!\n\nमी तुम्हाला मदत करू शकतो:\n🍔 जेवण ऑर्डर करा\n📦 तुमचे ऑर्डर ट्रॅक करा\n🎁 रिवॉर्ड्स तपासा\n📍 पत्ते व्यवस्थापित करा\n\nआज तुम्हाला काय करायचे आहे?"
+    next: transfer_to_customer_flow
+
+  - id: transfer_to_customer_flow
+    type: flow_transfer
+    target_flow: main_menu
+
+  # Greet new user
+  - id: greet_new_user
+    type: action
+    action: set_session_context
+    params:
+      user_type: new_user
+      user_type_detected: true
+    next: new_user_greeting
+
+  - id: new_user_greeting
+    type: message
+    message:
+      en: "Hello! 👋 Welcome to Mangwale!\n\nI'm your AI assistant for food ordering.\n\nTo get started, please share your phone number for registration.\n\nOr you can:\n• Browse restaurants\n• Check our menu\n• Learn about our services"
+      hi: "नमस्ते! 👋 Mangwale में आपका स्वागत है!\n\nमैं खाना ऑर्डर करने के लिए आपका AI सहायक हूं।\n\nशुरू करने के लिए, कृपया पंजीकरण के लिए अपना फोन नंबर साझा करें।\n\nया आप कर सकते हैं:\n• रेस्तरां ब्राउज़ करें\n• हमारा मेनू देखें\n• हमारी सेवाओं के बारे में जानें"
+      mr: "नमस्कार! 👋 Mangwale मध्ये आपले स्वागत!\n\nमी जेवण ऑर्डर करण्यासाठी तुमचा AI सहाय्यक आहे.\n\nसुरू करण्यासाठी, कृपया नोंदणीसाठी तुमचा फोन नंबर शेअर करा.\n\nकिंवा तुम्ही:\n• रेस्टॉरंट्स ब्राउझ करा\n• आमचा मेनू पहा\n• आमच्या सेवांबद्दल जाणून घ्या"
+    next: wait_for_new_user_input
+
+  - id: wait_for_new_user_input
+    type: input
+    input_type: text
+    next: transfer_to_registration
+
+  - id: transfer_to_registration
+    type: flow_transfer
+    target_flow: customer_registration
+
+# Error handling
+error_handler:
+  - id: error_fallback
+    type: message
+    message:
+      en: "I encountered an issue detecting your account. Let me connect you with support."
+      hi: "आपका खाता पहचानने में समस्या हुई। मुझे आपको सहायता से जोड़ने दें।"
+      mr: "तुमचे खाते ओळखण्यात समस्या आली. मला तुम्हाला समर्थनाशी जोडू द्या."

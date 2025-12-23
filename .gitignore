@@ -1,0 +1,54 @@
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# Build outputs
+dist/
+.next/
+build/
+*.tsbuildinfo
+
+# Environment files
+.env
+.env.*
+!.env.example
+!.env.*.example
+
+# Model weights and ML artifacts
+*.safetensors
+*.pt
+*.pth
+*.bin
+*.ckpt
+*.lock
+backend/models/
+backend/training-data/
+backend/labelstudio_data/
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Docker
+docker-compose.override.yml
+
+# OSRM data (large)
+backend/osrm-data/
+
+# Temp files
+*.tmp
+*.temp
+.cache/

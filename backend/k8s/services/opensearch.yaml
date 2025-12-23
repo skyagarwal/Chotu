@@ -1,0 +1,54 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: opensearch
+  namespace: mangwale
+  labels:
+    app: opensearch
+spec:
+  type: ClusterIP
+  ports:
+    - port: 9200
+      targetPort: 9200
+      protocol: TCP
+      name: http
+    - port: 9300
+      targetPort: 9300
+      protocol: TCP
+      name: transport
+  selector:
+    app: opensearch
+---
+# Headless service for StatefulSet DNS
+apiVersion: v1
+kind: Service
+metadata:
+  name: opensearch-headless
+  namespace: mangwale
+spec:
+  clusterIP: None
+  ports:
+    - port: 9200
+      targetPort: 9200
+      name: http
+    - port: 9300
+      targetPort: 9300
+      name: transport
+  selector:
+    app: opensearch
+---
+# OpenSearch Dashboards
+apiVersion: v1
+kind: Service
+metadata:
+  name: opensearch-dashboards
+  namespace: mangwale
+spec:
+  type: ClusterIP
+  ports:
+    - port: 5601
+      targetPort: 5601
+      protocol: TCP
+      name: http
+  selector:
+    app: opensearch-dashboards

@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json.schemastore.org/nest-cli",
+  "collection": "@nestjs/schematics",
+  "sourceRoot": "src",
+  "compilerOptions": {
+    "deleteOutDir": true,
+    "webpack": false,
+    "builder": "tsc",
+    "assets": [
+      {
+        "include": "flow-engine/flows/yaml-v2/**/*.yaml",
+        "watchAssets": true
+      },
+      {
+        "include": "flow-engine/flows/yaml/**/*.yaml",
+        "watchAssets": true
+      }
+    ]
+  }
+}

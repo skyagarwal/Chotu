@@ -1,0 +1,239 @@
+# Prometheus Alert Rules for Mangwale
+---
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: mangwale-alerts
+  namespace: mangwale
+  labels:
+    release: prometheus
+    app: mangwale
+spec:
+  groups:
+    # Backend API Alerts
+    - name: mangwale-backend
+      rules:
+        - alert: BackendHighLatency
+          expr: histogram_quantile(0.95, sum(rate(http_request_duration_seconds_bucket{app="mangwale-backend"}[5m])) by (le)) > 2
+          for: 5m
+          labels:
+            severity: warning
+          annotations:
+            summary: "Backend API p95 latency > 2s"
+            description: "The p95 latency is {{ $value }}s for the last 5 minutes"
+
+        - alert: BackendHighErrorRate
+          expr: sum(rate(http_requests_total{app="mangwale-backend",status=~"5.."}[5m])) / sum(rate(http_requests_total{app="mangwale-backend"}[5m])) > 0.05
+          for: 2m
+          labels:
+            severity: critical
+          annotations:
+            summary: "Backend error rate > 5%"
+            description: "Error rate is {{ $value | humanizePercentage }}"
+
+        - alert: BackendPodCrashLooping
+          expr: increase(kube_pod_container_status_restarts_total{namespace="mangwale",container="backend"}[1h]) > 3
+          for: 5m
+          labels:
+            severity: critical
+          annotations:
+            summary: "Backend pod crash looping"
+            description: "Pod {{ $labels.pod }} has restarted {{ $value }} times in the last hour"
+
+        - alert: BackendHighMemory
+          expr: container_memory_usage_bytes{namespace="mangwale",container="backend"} / container_spec_memory_limit_bytes{namespace="mangwale",container="backend"} > 0.9
+          for: 5m
+          labels:
+            severity: warning
+          annotations:
+            summary: "Backend memory usage > 90%"
+            description: "Pod {{ $labels.pod }} memory usage is {{ $value | humanizePercentage }}"
+
+    # vLLM Alerts
+    - name: vllm
+      rules:
+        - alert: VllmHighQueueLength
+          expr: vllm_pending_requests > 50
+          for: 2m
+          labels:
+            severity: warning
+          annotations:
+            summary: "vLLM request queue > 50"
+            description: "vLLM has {{ $value }} pending requests"
+
+        - alert: VllmHighLatency
+          expr: histogram_quantile(0.95, sum(rate(vllm_request_latency_seconds_bucket[5m])) by (le)) > 30
+          for: 5m
+          labels:
+            severity: warning
+          annotations:
+            summary: "vLLM p95 latency > 30s"
+            description: "vLLM inference latency is {{ $value }}s"
+
+        - alert: VllmDown
+          expr: up{job="vllm"} == 0
+          for: 1m
+          labels:
+            severity: critical
+          annotations:
+            summary: "vLLM service is down"
+            description: "vLLM is not responding to health checks"
+
+        - alert: VllmGpuMemoryHigh
+          expr: nvidia_gpu_memory_used_bytes / nvidia_gpu_memory_total_bytes > 0.95
+          for: 5m
+          labels:
+            severity: warning
+          annotations:
+            summary: "GPU memory usage > 95%"
+            description: "GPU {{ $labels.gpu }} memory is {{ $value | humanizePercentage }}"
+
+    # Database Alerts
+    - name: database
+      rules:
+        - alert: PostgresConnectionsHigh
+          expr: pg_stat_activity_count / pg_settings_max_connections > 0.8
+          for: 5m
+          labels:
+            severity: warning
+          annotations:
+            summary: "PostgreSQL connections > 80%"
+            description: "{{ $value | humanizePercentage }} of max connections used"
+
+        - alert: PostgresReplicationLag
+          expr: pg_replication_lag_seconds > 30
+          for: 2m
+          labels:
+            severity: warning
+          annotations:
+            summary: "PostgreSQL replication lag > 30s"
+            description: "Replica lag is {{ $value }}s"
+
+        - alert: PostgresSlowQueries
+          expr: rate(pg_stat_statements_mean_time_seconds[5m]) > 5
+          for: 5m
+          labels:
+            severity: warning
+          annotations:
+            summary: "PostgreSQL slow queries detected"
+            description: "Average query time is {{ $value }}s"
+
+        - alert: PostgresDown
+          expr: pg_up == 0
+          for: 1m
+          labels:
+            severity: critical
+          annotations:
+            summary: "PostgreSQL is down"
+            description: "PostgreSQL is not responding"
+
+    # Redis Alerts
+    - name: redis
+      rules:
+        - alert: RedisMemoryHigh
+          expr: redis_memory_used_bytes / redis_memory_max_bytes > 0.9
+          for: 5m
+          labels:
+            severity: warning
+          annotations:
+            summary: "Redis memory > 90%"
+            description: "Redis memory usage is {{ $value | humanizePercentage }}"
+
+        - alert: RedisDown
+          expr: redis_up == 0
+          for: 1m
+          labels:
+            severity: critical
+          annotations:
+            summary: "Redis is down"
+            description: "Redis is not responding"
+
+        - alert: RedisReplicationBroken
+          expr: redis_connected_slaves < 2
+          for: 5m
+          labels:
+            severity: warning
+          annotations:
+            summary: "Redis replication broken"
+            description: "Only {{ $value }} slaves connected (expected 2)"
+
+    # OpenSearch Alerts
+    - name: opensearch
+      rules:
+        - alert: OpenSearchClusterRed
+          expr: opensearch_cluster_health_status{color="red"} == 1
+          for: 1m
+          labels:
+            severity: critical
+          annotations:
+            summary: "OpenSearch cluster is RED"
+            description: "OpenSearch cluster health is critical"
+
+        - alert: OpenSearchClusterYellow
+          expr: opensearch_cluster_health_status{color="yellow"} == 1
+          for: 15m
+          labels:
+            severity: warning
+          annotations:
+            summary: "OpenSearch cluster is YELLOW"
+            description: "OpenSearch cluster has unassigned shards"
+
+        - alert: OpenSearchDiskHigh
+          expr: opensearch_fs_data_free_bytes / opensearch_fs_data_total_bytes < 0.15
+          for: 5m
+          labels:
+            severity: warning
+          annotations:
+            summary: "OpenSearch disk < 15% free"
+            description: "Only {{ $value | humanizePercentage }} disk space remaining"
+
+    # WhatsApp Channel Alerts
+    - name: whatsapp
+      rules:
+        - alert: WhatsAppWebhookErrors
+          expr: sum(rate(whatsapp_webhook_errors_total[5m])) > 1
+          for: 5m
+          labels:
+            severity: warning
+          annotations:
+            summary: "WhatsApp webhook errors detected"
+            description: "{{ $value }} webhook errors per second"
+
+        - alert: WhatsAppMessageDeliveryFailed
+          expr: sum(rate(whatsapp_message_delivery_failed_total[10m])) / sum(rate(whatsapp_message_sent_total[10m])) > 0.05
+          for: 10m
+          labels:
+            severity: warning
+          annotations:
+            summary: "WhatsApp delivery failure rate > 5%"
+            description: "{{ $value | humanizePercentage }} of messages failing"
+
+    # Business Metrics Alerts
+    - name: business
+      rules:
+        - alert: LowConversationVolume
+          expr: sum(increase(conversations_started_total[1h])) < 10
+          for: 2h
+          labels:
+            severity: info
+          annotations:
+            summary: "Low conversation volume"
+            description: "Only {{ $value }} conversations in the last hour"
+
+        - alert: HighAbandonmentRate
+          expr: sum(rate(conversations_abandoned_total[1h])) / sum(rate(conversations_started_total[1h])) > 0.3
+          for: 1h
+          labels:
+            severity: warning
+          annotations:
+            summary: "High conversation abandonment rate"
+            description: "{{ $value | humanizePercentage }} of conversations abandoned"
+
+        - alert: LlmCostAnomaly
+          expr: sum(increase(llm_tokens_used_total[1h])) > sum(increase(llm_tokens_used_total[1h] offset 24h)) * 2
+          for: 30m
+          labels:
+            severity: warning
+          annotations:
+            summary: "LLM token usage anomaly"
+            description: "Token usage is 2x higher than same time yesterday"

@@ -1,0 +1,1127 @@
+{"text":"Add Amul Pav Bhaji (2 Butter Pav) to cart","intent":"add_to_cart","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Add Chicken Good Chilli to cart","intent":"add_to_cart","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Add Chicken Hakka Noodles to cart","intent":"add_to_cart","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Add Khaman Dhokla to cart","intent":"add_to_cart","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Add pizza to my cart","intent":"add_to_cart","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"add first one to cart","intent":"add_to_cart","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"add this to cart","intent":"add_to_cart","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"cart me add karo","intent":"add_to_cart","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"cart me dal do","intent":"add_to_cart","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"What can you do for me","intent":"browse_menu","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Cancel my order","intent":"cancel_order","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"I want to pickup a parcel cancel this food","intent":"cancel_order","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"cacncel","intent":"cancel_order","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"cacnecl","intent":"cancel_order","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"cancel my order","intent":"cancel_order","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"cancel order 12345","intent":"cancel_order","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"cancle","intent":"cancel_order","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"order cancel karo","intent":"cancel_order","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"please help me cancel order number 12345","intent":"cancel_order","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"इसे कैंसल करो और मुझे एक पार्सल भेजना है।","intent":"cancel_order","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"कैंसल","intent":"cancel_order","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Checkout","intent":"checkout","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Complete the task","intent":"checkout","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Hi sir send me payment details","intent":"checkout","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Payment not happning","intent":"checkout","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"cash on delivery","intent":"checkout","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"checkout","intent":"checkout","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"checkout karo","intent":"checkout","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"https://new.mangwale.com/payment/razor-pay/pay?payment id=b44085e1-7135-4136-be41-88651a0bf3f5","intent":"checkout","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"https://new.mangwale.com/payment/razorpay/103632","intent":"checkout","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"https://new.mangwale.com/payment/razorpay/103633","intent":"checkout","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"https://new.mangwale.com/payment/razorpay/103634","intent":"checkout","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"https://new.mangwale.com/payment/razorpay/103635","intent":"checkout","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"https://new.mangwale.com/payment/razorpay/103636","intent":"checkout","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"i paid","intent":"checkout","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"online","intent":"checkout","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"online payment","intent":"checkout","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"💳 Pay ₹44","intent":"checkout","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"📱 Pay Online (UPI/C","intent":"checkout","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"🛒 Checkout","intent":"checkout","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"","intent":"chitchat","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"1","intent":"chitchat","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"12345","intent":"chitchat","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"3","intent":"chitchat","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"5","intent":"chitchat","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"530 after discount","intent":"chitchat","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"@#$%^&*()","intent":"chitchat","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Are you understand what i am saying","intent":"chitchat","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Do you have work from home??","intent":"chitchat","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"For making receipt","intent":"chitchat","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Home-42","intent":"chitchat","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"I am vegitarian","intent":"chitchat","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"I dont know what you talking","intent":"chitchat","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"I received a call in morning","intent":"chitchat","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Is any vacancy for Data analyst","intent":"chitchat","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Job che","intent":"chitchat","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Kaise ho","intent":"chitchat","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Kaise sab","intent":"chitchat","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Lets go","intent":"chitchat","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Please send me your address / location for the interview","intent":"chitchat","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Rs 625","intent":"chitchat","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Very good","intent":"chitchat","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"What r u doing ??","intent":"chitchat","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"What's up","intent":"chitchat","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Where ?","intent":"chitchat","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"[Image received]","intent":"chitchat","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"[respond in english] Oke, pay online.","intent":"chitchat","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"[respond in english] um","intent":"chitchat","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"[respond in english] مجھے کیا آپ کرسکتے ہیں؟","intent":"chitchat","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"are you a robot","intent":"chitchat","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"asdfghjkl","intent":"chitchat","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"badiya","intent":"chitchat","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"bhook lagi hai","intent":"chitchat","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"btn-0","intent":"chitchat","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"btn-1","intent":"chitchat","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"confired ?","intent":"chitchat","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"confrin","intent":"chitchat","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"do you remember my name?","intent":"chitchat","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"give feedback","intent":"chitchat","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"hey, i am feeling a bit tired today","intent":"chitchat","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"hindi aatihai ?","intent":"chitchat","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"hindi mein baat karo","intent":"chitchat","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"how are you doing today?","intent":"chitchat","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"how are you doing?","intent":"chitchat","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"how are you today?","intent":"chitchat","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"how are you?","intent":"chitchat","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"how are you? i am doing great!","intent":"chitchat","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"how does this work","intent":"chitchat","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"i am doing ok","intent":"chitchat","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"i am not raj?","intent":"chitchat","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"i dont want text in hindi i want it to be in english but hinglish","intent":"chitchat","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"i gave u","intent":"chitchat","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"i gave you","intent":"chitchat","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"i m good n u","intent":"chitchat","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"ih","intent":"chitchat","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"kem cho","intent":"chitchat","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"kya haal","intent":"chitchat","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"kya kya hai","intent":"chitchat","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"mangwale","intent":"chitchat","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"marathi yeti ka tumala ?","intent":"chitchat","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"my","intent":"chitchat","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"my name","intent":"chitchat","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"my self","intent":"chitchat","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"option-1","intent":"chitchat","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"option-2","intent":"chitchat","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"tell me a joke","intent":"chitchat","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"this is a text message","intent":"chitchat","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"what are you doing","intent":"chitchat","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"what is my name?","intent":"chitchat","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"what's the weather","intent":"chitchat","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"what's your name","intent":"chitchat","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"whats happning","intent":"chitchat","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"whats up","intent":"chitchat","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"who is raj","intent":"chitchat","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"why","intent":"chitchat","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"wjhar can tiy do","intent":"chitchat","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"yeah konsi basha hai ?","intent":"chitchat","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"आप कैसे हो?","intent":"chitchat","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"कर दो कि अ क्यों कि यह काट कहां से आ गया है इसमें अ  कि यह काट कहां से आ गया है इसमें अ कर दो कि यह काट कहां से आ गया है इसमें अ","intent":"chitchat","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"करते हुए दिनों के लिए जाने के लिए जाने के लिए जाने के लिए.","intent":"chitchat","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"करते हुए हुए हुए हुए हुए हुए हुए हुए हुए हुए हुए हुए हुए हुए हुए हुए हुए हुए हुए हुए हुए हुए हुए हुए हुए हुए हुए हुए हुए हुए हुए हुए हुए हुए हुए हुए हुए हुए हुए हुए हुए हुए हुए हु�","intent":"chitchat","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"कि शिष्ट और नाकुस और नाकुस और नाकुस और नाकुस और नाकुस और नाकुस","intent":"chitchat","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"तो था था था था था था था था था था था था था था था था था था था था था था था था था था था था था था था था था था था था था था था था था था था था था था था था था था था था था था था था था था था था था था था था था था था था था था था था था �","intent":"chitchat","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"पाम समय चाओ","intent":"chitchat","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"बवाँश्वाँ बवाँश्वाँ","intent":"chitchat","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"हुआ थी झाला हुआ था","intent":"chitchat","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"😀😀😀","intent":"chitchat","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"I have a complaint","intent":"complaint","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Kya hai yeah , i didnt ask for this","intent":"complaint","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Payment accept karne bolo 29 nov and 6 dec k hai","intent":"complaint","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"what problem","intent":"complaint","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"कोई reply नहीं आ रहा है मुझे","intent":"complaint","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"search my phone book","intent":"contact_search","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"9","intent":"create_parcel_order","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"I want to place an order, I want to place an order, I want to place an order, I want to place an order,","intent":"create_parcel_order","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"I want to place an order. मुझे एक वाटर प्लेश करना है, अभी जल्दी.","intent":"create_parcel_order","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Pickup a parcel from my home quickly","intent":"create_parcel_order","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Please send me address","intent":"create_parcel_order","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Put mine","intent":"create_parcel_order","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Send Parcel","intent":"create_parcel_order","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"auto delivery","intent":"create_parcel_order","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"bike delivery","intent":"create_parcel_order","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"bike delivery chahiye","intent":"create_parcel_order","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"hello i want to send a parcel","intent":"create_parcel_order","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"i want to send a parcel to 123 main street","intent":"create_parcel_order","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"i want to send a parcel to my friend","intent":"create_parcel_order","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"no wait send parcel","intent":"create_parcel_order","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"ok do it","intent":"create_parcel_order","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"send a parcel","intent":"create_parcel_order","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"tempo booking","intent":"create_parcel_order","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"urgent delivery","intent":"create_parcel_order","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"कर दो","intent":"create_parcel_order","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"मुझे एक parcel order place करना है अभी तुरंथ","intent":"create_parcel_order","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"मुझे एक ओडर प्लेस करना है पार्सल का  मुझे एक ओडर प्लेस करना है पार्सल का  मुझे एक ओडर प्लेस करना है पार्सल का  मुझे एक ओडर प्लेस करना है पार्सल का  मुझे एक ओडर प्लेस करना है पार्सल का  मुझे एक ओडर प्लेस करना है पार्सल का","intent":"create_parcel_order","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"📍 Location shared:\nSunder Nagar Colony, 38, New, Shanti Nagar, Lekha Nagar, Nashik, Maharashtra 422009, India\nContact: Rajesh (9923383838)\nType: home\nRoad: New\n\nCoordinates: 19.977666, 73.776278","intent":"create_parcel_order","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"i'm bored","intent":"earn","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"मेरा इट्रिस ले लोग गर काप, मेरा एट्रिस ले लोग गर काप, मेरा एट्रिस ले लोग गर काप, मेरा एट्रिस ले लोग गर काप, मेरा एट्रिस ले लोग गर काप, मेरा एट्रिस ले लोग गर काप, मेरा एट्रिस ले लोग गर काप, मेरा एट्रिस ले लोग गर काप","intent":"earn","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"?","intent":"greeting","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"??","intent":"greeting","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Bike","intent":"greeting","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Confirm","intent":"greeting","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Hello","intent":"greeting","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Hello sir","intent":"greeting","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Heplo","intent":"greeting","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Hi","intent":"greeting","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Hi test","intent":"greeting","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Hii","intent":"greeting","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"I apologize for missing your call earlier. Could you please let me know what it was regarding?\n\nRegards \nSneha katkule","intent":"greeting","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Isha Pal this side","intent":"greeting","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"My","intent":"greeting","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Parcel","intent":"greeting","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Ramesh","intent":"greeting","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Tomorrow","intent":"greeting","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Yes","intent":"greeting","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"aap kaise ho","intent":"greeting","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"add the first one","intent":"greeting","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"are you there","intent":"greeting","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"bike","intent":"greeting","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"biryani","intent":"greeting","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"breakfast","intent":"greeting","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"bye","intent":"greeting","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"coffee","intent":"greeting","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"confirm","intent":"greeting","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"continue","intent":"greeting","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"documents","intent":"greeting","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"features","intent":"greeting","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"good afternoon","intent":"greeting","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"good evening","intent":"greeting","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"good morning","intent":"greeting","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"greetings","intent":"greeting","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"helllo","intent":"greeting","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"hello","intent":"greeting","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"hello ji","intent":"greeting","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"hello mangwale","intent":"greeting","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"hello!","intent":"greeting","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"hello, my name is priya. how are you today?","intent":"greeting","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"hello, my name is rahul","intent":"greeting","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"helo","intent":"greeting","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"help","intent":"greeting","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"hey","intent":"greeting","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"hey there","intent":"greeting","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"hi","intent":"greeting","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"hi there!","intent":"greeting","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"hi, i am rahul from delhi","intent":"greeting","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"hi, my name is rahul","intent":"greeting","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"hii","intent":"greeting","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"hii there","intent":"greeting","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"hiiii","intent":"greeting","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"home","intent":"greeting","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"how ar eyou","intent":"greeting","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"how are you","intent":"greeting","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"how r u","intent":"greeting","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"hungry","intent":"greeting","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"i am","intent":"greeting","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"i am good how are you","intent":"greeting","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"juice","intent":"greeting","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"kaise ho","intent":"greeting","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"kya chalu hai","intent":"greeting","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"location","intent":"greeting","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"me","intent":"greeting","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"namaskar","intent":"greeting","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"namaste","intent":"greeting","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"namaste kaise ho","intent":"greeting","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"office","intent":"greeting","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"ok","intent":"greeting","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"options","intent":"greeting","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"parcel","intent":"greeting","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"sandwich","intent":"greeting","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"services","intent":"greeting","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"start","intent":"greeting","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"stop","intent":"greeting","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"sup","intent":"greeting","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"tumhara naam kya hai","intent":"greeting","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"u there","intent":"greeting","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"what can you help with","intent":"greeting","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"yo","intent":"greeting","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"कर दो हुआ है कि आप लोग हैं हुआ था","intent":"greeting","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"नमस्ते","intent":"greeting","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"माय होम।","intent":"greeting","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"हाँ","intent":"greeting","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"I need help","intent":"help","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"What is this mangwale","intent":"help","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"assistance please","intent":"help","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"btn help","intent":"help","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"complete my profile","intent":"help","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"contact number","intent":"help","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"error ??","intent":"help","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"guide me","intent":"help","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"help chahiye","intent":"help","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"help me","intent":"help","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"help me now!!!","intent":"help","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"i need help","intent":"help","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"kya kar sakte ho","intent":"help","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"mujhe madad chahiye","intent":"help","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"mujhe madad karo","intent":"help","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"refund policy","intent":"help","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"what can you","intent":"help","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"what can you do for me","intent":"help","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"what is mangwale","intent":"help","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"what is this ?","intent":"help","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"what is this mangwale","intent":"help","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"what is this?","intent":"help","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"who made you","intent":"help","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"+917796033248","intent":"login","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"8","intent":"login","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"8888777766","intent":"login","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"9923383838","intent":"login","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Plz send me app link to join","intent":"login","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Recheck login","intent":"login","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"put my details on it","intent":"login","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"use my name and number","intent":"login","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"करने के लिए","intent":"login","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"19.941683372345228, 73.7485021489015","intent":"manage_address","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"19.94626204556546, 73.75589312113014","intent":"manage_address","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"19.951475109442427, 73.83905875318099","intent":"manage_address","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"19.951639343364793, 73.83932522617795","intent":"manage_address","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"19.957323841220294, 73.81272786196229","intent":"manage_address","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"19.960170341095154, 73.77875612544705","intent":"manage_address","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"19.96081573858909, 73.73858333991693","intent":"manage_address","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"19.964190567593565, 73.76975438931225","intent":"manage_address","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"19.97780465482046, 73.77563128660017","intent":"manage_address","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"19.98983099878748, 73.77613351417814","intent":"manage_address","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"20.0059, 73.7897","intent":"manage_address","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Can you show me my saved address","intent":"manage_address","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"College Road, Nashik","intent":"manage_address","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Complete my profile","intent":"manage_address","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Deliver to CIDCO, sector 5","intent":"manage_address","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Drop Location","intent":"manage_address","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"From Bombay ??","intent":"manage_address","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Gangapur Road, Nashik","intent":"manage_address","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Location shared","intent":"manage_address","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Majithia Villa no 7, Nirman Vila Row House, Vesa Mala , Behind Big Bazaar , College Road , Nashik\n\nRonak Majithia\n7030669699","intent":"manage_address","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Near RK","intent":"manage_address","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Pickup address","intent":"manage_address","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Please send me the address / location","intent":"manage_address","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Pls send me location","intent":"manage_address","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Sector 17, Chandigarh","intent":"manage_address","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Show me adrress book","intent":"manage_address","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Sir process sanga","intent":"manage_address","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"[Location: 19.972821921632,73.784683272243]","intent":"manage_address","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"[Location: 19.9776707,73.7762707]","intent":"manage_address","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"[Location: 19.986089736194,73.766404017806]","intent":"manage_address","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"__LOCATION__","intent":"manage_address","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"can you share me my saved address","intent":"manage_address","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"can you show me my saved address","intent":"manage_address","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"cbs bus stand","intent":"manage_address","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"cbs bus stand nashik","intent":"manage_address","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"cbs bus stand, nashik road, nashik","intent":"manage_address","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"cbs nashik","intent":"manage_address","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"college road","intent":"manage_address","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"college road, nashik","intent":"manage_address","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"delivery location is https://maps.app.goo.gl/XPQkgjfSVZ1oQoCBA","intent":"manage_address","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"do you have any saved address?","intent":"manage_address","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"do you have my home address","intent":"manage_address","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"gangapur road nashik","intent":"manage_address","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"gangapur road se college road","intent":"manage_address","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"https://goo.gl/maps/E5xcQJvhaj2d3fmL7","intent":"manage_address","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"https://maps.app.goo.gl/Jw8z7V9eU1HLbpEq7?g_st=iw","intent":"manage_address","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"https://maps.app.goo.gl/QiEYWKZBWDkRqXZa7","intent":"manage_address","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"https://maps.app.goo.gl/QiEYWKZBWDkRqXZa7 rakesh 9934657867","intent":"manage_address","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"https://maps.app.goo.gl/VzgYQRCk1SwBDPW78","intent":"manage_address","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"https://maps.app.goo.gl/bYYsCEgFQQpmiSmx9","intent":"manage_address","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"https://maps.app.goo.gl/be6D9wrdY9rQbb3k8","intent":"manage_address","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"https://maps.app.goo.gl/fXy5BuPxQTAvPbhD7","intent":"manage_address","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"https://maps.app.goo.gl/vkwiCq8bw9766vk79","intent":"manage_address","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"https://maps.app.goo.gl/zWBWuV8QbrXEd48R8","intent":"manage_address","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"location_shared","intent":"manage_address","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"mangwale offic on google maps","intent":"manage_address","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"my address","intent":"manage_address","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"my office","intent":"manage_address","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"my saved address","intent":"manage_address","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"nashik road","intent":"manage_address","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"nashik road railway station","intent":"manage_address","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"nashik road railway station, nashik","intent":"manage_address","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"nashik road, near railway station","intent":"manage_address","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"near cbs bus stand opposite hdfc bank, gangapur road, nashik 422001","intent":"manage_address","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"old mumbai highway, nashik, maharashtra 422001","intent":"manage_address","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"option-3","intent":"manage_address","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"show me address","intent":"manage_address","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"show me my saved address ?? do you have it or not ?","intent":"manage_address","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"show mew saved address","intent":"manage_address","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"🏠 home - Sunder Nag","intent":"manage_address","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"📍 Location shared:\n11, P-11, Lekha Nagar Bypass Rd, Lekhanagar Colony, Cidco, Nashik, Maharashtra 422009, India\nHouse/Flat: 11\nRoad: Lekha Nagar Bypass Road\n\nCoordinates: 19.973463, 73.773071","intent":"manage_address","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"📍 Location shared:\n12/464/178, Sharanpur Gaothan, Nashik, Maharashtra 422002, India\n\nCoordinates: 20.000000, 73.780000","intent":"manage_address","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"📍 Location shared:\n12/464/178, Sharanpur Gaothan, Nashik, Maharashtra 422002, India\nContact: ramesh (992338388)\nType: home\n\nCoordinates: 20.000000, 73.780000","intent":"manage_address","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"📍 Location shared:\n2Q84+864, Narsinha Nagar, Datey Nagar, Veer Sawarkar Nagar, Nashik, Maharashtra 422013, India\nContact: Akash Agarwal (09158886329)\nType: home\n\nCoordinates: 20.015720, 73.755171","intent":"manage_address","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"📍 Location shared:\n2Q97+RFQ, Nashik Rd, D. K. Nagar, Nashik, Maharashtra 422013, India\nRoad: Nashik Road\n\nCoordinates: 20.019313, 73.763671","intent":"manage_address","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"📍 Location shared:\n42, Agra - Mumbai Hwy, Ashwin Nagar, Nashik, Maharashtra 422009, India\nHouse/Flat: 42\nRoad: Agra - Mumbai Highway\n\nCoordinates: 19.960531, 73.758725","intent":"manage_address","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"📍 Location shared:\n63, Agra - Mumbai Hwy, Ashwin Nagar, Nashik, Maharashtra 422009, India\nHouse/Flat: 63\nRoad: Agra - Mumbai Highway\n\nCoordinates: 19.960653, 73.758714","intent":"manage_address","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"📍 Location shared:\n799/19, Murlidhar Vajre Nagar, Govind Nagar, Old Cidco, Nashik, Maharashtra 422009, India\nHouse/Flat: 809\nRoad: Ring Road\n\nCoordinates: 19.986904, 73.775632","intent":"manage_address","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"📍 Location shared:\nASC-42, Ashwin Nagar, Nashik, Maharashtra 422009, India\n\nCoordinates: 19.960461, 73.758773","intent":"manage_address","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"📍 Location shared:\nASC-42, Ashwin Nagar, Nashik, Maharashtra 422009, India\n\nCoordinates: 19.960518, 73.758770","intent":"manage_address","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"📍 Location shared:\nASC-42, Ashwin Nagar, Nashik, Maharashtra 422009, India\n\nCoordinates: 19.960545, 73.758758","intent":"manage_address","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"📍 Location shared:\nASC-42, Ashwin Nagar, Nashik, Maharashtra 422009, India\nContact: Akash (9158886329)\nType: home\nRoad: New\n\nCoordinates: 19.960518, 73.758770","intent":"manage_address","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"📍 Location shared:\nASC-42, Ashwin Nagar, Nashik, Maharashtra 422009, India\nHouse/Flat: 10\nRoad: Fatehabad Road\n\nCoordinates: 19.960518, 73.758770","intent":"manage_address","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"📍 Location shared:\nASC-42, Ashwin Nagar, Nashik, Maharashtra 422009, India\nHouse/Flat: 3\nRoad: Avdumber Cidco Road\n\nCoordinates: 19.960518, 73.758770","intent":"manage_address","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"📍 Location shared:\nASC-42, Ashwin Nagar, Nashik, Maharashtra 422009, India\nHouse/Flat: BE3/25/3\nRoad: Sambhaji Stadium Road\n\nCoordinates: 19.960518, 73.758770","intent":"manage_address","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"📍 Location shared:\nASC-42, Ashwin Nagar, Nashik, Maharashtra 422009, India\nHouse/Flat: BE3/60/4\nRoad: Sihsth Nagar Road\n\nCoordinates: 19.960475, 73.758758","intent":"manage_address","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"📍 Location shared:\nASC-42, Ashwin Nagar, Nashik, Maharashtra 422009, India\nRoad: Barne Road\n\nCoordinates: 19.960518, 73.758770","intent":"manage_address","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"📍 Location shared:\nASC-42, Ashwin Nagar, Nashik, Maharashtra 422009, India\nRoad: Bhujbal Farm Road\n\nCoordinates: 19.960518, 73.758770","intent":"manage_address","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"📍 Location shared:\nASC-42, Ashwin Nagar, Nashik, Maharashtra 422009, India\nRoad: Mohammed Ali Road\n\nCoordinates: 19.960518, 73.758770","intent":"manage_address","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"📍 Location shared:\nASC-42, Ashwin Nagar, Nashik, Maharashtra 422009, India\nRoad: road\n\nCoordinates: 19.960518, 73.758770","intent":"manage_address","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"📍 Location shared:\nASC-43, Ashwin Nagar, Nashik, Maharashtra 422009, India\n\nCoordinates: 19.960454, 73.758762","intent":"manage_address","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"📍 Location shared:\nAkash Bunglow, Plot No.ME-38 , Sunderban Colony , Bhujbal farm lane, Shanti Nagar, Lekha Nagar, Nashik, Maharashtra 422009, India\n\nCoordinates: 19.977659, 73.776215","intent":"manage_address","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"📍 Location shared:\nAkash Bunglow, Plot No.ME-38 , Sunderban Colony , Bhujbal farm lane, Shanti Nagar, Lekha Nagar, Nashik, Maharashtra 422009, India\nHouse/Flat: 10\nRoad: Fatehabad Road\n\nCoordinates: 19.977659, 73.776215","intent":"manage_address","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"📍 Location shared:\nAkash Bunglow, Plot No.ME-38 , Sunderban Colony , Bhujbal farm lane, Shanti Nagar, Lekha Nagar, Nashik, Maharashtra 422009, India\nHouse/Flat: 3\nRoad: Avdumber Cidco Road\n\nCoordinates: 19.977659, 73.776215","intent":"manage_address","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"📍 Location shared:\nB-931/5, Maa Ganga Colony, Kalewadi, Pimpri-Chinchwad, Maharashtra 411017, India\n\nCoordinates: 19.970256, 73.786782","intent":"manage_address","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"📍 Location shared:\nBE3/25/3, N52/BE3/25/3, Sambhaji Stadium Rd, Sinhasta Nagar, Nashik, Maharashtra 422009, India\nHouse/Flat: BE3/25/3\nRoad: Sambhaji Stadium Road\n\nCoordinates: 19.963719, 73.759542","intent":"manage_address","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"📍 Location shared:\nBE3/25/3, N52/BE3/25/3, Sambhaji Stadium Rd, Sinhasta Nagar, Nashik, Maharashtra 422009, India\nHouse/Flat: BE3/25/3\nRoad: Sambhaji Stadium Road\n\nCoordinates: 19.970256, 73.786782","intent":"manage_address","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"📍 Location shared:\nBLOCK-A3, DWARKA SUNCREST SOCIETY, रामबाग कॉलनी, रहाटणी, पिंपरी चिंचवड, महाराष्ट्र 411017, India\n\nCoordinates: 19.970256, 73.786782","intent":"manage_address","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"📍 Location shared:\nCIDCO Nashik\nCoordinates: 19.9975, 73.7898","intent":"manage_address","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"📍 Location shared:\nCIDCO, Sector 5, Nashik\nCoordinates: 19.9975, 73.7898","intent":"manage_address","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"📍 Location shared:\nDehabhonoo Complex, Nashik Road, Nashik, Maharashtra 422006, India\nRoad: Bhujbal Farm Road\n\nCoordinates: 19.972890, 73.822952","intent":"manage_address","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"📍 Location shared:\nNashik Road Station\nCoordinates: 20.0063, 73.7789","intent":"manage_address","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"📍 Location shared:\nNashik Road Station, Nashik\nCoordinates: 20.0063, 73.7789","intent":"manage_address","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"📍 Location shared:\nP-17, Agra - Mumbai Hwy, MIDC Ambad, Nashik, Maharashtra 422010, India\nRoad: Agra - Mumbai Highway\n\nCoordinates: 19.957383, 73.754381","intent":"manage_address","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"📍 Location shared:\nPlot No.ME-38 , Sunderban Colony, Bhujbal Farm Rd, Shanti Nagar, Cidco, Nashik, Maharashtra 422009, India\nRoad: Bhujbal Farm Road\n\nCoordinates: 19.977687, 73.776268","intent":"manage_address","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"📍 Location shared:\nPlot No.ME-38 , Sunderban Colony, Bhujbal Farm Rd, Shanti Nagar, Cidco, Nashik, Maharashtra 422009, India\nRoad: Bhujbal Farm Road\n\nCoordinates: 19.977701, 73.776279","intent":"manage_address","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"📍 Location shared:\nPlot No.ME-38 , Sunderban Colony, Bhujbal Farm Rd, Shanti Nagar, Cidco, Nashik, Maharashtra 422009, India\nRoad: Bhujbal Farm Road\n\nCoordinates: 19.977704, 73.776280","intent":"manage_address","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"📍 Location shared:\nPlot No.ME-38 , Sunderban Colony, Bhujbal Farm Rd, Shanti Nagar, Cidco, Nashik, Maharashtra 422009, India\nRoad: Bhujbal Farm Road\n\nCoordinates: 19.977705, 73.776277","intent":"manage_address","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"📍 Location shared:\nPlot No.ME-38 , Sunderban Colony, Bhujbal Farm Rd, Shanti Nagar, Lekha Nagar, Nashik, Maharashtra 422009, India\nRoad: Bhujbal Farm Road\n\nCoordinates: 19.970256, 73.786782","intent":"manage_address","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"📍 Location shared:\nPlot No.ME-38 , Sunderban Colony, Bhujbal Farm Rd, Shanti Nagar, Lekha Nagar, Nashik, Maharashtra 422009, India\nRoad: Bhujbal Farm Road\n\nCoordinates: 19.977744, 73.776170","intent":"manage_address","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"📍 Location shared:\nSunder Nagar Colony, 38, New, Shanti Nagar, Lekha Nagar, Nashik, Maharashtra 422009, India\nRoad: New\n\nCoordinates: 19.977679, 73.776267","intent":"manage_address","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"📍 Location shared:\nSunder Nagar Colony, 38, New, Shanti Nagar, Lekha Nagar, Nashik, Maharashtra 422009, India\nRoad: New\n\nCoordinates: 19.977685, 73.776274","intent":"manage_address","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"📍 Location shared:\nSwaroop Bunglow, ME-44, Magha Sector, Shanti Nagar, Lekha Nagar, Nashik, Maharashtra 422009, India\n\nCoordinates: 19.977739, 73.775915","intent":"manage_address","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"📍 Location shared:\nWQVG+HFX, Pathardi Gaon, Pathardi Phata, Nashik, Maharashtra 422009, India\n\nCoordinates: 19.944689, 73.776456","intent":"manage_address","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"📍 Location shared:\nXPHG+QVG, Ambad Satpur Link Rd, Bajrang Nagar, Medage Nagar, Nashik, Maharashtra 422010, India\nRoad: Ambad Satpur Link Road\n\nCoordinates: 19.980098, 73.727259","intent":"manage_address","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"📍 Location shared:\nXQ5V+H8J, Gandhi Nagar Airport Area, Wadala Gaon, Nashik, Maharashtra 422006, India\n\nCoordinates: 19.959507, 73.793863","intent":"manage_address","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"📍 Location shared:\nXQCP+4JH, Chintamani Colony, Bhagirath Sankul, Nashik, Maharashtra 422009, India\n\nCoordinates: 19.970256, 73.786782","intent":"manage_address","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"📍 Location shared:\nXQCP+4JH, Chintamani Colony, Bhagirath Sankul, Nashik, Maharashtra 422009, India\nHouse/Flat: 3\nRoad: Avdumber Cidco Road\n\nCoordinates: 19.970256, 73.786782","intent":"manage_address","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"📍 Location shared:\nXQCP+4JH, Chintamani Colony, Bhagirath Sankul, Nashik, Maharashtra 422009, India\nHouse/Flat: BE3/25/3\nRoad: Sambhaji Stadium Road\n\nCoordinates: 19.970256, 73.786782","intent":"manage_address","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"📍 Location shared:\nXQCP+4JH, Chintamani Colony, Bhagirath Sankul, Nashik, Maharashtra 422009, India\nRoad: Barne Road\n\nCoordinates: 19.970256, 73.786782","intent":"manage_address","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"📍 Location shared:\nXQCP+4JH, Chintamani Colony, Bhagirath Sankul, Nashik, Maharashtra 422009, India\nRoad: Bhujbal Farm Road\n\nCoordinates: 19.970256, 73.786782","intent":"manage_address","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"📍 location shared:\ncbs bus stand, gangapur road, nashik\ncoordinates: 19.9834, 73.7800","intent":"manage_address","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"📍 location shared:\ncbs bus stand, nashik\ncoordinates: 19.9834, 73.7800","intent":"manage_address","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"📍 location shared:\nnashik road railway station\ncoordinates: 19.9975, 73.7898","intent":"manage_address","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"📍 location shared:\nnear cbs bus stand, gangapur road, nashik\ncoordinates: 19.9834, 73.7800","intent":"manage_address","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Add Kolhapuri Pav Bhaji (2 Butter Pav) to cart","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Add pizza to cart","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Aloo paratha lao","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Bappas pav bhaji","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Bhookh lagi hai yaar","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Biryani order karo","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Breakfast delivery","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Burger lao ek","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Can I get some food","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Can you find me some samosas","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Chai mangao please","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Chicken tikka order do","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Chinese food delivery","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Chinese food order karo","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Chole bhature order karo","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Coffee delivery","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Cold drink mangao","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Dal chawal lao","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Demo restaurant se samosa mangwao","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Dinner mangana hai","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Dinner options","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Donyoubhave food items ??","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Dosa mangana hai","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Fast food delivery","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Food delivery please","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Food options batao","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Fries chahiye","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Get me chai","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Get me some momos","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Get me some thali","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"I am hungry","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"I need lunch","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"I need to order paneer from ganesh sweets 1kg","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"I want a burger","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"I want dal makhani","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"I want dessert","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"I want pizza","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"I want samosa","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"I want to order biryani","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"I want to order chicken biryani","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"I want to order food","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"I want to order food aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"I want to order pizza","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"I want to order pizza, but only veg","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"I want to order xyz123nonexistentfood","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Ice cream delivery","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Ice cream order karo","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Idli sambhar bhejo","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Juice delivery chahiye","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Khana mangana hai","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Kuch khane ko manga do","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Lassi chahiye","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Looking for nearby restaurants","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Lunch kya hai aaj?","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Maggi mangao ghar pe","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Meetha kuch bhejo","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Momos lao yaar","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Mujhe khana chahiye","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Non veg special chahiye","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Noodles khana hai","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Order","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Order Food","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Order biryani for me","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Order food delivery","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Order fries","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Order kaha hai mera","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Order noodles","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Order roti sabzi","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Order some snacks","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Paneer butter masala chahiye","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Paneer butter masala please","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Paninouri","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Pasta order karna hai","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Pizza lao mujhe","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Rajma chawal bhejo","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Restaurant dikhao nearby","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Roti sabzi mangao","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Samosa khana hai","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Sandwich lao ek","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Shake lao chocolate wala","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Share me veg restaurant near me","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Snacks mangao kuch","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"South Indian food","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"South Indian khana dikhao","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Tandoori chicken order","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Thali bhejo ghar pe","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Vadapav","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Veg thali order do","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"What can I eat?","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"add coin pizza to cart","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"best restaurant nearby","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"biryani mangwao","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"biryni pizzza","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"btn food","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"burger","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"burgers","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"chai aur paratha","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"cheap food under 100","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"chicken momos chahiye","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"chicken tikka","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"chinese food","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"cold coffee","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"dinner order","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"dinner order karna hai","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"dominos pizza","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"extra cheese burger","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"food","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"friendship restaurant se order karo","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"healthy salads","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"hello, i want to order food","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"i think you not understand food to be picked up from my home and delivery to my frined ramesh 9923383838 at this address https://maps.app.goo.gl/Qh88p7phx2ANYDYc8","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"i want biryani","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"i want pizza","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"i want to order biryani","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"i want to order food","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"i want to order pizza","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"i want to order some food","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"ice cream","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"jain food mangwao","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"kal subah 9 baje ke liye order karna hai","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"khana order karna hai","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"kuch saaman mangwana hai","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"lunch karna hai","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"lunch ke liye kuch mangwao","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"mai bhut badiya","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"misal pav","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"momos","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"mujhe khana chahiye","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"mujhe pizza khana hai","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"order confirm karo","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"order from hotel raj darbar","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"order pizza","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"order place kar do","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"order place karo","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"order_food","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"pizza","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"pizza add karo","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"pizza chahiye","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"pizza order karo","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"place order","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"pure veg restaurant se order","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"samosa","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"samosa order karo","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"show me biryani options","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"show me chinese food","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"show me restaurants","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"small box about 2kg","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"small box, about 2kg","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"something quick to eat","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"south indian breakfast","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"spicy chicken kuch order karna hai","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"thali chahiye","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"thali combo","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"tiffin delivery","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"veg paneer dishes","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"veg thali order karo","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"खाना मंगाना है","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"चाय मंगाओ","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"डिनर मंगाना है","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"थाली भेजो","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"पिज़्ज़ा ऑर्डर करो","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"प्लेस एन ओर्डर नाओ","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"बिरयानी लाओ","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"भूख लगी है","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"मुझे pizza चाहिए delivery ke liye","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"मुझे खाना ऑर्डर करना है","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"मुझे खाना चाहिए","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"मुझे बिरयानी चाहिए","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"लंच का क्या है?","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"समोसा खाना है","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"हुआ है कि अ क्योंकि यू डू फॉर में टुड़े थे हुआ था  कर दो","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"🍕🍔🍟","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Aaj hi pickup ho sakti hai?","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Birthday gift bhejo friend ko","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Book a delivery pickup","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Book parcel delivery","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Books courier karni hain","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Bulk parcel sending","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"COD parcel bhej sakte ho?","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"City ke andar delivery","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Courier book karo","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Courier booking please","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Deliver gift to someone","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Deliver something for me","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Deliver this to another address","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Delivery book karni hai","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Delivery charges batao","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Delivery slot book karo","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Documents bhejne hain","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Doosre sheher bhejna hai","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Ek parcel book karo please","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Electronics safely bhejo","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Evening me pickup ho jayegi?","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Express courier chahiye","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Express delivery booking","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Food parcel bhejo","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Fragile item delivery","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Fragile item hai handle carefully","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Get my shoes picked up from my home and send it to https://maps.app.goo.gl/XPQkgjfSVZ1oQoCBA his name is ramesh 9923383838","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Gift bhejna hai friend ko","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Heavy parcel pickup","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Heavy parcel pickup karo","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Home delivery book karni hai","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"How to send a package?","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"I have something to send","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"I need courier service","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"I need parcel delivery to be done","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"I need to send a package to my friend","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"I need to send a parcel","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"I want to book a parcel","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"I want to send a package","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"I want to send a parcel","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"I want to send a parcel from College Road to Gangapur","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"I want to send my shoes to my friend","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Insurance wala courier","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Interstate parcel delivery","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Its a small box, about 2kg","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Jaldi delivery chahiye urgent","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Jewellery courier safely","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Kal subah pickup lagao","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Kapde bhejne hain ghar","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Kuch bhejwana hai","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Laptop send karna hai safely","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Local delivery book karo","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Local delivery booking","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Location send kara na","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Medicine bhejna hai urgent","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Medicine delivery needed","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Mobile phone delivery","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Multiple parcels bhejne hain","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"New parcel order","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Night delivery available hai?","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"No drop is different","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Office se pickup lena hai","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Office timing me pickup","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Package bhijwana hai","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Parcel bhejna hai","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Parcel bhejna hai urgently","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Parcel bhijwao address pe","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Parcel ka rate kya hai?","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Parcel pickup from my home","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Parcel pickup needed","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Pick up cloths from my home","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Pick up parcel from my home","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Pickup and drop service","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Pickup drop service chahiye","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Pickup from Nashik Road near train station","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Pickup lagao ghar se","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Pickup my shoes from my friends house and get it deliverd to my home","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Pickup schedule karo kal","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Prepaid delivery book karo","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Rakhi bhejna hai bhai ko","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Relative ke paas bhejna hai","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Return parcel bhejwana hai","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Samaan bhejna hai","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Same day delivery ho sakti hai?","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Same day delivery service","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Schedule a pickup","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Send clothes to relative","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Send documents","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Send electronics safely","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Send package to my friend","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Send to family","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Send within city","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Ship to another city","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Sunday ko bhi pickup hoti hai?","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Sweets bhejna hai Diwali pe","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Urgent courier needed","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Valuable item bhejna hai","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"[respond in english] پارسل آرڈر پلیس کرنا ہے","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"[respond in english] پرسل آرڈر پلیس کرنا ہے","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"book a delivery","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"book a parcel","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"book a parcel fro my friends place to my place","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"book parcel","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"btn parcel","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"can you pickup my shoes from my home and send to office , right now","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"cbs se satpur delivery","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"college road nashik","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"courier booking karo","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"courier chahiye","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"courier send karo","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"day is going fine but i am unable to send a parcel to my friend can you hekp me","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"delivery karni hai","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"document deliver karna hai","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"document pickup karwao","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"https://maps.app.goo.gl/ihnHG6fdcVMBxfjg9 - pickup location \n19.95061912699634, 73.80737438807638 - drop location","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"https://maps.app.goo.gl/jtztDWiqAihCsFLY8 pickup","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"i had earlier send parcel delivery did you forget","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"i need to quicky get my shoes pickup from my home and get it to badmintion court , rachna at gangapur road","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"i want to place a local parcel order","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"i want to send a parcel","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"i want to send a parcel from cidco to gangapur road","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"i want to send a parcel from college road nashik to gangapur road nashik","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"i want to send a parcel to suresh","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"i want to send a parcle","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"i want you to pickup items from my friends manav and get it delivered to my home","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"keys bhejni hai","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"lets pick home some stuff","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"mere ghar se picup karna hai and deliver karna hai 19.960170341095154, 73.77875612544705","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"mere ghar se shoes picup karna hai and deliver karna hai 19.960170341095154, 73.77875612544705","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"muje college road se saaman pickup karna hai , sab se badi gadi konsi hai?","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"mujhe parcel bhejna hai","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"mujhe parcel order karna hai","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"my home","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"nashik me parcel","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"need to book a parcel","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"need to pick up some stuff from my home","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"package deliver karo","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"parcel bhejni hai","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"parcel_booking","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"pay for order 103884","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"payment confirmed","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"pick my home","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"pickup and drop","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"pickup bag from my home and deliver it to my friend akash","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"pickup https://maps.app.goo.gl/1ENgXjqQP9JCDnvB7","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"pickup items from my home and delivery it to my office","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"pickup location 19.974357131880968, 73.75742854064794\ndrop location :- https://maps.app.goo.gl/iQREcUSC8M28yXWZ7\n\nput my number and name for pickup and drop let the driver speak to me only","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"pickup location is my home address and drop is my friend suresh , bike would be fine","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"pickup my home and drop at my frineds place","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"pickup my shoes","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"send a parcel to friend","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"send parcel","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"send parcel from college road nashik","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"send something","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"small box 2kg","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"small box with documents","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"what can you do , can you get my shoes picked from my home and delivered to my office","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"yes i want to place a parcel ordr","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"مجھے ایک پارسل ڈیلیوری کروانی ہے","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"इस पर्संखावोड़ लिएश कनना है  इस पर्संखावोड़ लिएश कनना है  इस पर्संखावोड़ लिएश कनना है  इस पर्संखावोड़ लिएश कनना है  इस पर्संखावोड़ लिएश कनना है  इस पर्संखावोड़ लिएश कनना है","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"उजे पर्सल भेजना है  उजे पर्सल भेजना है  उजे पर्सल भेजना है  उजे पर्सल भेजना है  उजे पर्सल भेजना है  उजे पर्सल भेजना है  उजे पर्सल भेजना है  उजे पर्सल भेजना है  उजे पर्सल भेजना है  उजे पर्सल भेजना है","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"एक पार्सन बेजना है अर्जक्ट  एक पार्सन बेजना है अर्जक्ट  एक पार्सन बेजना है अर्जक्ट","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"एक पार्सल पिक अप करना है मेरे घर से एड्रेस मेरे घर का यूज करना और ड्रॉप करने के लिए मैं आपको एड्रेस दूंगा","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"एक पार्सल बेशना है अर्जिंट मेरे घर से  एक पार्सल बेशना है अर्जिंट मेरे घर से","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"एक पार्सल भेजना है मेरे घर से पिक अप करना है और डिलिवरी एट्रिस मैं देम का भी","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"कपड़े भेजने हैं","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"कि मुझे एक ओडर प्लेस करना है पार्सल का तुरंत हुआ था","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"कि मुझे पार्सल बेचना है एक हुआ कि मुझे पार्सल बेचना है एक","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"कि मेरे घर से समान लेकर मेरे प्रेंड के हां पार्सल पहुंचाना है  कि अ  कि अ  कि अ","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"कुरियर बुक करो","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"गिफ्ट भेजना है","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"जल्दी डिलीवरी चाहिए","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"डिलीवरी बुक करनी है","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"दस्तावेज भेजने हैं","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"पाना सेकी","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"पारसल पिक अप नाओ","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"पार्सल भेजना है","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"पिक अप एट्रेस मेरे घर का ले लेना  पिक अप एट्रेस मेरे घर का ले लेना  पिक अप एट्रेस मेरे घर का ले लेना  पिक अप एट्रेस मेरे घर का ले लेना  पिक अप एट्रेस मेरे घर का ले लेना  पिक अप एट्रेस मेरे घर का ले लेना","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"पिकअप लगाओ","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"पैकेज भिजवाना है","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"मजहे अयक पअरसल आटर पलयस करनअ हे","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"मुझे एक पारसल बुक करना है जल्दी","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"मुझे एक पार्सल ओट प्रेस करना है अभी","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"मुझे एक पार्सल ओडर प्लेस करना है अभी  मुझे एक पार्सल ओडर प्लेस करना है अभी  मुझे एक पार्सल ओडर प्लेस करना है अभी  मुझे एक पार्सल ओडर प्लेस करना है अभी  मुझे एक पार्सल ओडर प्लेस करना है अभी  मुझे एक पार्सल ओडर प्लेस करना है अभी  मुझे एक पार्सल ओडर प्लेस करना है अभी","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"मुझे परसल बेजना है ना सिक से बूमबे","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"मुझे पार्सल ओर्डर प्लेस करना है।","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"मुझे पार्सल का ओर्डर करना है, फूड का नहीं।","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"मुझे पासर ओर्डर प्लेश करना है मेरे घर से, मेरे सेव डेटरिस में है।","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"मुझे मेरे घर से जूते मेरे फ्रेंड के हाँ भेजने हैं","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"मेरे घर से एक पार्चल पिक अप करना है, मेरे घर का एड्रेस है तुम्हारे पास।","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"मेरे घर से पिक अप करना है और आगे डिलिवर करना है","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"मेरे घर से मेरे शूज मनाने मुझे मेरे घर पे  मेरे घर से मेरे शूज मनाने मुझे मेरे घर पे","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"वासल कोडर प्लीस करना है  वासल कोडर प्लीस करना है  वासल कोडर प्लीस करना है  वासल कोडर प्लीस करना है  वासल कोडर प्लीस करना है  वासल कोडर प्लीस करना है  वासल कोडर प्लीस करना है  वासल कोडर प्लीस करना है  वासल कोडर प्लीस करना है","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"वो बद्याँ परसन्या","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"सामान भेजना है","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Game","intent":"play_game","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Play game","intent":"play_game","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"earn rewards","intent":"play_game","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"lets play game","intent":"play_game","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"play game","intent":"play_game","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"cart se hatao","intent":"remove_from_cart","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"remove from cart","intent":"remove_from_cart","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"I just gave it","intent":"repeat_order","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"YES","intent":"repeat_order","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"order 103892","intent":"repeat_order","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"put mine","intent":"repeat_order","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"repeat my last order","intent":"repeat_order","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"what did i tell you earlier?","intent":"repeat_order","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"yes","intent":"repeat_order","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"कर दो कि अ कर दो कर दो कर दो कर दो कर दो कर दो कर दो","intent":"repeat_order","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Add 12998 to cart","intent":"search_product","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Bhagat tarachand","intent":"search_product","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Do you have c bhagat tarafhand","intent":"search_product","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"From which restaurant","intent":"search_product","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Near byk college","intent":"search_product","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"buy groceries from kirana store","intent":"search_product","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"i want to search for pizza","intent":"search_product","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"kya karsakte hai aap","intent":"search_product","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"near cbs, nashik","intent":"search_product","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"near kthm college","intent":"search_product","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"near nashik road railway station","intent":"search_product","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"search for pizza","intent":"search_product","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"show me paneer dishes","intent":"search_product","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"show me restaurants near me","intent":"search_product","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"south indian","intent":"search_product","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"what can you suggest","intent":"search_product","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"📋 List Menu","intent":"search_product","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"📍 Pick from Map","intent":"search_product","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Book a cab to airport","intent":"service_inquiry","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"I don't see any catogery","intent":"service_inquiry","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"I don't see any vechile","intent":"service_inquiry","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Pls msg u r service","intent":"service_inquiry","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Show me catogery","intent":"service_inquiry","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"What can you do","intent":"service_inquiry","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"What more can you offer","intent":"service_inquiry","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"[respond in english] What can you do? تم کیا کر سکتے ہو؟","intent":"service_inquiry","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"contact_support","intent":"service_inquiry","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"delivery locations","intent":"service_inquiry","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"genie service","intent":"service_inquiry","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"i dont see any vechile","intent":"service_inquiry","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"parcel ka rate kya hai","intent":"service_inquiry","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"same day delivery","intent":"service_inquiry","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"store timings","intent":"service_inquiry","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"support se baat karo","intent":"service_inquiry","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"talk to support","intent":"service_inquiry","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"tell me about mangwale","intent":"service_inquiry","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"what can you do","intent":"service_inquiry","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"what can you do ?","intent":"service_inquiry","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"what can you do more","intent":"service_inquiry","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"what can you do?","intent":"service_inquiry","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"what payment methods do you accept","intent":"service_inquiry","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"what r u good at","intent":"service_inquiry","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"what services do you offer","intent":"service_inquiry","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"what vechiles you have ?","intent":"service_inquiry","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"which vechiles you have ?","intent":"service_inquiry","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"whta can you do","intent":"service_inquiry","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"[respond in english] Thank you.","intent":"thanks","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"cool, thanks","intent":"thanks","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"thank you","intent":"thanks","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"thanks for the help earlier","intent":"thanks","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"thanks, that was nice of you","intent":"thanks","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"*Continue setting up your account*\n\nYou have a few steps left to get started with WhatsApp Business. Get detailed instructions and track progress for your number +91 97301 99571 in *WhatsApp Manager's* new *Setup guidance*.\n\nGo to your *Setup guidance* on *desktop*: https://business.facebook.com/latest/whatsapp%5Fmanager/setup%5Fguidance?nav%5Fref=nudge&business%5Fid=1280793018792241&lang=en_US&asset%5Fid=1538156784195596&phone%5Fnumber%5Fid=908689285655004","intent":"track_order","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"103891 Order","intent":"track_order","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Bhai mera order ka kya scene hai?","intent":"track_order","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Can you help me find my package","intent":"track_order","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Can you tell me where my package is?","intent":"track_order","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Check delivery status","intent":"track_order","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Check karo order kitna door hai","intent":"track_order","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Delivery boy kaha hai?","intent":"track_order","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Delivery kab tak aayegi?","intent":"track_order","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Delivery out ho gayi?","intent":"track_order","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Delivery status check karo","intent":"track_order","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Dispatch ho gaya kya?","intent":"track_order","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"ETA for my delivery?","intent":"track_order","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"ETA kya hai delivery ka?","intent":"track_order","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Food delivery kab tak?","intent":"track_order","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Give me tracking update","intent":"track_order","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Has my order been shipped?","intent":"track_order","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"How can I check my order status?","intent":"track_order","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"I need to track something I ordered","intent":"track_order","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"I ordered something yesterday where is it","intent":"track_order","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"I want to see where my delivery is","intent":"track_order","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"I want to track my parcel","intent":"track_order","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Is my order out for delivery?","intent":"track_order","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Kab tak milega mera order?","intent":"track_order","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Khana kaha pahucha?","intent":"track_order","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Kya status hai mera order ka?","intent":"track_order","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Live location chahiye","intent":"track_order","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Mera order aa gaya?","intent":"track_order","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Mera order kaha hai?","intent":"track_order","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Mera package kidhar hai?","intent":"track_order","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Mera samaan kaha pahucha?","intent":"track_order","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Meri delivery ka kya hua?","intent":"track_order","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"My delivery is late please check","intent":"track_order","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"My order tracking please","intent":"track_order","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Order ID: #103884","intent":"track_order","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Order assigned hai kya?","intent":"track_order","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Order movement dikhao","intent":"track_order","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Order pohoch gaya kya?","intent":"track_order","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Order status","intent":"track_order","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Order status 103891","intent":"track_order","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Order status batao","intent":"track_order","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Order status check","intent":"track_order","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Order track karna hai","intent":"track_order","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Order tracking chahiye","intent":"track_order","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Package kaha hai abhi?","intent":"track_order","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Package shipped hua ya nahi?","intent":"track_order","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Parcel ka update do","intent":"track_order","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Parcel kab pick hua?","intent":"track_order","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Please track my recent order","intent":"track_order","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Pls track","intent":"track_order","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Rider ka location batao","intent":"track_order","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Show me my order tracking","intent":"track_order","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Show tracking info","intent":"track_order","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Track food order","intent":"track_order","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Track karo mera parcel","intent":"track_order","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Track my delivery","intent":"track_order","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Track my order","intent":"track_order","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Track my parcel delivery","intent":"track_order","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Tracking dikhao please","intent":"track_order","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Tracking number se check karo","intent":"track_order","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"What is the status of my order?","intent":"track_order","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"When will my parcel arrive?","intent":"track_order","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Where is my food delivery?","intent":"track_order","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Where is my order?","intent":"track_order","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Wheres my stuff","intent":"track_order","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Yaar check kar de delivery kab aayegi","intent":"track_order","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"can you share me the status of this order","intent":"track_order","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"is the payment done for 103892","intent":"track_order","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"my orders status","intent":"track_order","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"order ka status","intent":"track_order","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"parcel delivery order from my friends place in at college road my office mangwale","intent":"track_order","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"parcel order","intent":"track_order","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"track my order","intent":"track_order","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"track my order 12345","intent":"track_order","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"what is the order status now","intent":"track_order","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"where is my order","intent":"track_order","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"ऑर्डर का स्टेटस बताओ","intent":"track_order","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"कब तक मिलेगा?","intent":"track_order","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"खाना कहां पहुंचा?","intent":"track_order","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"ट्रैकिंग दिखाओ","intent":"track_order","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"डिलीवरी स्टेटस चेक करो","intent":"track_order","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"पार्सल ट्रैक करो","intent":"track_order","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"मेरा ऑर्डर कहां है?","intent":"track_order","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"मेरा पैकेज कहां है?","intent":"track_order","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"मेरा सामान कहां पहुंचा?","intent":"track_order","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"मेरी डिलीवरी कब आएगी?","intent":"track_order","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"123456","intent":"unknown","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"2","intent":"unknown","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"9923383838 akash","intent":"use_my_details","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"9923833883 ajasa","intent":"use_my_details","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Akash 9923383838","intent":"use_my_details","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Details send krra","intent":"use_my_details","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Harshvardhan Patil\nFlat F34\n7588708810","intent":"use_my_details","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Jajshs 883737383","intent":"use_my_details","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"John Doe 9876543210","intent":"use_my_details","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Priya 9876543210","intent":"use_my_details","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Priya 9923383838","intent":"use_my_details","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Put my name","intent":"use_my_details","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Rahul 9876543210","intent":"use_my_details","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Rahul 9999999923","intent":"use_my_details","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Rahul 9999999999","intent":"use_my_details","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Rahul Sharma 9876543210","intent":"use_my_details","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Rahul dev 9876543210","intent":"use_my_details","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Raj 9923383838","intent":"use_my_details","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Raj singh 992736282","intent":"use_my_details","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Ramesh bhai 9923383838","intent":"use_my_details","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Recipient name is Rahul and phone is 9123456789","intent":"use_my_details","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"Recipient: Rahul, Phone: 9876543210","intent":"use_my_details","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"akash 9923383838","intent":"use_my_details","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"akash 9923596798","intent":"use_my_details","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"akasj 9158886329","intent":"use_my_details","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"call me akash","intent":"use_my_details","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"i am the rcecipt","intent":"use_my_details","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"jhhhh 9988899987","intent":"use_my_details","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"my name and number","intent":"use_my_details","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"naresh 99999987","intent":"use_my_details","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"priya 9123456789","intent":"use_my_details","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"priya 9923383838","intent":"use_my_details","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"put my details","intent":"use_my_details","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"put my name and number","intent":"use_my_details","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"rahul","intent":"use_my_details","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"rahul 9876543210","intent":"use_my_details","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"rahul 9923383838","intent":"use_my_details","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"rahul sharma 9876543210","intent":"use_my_details","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"raj 9923383838","intent":"use_my_details","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"raj 9983213121","intent":"use_my_details","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"raj 999999999","intent":"use_my_details","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"raj 9999999999","intent":"use_my_details","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"ramesh","intent":"use_my_details","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"ramesh 9923383838","intent":"use_my_details","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"shantanu, 9370407508","intent":"use_my_details","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"use mine","intent":"use_my_details","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"use my","intent":"use_my_details","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"कि वाइज मैं नेम राज है मैं नॉट राज मैं नेम फॉर माय अकाउंट कर दो","intent":"use_my_details","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"नेशद","intent":"use_my_details","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"cart dikhao","intent":"view_cart","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"kya hai cart me","intent":"view_cart","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"show my cart","intent":"view_cart","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"nashik mai sabse best kya hai","intent":"browse_menu","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"kya kya hai khane ko","intent":"browse_menu","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"menu dikha do","intent":"browse_menu","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"kya available hai","intent":"browse_menu","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"options batao","intent":"browse_menu","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"aaj kya hai special","intent":"browse_menu","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"menu dekhna hai","intent":"browse_menu","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"kya order kar sakta hu","intent":"browse_menu","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"nashik me kya famous hai","intent":"browse_menu","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"yahan kya milta hai","intent":"browse_menu","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"kya hai khane me","intent":"browse_menu","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"food options dikha","intent":"browse_menu","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"kya kya mil sakta hai","intent":"browse_menu","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"menu open karo","intent":"browse_menu","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"khane ki list dikha","intent":"browse_menu","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"food menu please","intent":"browse_menu","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"sabkuch dikha do","intent":"browse_menu","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"all items dikha do","intent":"browse_menu","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"kya order karu samajh nahi aa raha","intent":"browse_menu","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"suggest karo kya order karu","intent":"browse_menu","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"batao kya khau","intent":"browse_menu","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"menu show karo","intent":"browse_menu","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"kya hai aapke paas","intent":"browse_menu","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"sab options dikha do","intent":"browse_menu","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"categories dikha","intent":"browse_menu","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"missal konsi konsi hai","intent":"browse_category","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"pizza ki variety dikha","intent":"browse_category","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"biryani ke types batao","intent":"browse_category","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"kitni type ki missal hai","intent":"browse_category","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"burger ke options dikha","intent":"browse_category","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"south indian kya kya hai","intent":"browse_category","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"chinese items dikha","intent":"browse_category","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"north indian food dikha","intent":"browse_category","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"desserts dikha do","intent":"browse_category","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"sweets ki variety","intent":"browse_category","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"drinks ki list","intent":"browse_category","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"thali ke options","intent":"browse_category","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"snacks dikha do","intent":"browse_category","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"breakfast me kya hai","intent":"browse_category","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"dinner ke options","intent":"browse_category","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"veg items dikha","intent":"browse_category","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"non veg options batao","intent":"browse_category","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"mutton dishes dikha","intent":"browse_category","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"chicken items list karo","intent":"browse_category","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"paneer dishes dikha","intent":"browse_category","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"dal ke options","intent":"browse_category","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"rice items dikha","intent":"browse_category","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"roti chapati options","intent":"browse_category","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"combo offers dikha","intent":"browse_category","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"family packs hai kya","intent":"browse_category","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"best kya hai","intent":"ask_recommendation","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"kya recommend karoge","intent":"ask_recommendation","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"achha kya hai yahan","intent":"ask_recommendation","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"sabse achha kya hai","intent":"ask_recommendation","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"konsa order karu","intent":"ask_recommendation","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"top rated kya hai","intent":"ask_recommendation","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"popular kya hai","intent":"ask_recommendation","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"trending kya hai aaj","intent":"ask_recommendation","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"sabse zyada order hota kya hai","intent":"ask_recommendation","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"log kya prefer karte hai","intent":"ask_recommendation","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"famous dish kya hai","intent":"ask_recommendation","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"best seller kya hai","intent":"ask_recommendation","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"must try kya hai","intent":"ask_recommendation","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"special kya hai aaj","intent":"ask_recommendation","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"customer favorite kya hai","intent":"ask_recommendation","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"highest rated kya hai","intent":"ask_recommendation","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"5 star rating wale dikha","intent":"ask_recommendation","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"best reviewed items","intent":"ask_recommendation","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"top picks dikha","intent":"ask_recommendation","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"editor choice kya hai","intent":"ask_recommendation","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"recommended kya hai","intent":"ask_recommendation","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"acha wala suggest karo","intent":"ask_recommendation","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"quality wala dikha","intent":"ask_recommendation","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"tasty kya hai","intent":"ask_recommendation","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"mast wala batao","intent":"ask_recommendation","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"aditya mutton ka famous kya hai","intent":"ask_famous","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"is restaurant ki specialty kya hai","intent":"ask_famous","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"inka special kya hai","intent":"ask_famous","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"yahan kya famous hai","intent":"ask_famous","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"hotel taj ka best kya hai","intent":"ask_famous","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"ganesh sweet mart ka famous","intent":"ask_famous","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"bhagat tarachand special kya hai","intent":"ask_famous","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"inka signature dish kya hai","intent":"ask_famous","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"ye kiske liye famous hai","intent":"ask_famous","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"yahan kya try karna chahiye","intent":"ask_famous","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"inka USP kya hai","intent":"ask_famous","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"must have kya hai yahan","intent":"ask_famous","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"is jagah ki specialty","intent":"ask_famous","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"ye kis cheez ke liye jana jata hai","intent":"ask_famous","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"inka best dish kya hai","intent":"ask_famous","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"ye kyu famous hai","intent":"ask_famous","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"yahan sab log kya khate hai","intent":"ask_famous","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"iska star item kya hai","intent":"ask_famous","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"chef special kya hai","intent":"ask_famous","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"house special dikha","intent":"ask_famous","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"kiska jaldi milega","intent":"check_availability","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"sabse fast delivery kiska hai","intent":"check_availability","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"turant kya mil sakta hai","intent":"check_availability","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"abhi available kya hai","intent":"check_availability","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"10 minute me kya milega","intent":"check_availability","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"jaldi chahiye kya hai ready","intent":"check_availability","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"express delivery wale items","intent":"check_availability","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"fastest option kya hai","intent":"check_availability","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"quick delivery wale dikha","intent":"check_availability","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"urgent chahiye kya milega","intent":"check_availability","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"ready to deliver kya hai","intent":"check_availability","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"instant delivery options","intent":"check_availability","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"nearby se kya milega jaldi","intent":"check_availability","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"15 min me delivery ho sakti hai kya","intent":"check_availability","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"bhut bhook lagi jaldi do","intent":"check_availability","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"hungry hai jaldi mangwa","intent":"check_availability","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"quick wala chahiye","intent":"check_availability","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"late nahi hona chahiye","intent":"check_availability","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"time pe delivery hogi kya","intent":"check_availability","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"kitne time me aayega","intent":"check_availability","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"naan paneer kiska jaldi milsakta hai","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"paneer tikka jaldi chahiye","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"biryani urgent bhej do","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"pizza order karo fast","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"jaldi se khana bhej do","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"turant delivery chahiye food ki","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"abhi khana mangwa do please","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"hunger emergency hai","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"bhook lagi hai jaldi","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"kuch khane ko bhej do fast","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"3kg paneer bhej do","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"5 kilo chicken chahiye","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"2 kg mutton order karo","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"1 kg sweets bhej do","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"half kg paneer chahiye","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"250 gram butter order karo","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"500ml milk bhej do","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"1 liter dahi chahiye","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"ganesh ka paneer bhej do","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"bhagat ka khana chahiye","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"inayat cafe se order karo","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"hotel taj se biryani","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"demo restaurant se pizza","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"sweet mart se mithai","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"mere office pe bhej do","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"ghar pe delivery karo","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"work location pe chahiye","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"college address pe bhej do","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"hostel me deliver karo","intent":"order_food","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"ghar se pickup karke office bhej do","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"ek packet bhejna hai ghar se","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"documents pickup karwa do","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"parcel bhej na hai dusri jagah","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"samaan shift karna hai","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"bike se delivery chahiye","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"courier bhej na hai local","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"pickup and drop chahiye","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"delivery boy bhej do","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"rider chahiye pickup ke liye","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"coolie chahiye samaan ke liye","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"local delivery kara do","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"same city delivery chahiye","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"within nashik bhej na hai","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}
+{"text":"intra city courier","intent":"parcel_booking","entities":{},"tone":"neutral","confidence":0.9}

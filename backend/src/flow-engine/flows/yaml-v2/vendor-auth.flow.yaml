@@ -1,0 +1,304 @@
+# ============================================================
+# VENDOR AUTHENTICATION FLOW v1.0
+# ============================================================
+# Authentication flow for restaurant/store vendors:
+#   - Email + Password login
+#   - Profile loading
+#   - Quick actions menu
+#   - Multi-channel support (WhatsApp, Web)
+# ============================================================
+
+id: vendor_auth_v1
+name: Vendor Authentication
+description: Login flow for restaurant and store vendors
+version: "1.0.0"
+module: vendor
+trigger: vendor_login
+enabled: true
+
+contextSchema:
+  # Vendor Credentials
+  email: { type: string }
+  password: { type: string }
+  
+  # Vendor Profile
+  vendor_id: { type: number }
+  vendor_name: { type: string }
+  store_name: { type: string }
+  store_id: { type: number }
+  
+  # Session
+  vendor_token: { type: string }
+  is_vendor_authenticated: { type: boolean, default: false }
+  login_attempts: { type: number, default: 0 }
+
+initialState: welcome_vendor
+finalStates: [vendor_authenticated, vendor_cancelled]
+
+constants:
+  MAX_LOGIN_ATTEMPTS: 3
+
+states:
+  # ============================================================
+  # WELCOME
+  # ============================================================
+  welcome_vendor:
+    type: action
+    description: Greet vendor and ask for credentials
+    actions:
+      - id: greet
+        executor: response
+        config:
+          message: |
+            🏪 *Vendor Portal*
+            
+            Welcome! Please login to manage your store.
+            
+            Enter your registered *email address*:
+    transitions:
+      success: collect_email
+
+  # ============================================================
+  # EMAIL COLLECTION
+  # ============================================================
+  collect_email:
+    type: input
+    description: Collect vendor email
+    inputConfig:
+      variable: email
+      validation:
+        pattern: "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$"
+        errorMessage: "Please enter a valid email address"
+      prompt: "Enter your email:"
+    actions:
+      - id: save_email
+        executor: response
+        config:
+          saveToContext:
+            email: "{{input}}"
+    transitions:
+      valid: ask_password
+      invalid: invalid_email
+
+  invalid_email:
+    type: action
+    actions:
+      - id: error_msg
+        executor: response
+        config:
+          message: |
+            ❌ That doesn't look like a valid email.
+            
+            Please enter your registered email address (e.g., vendor@example.com):
+    transitions:
+      success: collect_email
+
+  # ============================================================
+  # PASSWORD COLLECTION
+  # ============================================================
+  ask_password:
+    type: action
+    actions:
+      - id: ask
+        executor: response
+        config:
+          message: |
+            ✅ Email: *{{email}}*
+            
+            Now enter your *password*:
+    transitions:
+      success: collect_password
+
+  collect_password:
+    type: input
+    description: Collect vendor password
+    inputConfig:
+      variable: password
+      validation:
+        minLength: 4
+        errorMessage: "Password must be at least 4 characters"
+      prompt: "Enter password:"
+      sensitive: true
+    actions:
+      - id: save_password
+        executor: response
+        config:
+          saveToContext:
+            password: "{{input}}"
+    transitions:
+      valid: attempt_login
+      invalid: invalid_password
+
+  invalid_password:
+    type: action
+    actions:
+      - id: error_msg
+        executor: response
+        config:
+          message: "❌ Password too short. Please try again:"
+    transitions:
+      success: collect_password
+
+  # ============================================================
+  # LOGIN ATTEMPT
+  # ============================================================
+  attempt_login:
+    type: action
+    description: Attempt vendor login via PHP backend
+    actions:
+      - id: login
+        executor: php_api
+        config:
+          action: vendor_login
+          email: "{{email}}"
+          password: "{{password}}"
+        output: login_result
+    transitions:
+      success: check_login_result
+      error: login_failed
+
+  check_login_result:
+    type: decision
+    conditions:
+      - expression: "context.login_result?.success && context.login_result?.data?.token"
+        event: success
+      - expression: "context.login_attempts >= 2"
+        event: max_attempts
+    transitions:
+      success: load_vendor_profile
+      max_attempts: too_many_attempts
+      default: login_failed
+
+  login_failed:
+    type: action
+    actions:
+      - id: increment_attempts
+        executor: response
+        config:
+          saveToContext:
+            login_attempts: "{{login_attempts + 1}}"
+      
+      - id: error_msg
+        executor: response
+        config:
+          message: |
+            ❌ Login failed. Please check your email and password.
+            
+            Attempt {{login_attempts + 1}} of 3
+            
+            Enter your *email* again:
+    transitions:
+      success: collect_email
+
+  too_many_attempts:
+    type: action
+    actions:
+      - id: blocked
+        executor: response
+        config:
+          message: |
+            🚫 Too many failed attempts.
+            
+            Please try again later or contact support if you've forgotten your password.
+          buttons:
+            - id: contact_support
+              title: Contact Support
+            - id: try_again
+              title: Try Again Later
+    transitions:
+      success: vendor_cancelled
+
+  # ============================================================
+  # PROFILE LOADING
+  # ============================================================
+  load_vendor_profile:
+    type: action
+    description: Load vendor profile after successful login
+    actions:
+      - id: save_token
+        executor: response
+        config:
+          saveToContext:
+            vendor_token: "{{login_result.data.token}}"
+            is_vendor_authenticated: true
+      
+      - id: get_profile
+        executor: php_api
+        config:
+          action: get_vendor_profile
+          token: "{{login_result.data.token}}"
+        output: vendor_profile
+    transitions:
+      success: profile_loaded
+      error: profile_error
+
+  profile_loaded:
+    type: action
+    actions:
+      - id: save_profile
+        executor: response
+        config:
+          saveToContext:
+            vendor_id: "{{vendor_profile.id}}"
+            vendor_name: "{{vendor_profile.firstName}}"
+            store_name: "{{vendor_profile.storeName}}"
+            store_id: "{{vendor_profile.storeId}}"
+      
+      - id: welcome_back
+        executor: response
+        config:
+          message: |
+            ✅ *Welcome, {{vendor_profile.firstName}}!*
+            
+            🏪 Store: *{{vendor_profile.storeName}}*
+            
+            What would you like to do?
+          buttons:
+            - id: view_orders
+              title: 📦 Current Orders
+            - id: update_menu
+              title: 📜 Manage Menu
+            - id: order_history
+              title: 📊 Order History
+            - id: go_offline
+              title: 🔴 Go Offline
+    transitions:
+      success: vendor_authenticated
+
+  profile_error:
+    type: action
+    actions:
+      - id: error_msg
+        executor: response
+        config:
+          message: |
+            ⚠️ Login successful but couldn't load your profile.
+            
+            Please try again or contact support.
+    transitions:
+      success: vendor_cancelled
+
+  # ============================================================
+  # FINAL STATES
+  # ============================================================
+  vendor_authenticated:
+    type: final
+    description: Vendor successfully authenticated
+    actions:
+      - id: complete
+        executor: response
+        config:
+          saveToContext:
+            flow_completed: true
+            authenticated_user_type: "vendor"
+
+  vendor_cancelled:
+    type: final
+    description: Vendor authentication cancelled or failed
+    actions:
+      - id: complete
+        executor: response
+        config:
+          saveToContext:
+            flow_completed: false
+            authenticated_user_type: null

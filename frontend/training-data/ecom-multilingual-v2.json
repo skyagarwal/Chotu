@@ -1,0 +1,202 @@
+{
+  "name": "E-commerce Multilingual Dataset v2",
+  "description": "Enhanced e-commerce training data with English, Hindi, and Marathi support",
+  "language": ["en", "hi", "mr"],
+  "module": "ecom",
+  "version": "2.0",
+  "intents": [
+    {
+      "intent": "search_product",
+      "description": "User wants to search or browse products",
+      "examples": [
+        {"text": "Show me milk products", "language": "en", "entities": {"product_type": "milk"}},
+        {"text": "I want to buy groceries", "language": "en", "entities": {"category": "groceries"}},
+        {"text": "Search for Amul products", "language": "en", "entities": {"brand": "Amul"}},
+        {"text": "Show organic vegetables", "language": "en", "entities": {"product_type": "vegetables", "specification": "organic"}},
+        {"text": "mujhe doodh chahiye", "language": "hi", "entities": {"product_type": "doodh"}},
+        {"text": "kirana saman dikhao", "language": "hi", "entities": {"category": "kirana"}},
+        {"text": "amul ke products dikhao", "language": "hi", "entities": {"brand": "Amul"}},
+        {"text": "fresh sabzi chahiye", "language": "hi", "entities": {"product_type": "sabzi", "specification": "fresh"}},
+        {"text": "mala dudh pahije", "language": "mr", "entities": {"product_type": "dudh"}},
+        {"text": "kirana saman dakhva", "language": "mr", "entities": {"category": "kirana"}},
+        {"text": "amul che products dakhva", "language": "mr", "entities": {"brand": "Amul"}},
+        {"text": "taja bhaji pahije", "language": "mr", "entities": {"product_type": "bhaji", "specification": "taja"}}
+      ]
+    },
+    {
+      "intent": "add_to_cart",
+      "description": "User wants to add items to shopping cart",
+      "examples": [
+        {"text": "Add 2 liters milk to cart", "language": "en", "entities": {"quantity": "2", "unit": "liters", "product_type": "milk"}},
+        {"text": "Add this to my cart", "language": "en", "entities": {}},
+        {"text": "I want 5 kg rice", "language": "en", "entities": {"quantity": "5", "unit": "kg", "product_type": "rice"}},
+        {"text": "Add Amul butter", "language": "en", "entities": {"brand": "Amul", "product_type": "butter"}},
+        {"text": "cart mein 2 liter doodh daalo", "language": "hi", "entities": {"quantity": "2", "unit": "liter", "product_type": "doodh"}},
+        {"text": "yeh cart mein add karo", "language": "hi", "entities": {}},
+        {"text": "5 kilo chawal chahiye", "language": "hi", "entities": {"quantity": "5", "unit": "kilo", "product_type": "chawal"}},
+        {"text": "amul butter cart mein daalo", "language": "hi", "entities": {"brand": "Amul", "product_type": "butter"}},
+        {"text": "cart madhe 2 liter dudh ghala", "language": "mr", "entities": {"quantity": "2", "unit": "liter", "product_type": "dudh"}},
+        {"text": "he cart madhe add kara", "language": "mr", "entities": {}},
+        {"text": "5 kilo tandul pahije", "language": "mr", "entities": {"quantity": "5", "unit": "kilo", "product_type": "tandul"}},
+        {"text": "amul butter cart madhe ghala", "language": "mr", "entities": {"brand": "Amul", "product_type": "butter"}}
+      ]
+    },
+    {
+      "intent": "view_cart",
+      "description": "User wants to see items in cart",
+      "examples": [
+        {"text": "Show my cart", "language": "en", "entities": {}},
+        {"text": "What's in my cart", "language": "en", "entities": {}},
+        {"text": "View cart items", "language": "en", "entities": {}},
+        {"text": "Check my shopping cart", "language": "en", "entities": {}},
+        {"text": "mera cart dikhao", "language": "hi", "entities": {}},
+        {"text": "cart mein kya hai", "language": "hi", "entities": {}},
+        {"text": "cart ke items dikhao", "language": "hi", "entities": {}},
+        {"text": "shopping cart check karo", "language": "hi", "entities": {}},
+        {"text": "majha cart dakhva", "language": "mr", "entities": {}},
+        {"text": "cart madhe kay aahe", "language": "mr", "entities": {}},
+        {"text": "cart che items dakhva", "language": "mr", "entities": {}},
+        {"text": "shopping cart check kara", "language": "mr", "entities": {}}
+      ]
+    },
+    {
+      "intent": "checkout",
+      "description": "User wants to proceed to checkout and pay",
+      "examples": [
+        {"text": "I want to checkout", "language": "en", "entities": {}},
+        {"text": "Proceed to payment", "language": "en", "entities": {}},
+        {"text": "Complete my order", "language": "en", "entities": {}},
+        {"text": "Place order now", "language": "en", "entities": {}},
+        {"text": "checkout karna hai", "language": "hi", "entities": {}},
+        {"text": "payment karna hai", "language": "hi", "entities": {}},
+        {"text": "order complete karo", "language": "hi", "entities": {}},
+        {"text": "abhi order karo", "language": "hi", "entities": {}},
+        {"text": "checkout karaycha aahe", "language": "mr", "entities": {}},
+        {"text": "payment karaycha aahe", "language": "mr", "entities": {}},
+        {"text": "order complete kara", "language": "mr", "entities": {}},
+        {"text": "aata order kara", "language": "mr", "entities": {}}
+      ]
+    },
+    {
+      "intent": "track_order",
+      "description": "User wants to track their order",
+      "examples": [
+        {"text": "Track my order", "language": "en", "entities": {}},
+        {"text": "Where is my order", "language": "en", "entities": {}},
+        {"text": "Order status", "language": "en", "entities": {}},
+        {"text": "Track order 12345", "language": "en", "entities": {"order_id": "12345"}},
+        {"text": "mera order kaha hai", "language": "hi", "entities": {}},
+        {"text": "order track karo", "language": "hi", "entities": {}},
+        {"text": "order ka status", "language": "hi", "entities": {}},
+        {"text": "order 12345 track karo", "language": "hi", "entities": {"order_id": "12345"}},
+        {"text": "majha order kuthe aahe", "language": "mr", "entities": {}},
+        {"text": "order track kara", "language": "mr", "entities": {}},
+        {"text": "order cha status", "language": "mr", "entities": {}},
+        {"text": "order 12345 track kara", "language": "mr", "entities": {"order_id": "12345"}}
+      ]
+    },
+    {
+      "intent": "filter_products",
+      "description": "User wants to apply filters to product search",
+      "examples": [
+        {"text": "Show products under 500 rupees", "language": "en", "entities": {"price_max": "500"}},
+        {"text": "Filter by brand Amul", "language": "en", "entities": {"brand": "Amul"}},
+        {"text": "Show 4 star and above products", "language": "en", "entities": {"rating_min": "4"}},
+        {"text": "Products with free delivery", "language": "en", "entities": {"delivery": "free"}},
+        {"text": "500 rupay se kam ke product dikhao", "language": "hi", "entities": {"price_max": "500"}},
+        {"text": "amul brand filter karo", "language": "hi", "entities": {"brand": "Amul"}},
+        {"text": "4 star se upar ke product dikhao", "language": "hi", "entities": {"rating_min": "4"}},
+        {"text": "free delivery wale product", "language": "hi", "entities": {"delivery": "free"}},
+        {"text": "500 rupayapeksha kam kimaticha", "language": "mr", "entities": {"price_max": "500"}},
+        {"text": "amul brand filter kara", "language": "mr", "entities": {"brand": "Amul"}},
+        {"text": "4 star var cha product dakhva", "language": "mr", "entities": {"rating_min": "4"}},
+        {"text": "free delivery aslela product", "language": "mr", "entities": {"delivery": "free"}}
+      ]
+    },
+    {
+      "intent": "remove_from_cart",
+      "description": "User wants to remove items from cart",
+      "examples": [
+        {"text": "Remove milk from cart", "language": "en", "entities": {"product_type": "milk"}},
+        {"text": "Delete this item", "language": "en", "entities": {}},
+        {"text": "Remove last item", "language": "en", "entities": {}},
+        {"text": "Clear my cart", "language": "en", "entities": {}},
+        {"text": "doodh cart se nikalo", "language": "hi", "entities": {"product_type": "doodh"}},
+        {"text": "yeh item delete karo", "language": "hi", "entities": {}},
+        {"text": "last item nikalo", "language": "hi", "entities": {}},
+        {"text": "cart khali karo", "language": "hi", "entities": {}},
+        {"text": "dudh cart madhun kadha", "language": "mr", "entities": {"product_type": "dudh"}},
+        {"text": "ha item delete kara", "language": "mr", "entities": {}},
+        {"text": "last item kadha", "language": "mr", "entities": {}},
+        {"text": "cart riktach kara", "language": "mr", "entities": {}}
+      ]
+    },
+    {
+      "intent": "get_offers",
+      "description": "User wants to see offers and discounts",
+      "examples": [
+        {"text": "Show me offers", "language": "en", "entities": {}},
+        {"text": "Any discounts available", "language": "en", "entities": {}},
+        {"text": "What deals are running", "language": "en", "entities": {}},
+        {"text": "Coupon codes", "language": "en", "entities": {}},
+        {"text": "offers dikhao", "language": "hi", "entities": {}},
+        {"text": "koi discount hai kya", "language": "hi", "entities": {}},
+        {"text": "kya deals chal rahe hai", "language": "hi", "entities": {}},
+        {"text": "coupon code bataao", "language": "hi", "entities": {}},
+        {"text": "offers dakhva", "language": "mr", "entities": {}},
+        {"text": "kahi discount aahe ka", "language": "mr", "entities": {}},
+        {"text": "konte deals ahet", "language": "mr", "entities": {}},
+        {"text": "coupon code sanga", "language": "mr", "entities": {}}
+      ]
+    },
+    {
+      "intent": "product_details",
+      "description": "User wants detailed information about a product",
+      "examples": [
+        {"text": "Tell me about this product", "language": "en", "entities": {}},
+        {"text": "Product details", "language": "en", "entities": {}},
+        {"text": "What are the ingredients", "language": "en", "entities": {}},
+        {"text": "Show specifications", "language": "en", "entities": {}},
+        {"text": "is product ke bare mein bataao", "language": "hi", "entities": {}},
+        {"text": "product ki details", "language": "hi", "entities": {}},
+        {"text": "ingredients kya hai", "language": "hi", "entities": {}},
+        {"text": "specifications dikhao", "language": "hi", "entities": {}},
+        {"text": "ya product vishay sangitlay", "language": "mr", "entities": {}},
+        {"text": "product chi details", "language": "mr", "entities": {}},
+        {"text": "ingredients kay aahe", "language": "mr", "entities": {}},
+        {"text": "specifications dakhva", "language": "mr", "entities": {}}
+      ]
+    },
+    {
+      "intent": "check_availability",
+      "description": "User wants to check product availability",
+      "examples": [
+        {"text": "Is this available", "language": "en", "entities": {}},
+        {"text": "Check stock", "language": "en", "entities": {}},
+        {"text": "Is milk in stock", "language": "en", "entities": {"product_type": "milk"}},
+        {"text": "When will it be available", "language": "en", "entities": {}},
+        {"text": "yeh available hai kya", "language": "hi", "entities": {}},
+        {"text": "stock check karo", "language": "hi", "entities": {}},
+        {"text": "doodh stock mein hai", "language": "hi", "entities": {"product_type": "doodh"}},
+        {"text": "kab available hoga", "language": "hi", "entities": {}},
+        {"text": "he available aahe ka", "language": "mr", "entities": {}},
+        {"text": "stock check kara", "language": "mr", "entities": {}},
+        {"text": "dudh stock madhe aahe", "language": "mr", "entities": {"product_type": "dudh"}},
+        {"text": "kevha available hoel", "language": "mr", "entities": {}}
+      ]
+    }
+  ],
+  "entities": [
+    {"name": "product_type", "type": "string", "description": "Type of product (milk/doodh/dudh, rice/chawal/tandul, etc.)"},
+    {"name": "brand", "type": "string", "description": "Brand name (Amul, Mother Dairy, etc.)"},
+    {"name": "quantity", "type": "number", "description": "Quantity of items"},
+    {"name": "unit", "type": "string", "description": "Unit of measurement (kg, liters, pieces)"},
+    {"name": "price_max", "type": "number", "description": "Maximum price filter"},
+    {"name": "price_min", "type": "number", "description": "Minimum price filter"},
+    {"name": "rating_min", "type": "number", "description": "Minimum rating filter"},
+    {"name": "category", "type": "string", "description": "Product category (groceries/kirana, vegetables/sabzi/bhaji, etc.)"},
+    {"name": "order_id", "type": "string", "description": "Order ID for tracking"},
+    {"name": "specification", "type": "string", "description": "Product specification (organic, fresh, etc.)"},
+    {"name": "delivery", "type": "string", "description": "Delivery type (free, express, etc.)"}
+  ]
+}

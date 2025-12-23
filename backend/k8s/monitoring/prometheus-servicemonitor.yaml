@@ -1,0 +1,104 @@
+# Prometheus ServiceMonitor for Mangwale
+# Requires Prometheus Operator to be installed
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: mangwale-backend
+  namespace: mangwale
+  labels:
+    app: mangwale-backend
+    release: prometheus
+spec:
+  selector:
+    matchLabels:
+      app: mangwale-backend
+  endpoints:
+    - port: http
+      path: /metrics
+      interval: 15s
+      scrapeTimeout: 10s
+  namespaceSelector:
+    matchNames:
+      - mangwale
+---
+# vLLM metrics
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: vllm
+  namespace: mangwale
+  labels:
+    app: vllm
+    release: prometheus
+spec:
+  selector:
+    matchLabels:
+      app: vllm
+  endpoints:
+    - port: http
+      path: /metrics
+      interval: 30s
+  namespaceSelector:
+    matchNames:
+      - mangwale
+---
+# Redis metrics (via redis-exporter sidecar)
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: redis
+  namespace: mangwale
+  labels:
+    app: redis
+    release: prometheus
+spec:
+  selector:
+    matchLabels:
+      app: redis-exporter
+  endpoints:
+    - port: metrics
+      interval: 15s
+  namespaceSelector:
+    matchNames:
+      - mangwale
+---
+# PostgreSQL metrics (via postgres-exporter)
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: postgres
+  namespace: mangwale
+  labels:
+    app: postgres
+    release: prometheus
+spec:
+  selector:
+    matchLabels:
+      app: postgres-exporter
+  endpoints:
+    - port: metrics
+      interval: 30s
+  namespaceSelector:
+    matchNames:
+      - mangwale
+---
+# OpenSearch metrics
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: opensearch
+  namespace: mangwale
+  labels:
+    app: opensearch
+    release: prometheus
+spec:
+  selector:
+    matchLabels:
+      app: opensearch-exporter
+  endpoints:
+    - port: metrics
+      interval: 30s
+  namespaceSelector:
+    matchNames:
+      - mangwale

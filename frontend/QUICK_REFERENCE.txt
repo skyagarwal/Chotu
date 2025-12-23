@@ -1,0 +1,112 @@
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃  🚀 MANGWALE AI DASHBOARD - QUICK REFERENCE         ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+📍 SERVICES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Frontend:  http://localhost:3000
+Backend:   http://localhost:3200
+vLLM GPU:  http://localhost:8002
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🎯 TOP PAGES TO CHECK
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✨ NEW: Agents Page
+http://localhost:3000/admin/agents
+→ Shows 4 real agents with database stats
+→ General Agent: 48.1% accuracy, 27 messages
+
+📊 Dashboard
+http://localhost:3000/admin/dashboard
+→ Real-time conversation metrics
+
+💬 LLM Chat  
+http://localhost:3000/admin/llm-chat
+→ Chat with local Qwen 2.5 7B model
+
+🔌 LLM Providers
+http://localhost:3000/admin/llm-providers
+→ vLLM GPU monitoring (VRAM, utilization, temp)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🔧 BACKEND APIs
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Stats API:
+  GET  /stats/dashboard   # Overview metrics
+  GET  /stats/agents      # Agent performance
+  GET  /stats/flows       # Flow execution
+
+Agents API (NEW):
+  GET  /agents            # List all agents
+  GET  /agents/:id        # Agent details
+
+LLM API:
+  POST /llm/chat          # Chat completion
+  POST /llm/chat/stream   # Streaming chat
+  GET  /llm/health        # Health check
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🧪 QUICK TESTS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+# Test all APIs
+./TEST_ALL_APIS.sh
+
+# Test agents API
+curl http://localhost:3200/agents | jq
+
+# Test LLM chat
+curl -X POST http://localhost:3200/llm/chat \
+  -H "Content-Type: application/json" \
+  -d '{"provider":"vllm","messages":[{"role":"user","content":"Hi"}]}'
+
+# Check frontend
+curl -I http://localhost:3000
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📊 CURRENT STATUS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Frontend:     ✅ Running (PID: 42253)
+Backend:      ✅ Running (Docker)
+APIs Tested:  ✅ 6/6 passing
+Real Data:    ✅ 6/8 pages (75%)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📚 DOCUMENTATION
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+AGENTS_API_COMPLETE.md
+  → Full API implementation details
+
+DEPLOYMENT_VERIFICATION_COMPLETE.md
+  → Complete deployment checklist
+
+PRIORITY_TASKS_COMPLETE.md
+  → Session summary and metrics
+
+TEST_ALL_APIS.sh
+  → Automated testing script
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+⚡ QUICK ACTIONS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Restart Frontend:
+  pkill -f "next dev"
+  cd /home/ubuntu/Devs/mangwale-unified-dashboard
+  npm run dev
+
+Restart Backend:
+  cd /home/ubuntu/Devs/mangwale-ai
+  docker-compose restart mangwale-ai
+
+View Logs:
+  Frontend: tail -f /tmp/nextjs-dev.log
+  Backend:  docker logs -f mangwale_ai_service
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✅ ALL SYSTEMS OPERATIONAL - READY TO USE!

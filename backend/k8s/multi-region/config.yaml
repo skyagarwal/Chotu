@@ -1,0 +1,277 @@
+# Multi-Region Deployment Configuration for Mangwale
+# This uses Kubernetes Federation or a GitOps approach (ArgoCD/Flux)
+---
+# Primary Region: Asia (Mumbai - ap-south-1)
+# Secondary Region: Europe (Frankfurt - eu-central-1)
+# DR Region: US (N. Virginia - us-east-1)
+
+# Global Load Balancer Configuration (Cloudflare/AWS Global Accelerator)
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: multi-region-config
+  namespace: mangwale
+data:
+  regions.yaml: |
+    regions:
+      primary:
+        name: asia-mumbai
+        cloud: aws
+        region: ap-south-1
+        weight: 70
+        endpoints:
+          - api.ap-south-1.mangwale.ai
+          - ws.ap-south-1.mangwale.ai
+        databases:
+          postgres: postgres.ap-south-1.mangwale.ai
+          redis: redis.ap-south-1.mangwale.ai
+          opensearch: search.ap-south-1.mangwale.ai
+      
+      secondary:
+        name: europe-frankfurt
+        cloud: aws
+        region: eu-central-1
+        weight: 20
+        endpoints:
+          - api.eu-central-1.mangwale.ai
+          - ws.eu-central-1.mangwale.ai
+        databases:
+          postgres: postgres.eu-central-1.mangwale.ai
+          redis: redis.eu-central-1.mangwale.ai
+          opensearch: search.eu-central-1.mangwale.ai
+      
+      dr:
+        name: us-virginia
+        cloud: aws
+        region: us-east-1
+        weight: 10
+        endpoints:
+          - api.us-east-1.mangwale.ai
+          - ws.us-east-1.mangwale.ai
+        databases:
+          postgres: postgres.us-east-1.mangwale.ai
+          redis: redis.us-east-1.mangwale.ai
+          opensearch: search.us-east-1.mangwale.ai
+
+    failover:
+      enabled: true
+      health_check_interval: 30s
+      failover_threshold: 3
+      recovery_threshold: 2
+      
+    geo_routing:
+      enabled: true
+      rules:
+        - regions: [IN, BD, NP, LK, PK]
+          target: primary
+        - regions: [DE, FR, GB, IT, ES, NL, BE, AT, CH]
+          target: secondary
+        - regions: [US, CA, MX, BR]
+          target: dr
+        - default: primary
+---
+# ArgoCD Application for Multi-Region Deployment
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: mangwale-multiregion
+  namespace: argocd
+spec:
+  generators:
+    - list:
+        elements:
+          - cluster: asia-mumbai
+            url: https://k8s.ap-south-1.mangwale.ai
+            region: ap-south-1
+            isPrimary: "true"
+            replicas: "5"
+          - cluster: europe-frankfurt
+            url: https://k8s.eu-central-1.mangwale.ai
+            region: eu-central-1
+            isPrimary: "false"
+            replicas: "3"
+          - cluster: us-virginia
+            url: https://k8s.us-east-1.mangwale.ai
+            region: us-east-1
+            isPrimary: "false"
+            replicas: "2"
+  template:
+    metadata:
+      name: 'mangwale-{{cluster}}'
+    spec:
+      project: mangwale
+      source:
+        repoURL: https://github.com/mangwale/infrastructure.git
+        targetRevision: HEAD
+        path: k8s/overlays/{{cluster}}
+        helm:
+          valueFiles:
+            - values-{{cluster}}.yaml
+          parameters:
+            - name: region
+              value: '{{region}}'
+            - name: isPrimary
+              value: '{{isPrimary}}'
+            - name: backend.replicas
+              value: '{{replicas}}'
+      destination:
+        server: '{{url}}'
+        namespace: mangwale
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true
+---
+# Cross-Region Database Replication Configuration
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cross-region-replication
+  namespace: mangwale
+data:
+  postgres-replication.yaml: |
+    # PostgreSQL Cross-Region Replication (AWS RDS / Aurora Global Database)
+    primary:
+      region: ap-south-1
+      instance: mangwale-db-primary
+      endpoint: mangwale-db.cluster-xxx.ap-south-1.rds.amazonaws.com
+    
+    replicas:
+      - region: eu-central-1
+        instance: mangwale-db-replica-eu
+        endpoint: mangwale-db.cluster-xxx.eu-central-1.rds.amazonaws.com
+        lag_threshold_seconds: 60
+      - region: us-east-1
+        instance: mangwale-db-replica-us
+        endpoint: mangwale-db.cluster-xxx.us-east-1.rds.amazonaws.com
+        lag_threshold_seconds: 120
+    
+    failover:
+      auto_failover: true
+      target_region: eu-central-1
+
+  redis-replication.yaml: |
+    # Redis Global Datastore (AWS ElastiCache Global Datastore)
+    primary:
+      region: ap-south-1
+      cluster: mangwale-redis-primary
+      endpoint: mangwale-redis.xxx.ng.0001.aps1.cache.amazonaws.com
+    
+    replicas:
+      - region: eu-central-1
+        cluster: mangwale-redis-replica-eu
+        endpoint: mangwale-redis.xxx.ng.0001.euc1.cache.amazonaws.com
+      - region: us-east-1
+        cluster: mangwale-redis-replica-us
+        endpoint: mangwale-redis.xxx.ng.0001.use1.cache.amazonaws.com
+    
+    failover:
+      auto_failover: true
+
+  opensearch-replication.yaml: |
+    # OpenSearch Cross-Cluster Replication
+    leader:
+      region: ap-south-1
+      domain: mangwale-search
+      endpoint: https://search-mangwale-xxx.ap-south-1.es.amazonaws.com
+    
+    followers:
+      - region: eu-central-1
+        domain: mangwale-search-eu
+        endpoint: https://search-mangwale-xxx.eu-central-1.es.amazonaws.com
+        indices:
+          - products
+          - conversations
+          - search_queries
+      - region: us-east-1
+        domain: mangwale-search-us
+        endpoint: https://search-mangwale-xxx.us-east-1.es.amazonaws.com
+        indices:
+          - products
+          - conversations
+---
+# Cloudflare Load Balancer Configuration
+# (Apply via Cloudflare Terraform provider or API)
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cloudflare-lb-config
+  namespace: mangwale
+data:
+  load-balancer.json: |
+    {
+      "name": "mangwale-global-lb",
+      "fallback_pool": "asia-mumbai-pool",
+      "default_pools": ["asia-mumbai-pool", "europe-frankfurt-pool", "us-virginia-pool"],
+      "region_pools": {
+        "WNAM": ["us-virginia-pool"],
+        "ENAM": ["us-virginia-pool"],
+        "WEU": ["europe-frankfurt-pool"],
+        "EEU": ["europe-frankfurt-pool"],
+        "NSAM": ["us-virginia-pool"],
+        "SSAM": ["us-virginia-pool"],
+        "SAS": ["asia-mumbai-pool"],
+        "SEAS": ["asia-mumbai-pool"],
+        "NEAS": ["asia-mumbai-pool"],
+        "OC": ["asia-mumbai-pool"]
+      },
+      "session_affinity": "ip_cookie",
+      "session_affinity_ttl": 3600,
+      "steering_policy": "geo",
+      "proxied": true
+    }
+
+  health-monitors.json: |
+    [
+      {
+        "type": "https",
+        "path": "/health",
+        "interval": 60,
+        "timeout": 5,
+        "retries": 2,
+        "expected_codes": "2xx",
+        "follow_redirects": true
+      }
+    ]
+
+  origin-pools.json: |
+    [
+      {
+        "name": "asia-mumbai-pool",
+        "origins": [
+          {
+            "address": "api.ap-south-1.mangwale.ai",
+            "enabled": true,
+            "weight": 1
+          }
+        ],
+        "minimum_origins": 1,
+        "monitor": "https-health-check"
+      },
+      {
+        "name": "europe-frankfurt-pool",
+        "origins": [
+          {
+            "address": "api.eu-central-1.mangwale.ai",
+            "enabled": true,
+            "weight": 1
+          }
+        ],
+        "minimum_origins": 1,
+        "monitor": "https-health-check"
+      },
+      {
+        "name": "us-virginia-pool",
+        "origins": [
+          {
+            "address": "api.us-east-1.mangwale.ai",
+            "enabled": true,
+            "weight": 1
+          }
+        ],
+        "minimum_origins": 1,
+        "monitor": "https-health-check"
+      }
+    ]

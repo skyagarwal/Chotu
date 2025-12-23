@@ -1,0 +1,4 @@
+{
+  "/(public)/chat/page": "app/(public)/chat/page.js",
+  "/admin/vision/page": "app/admin/vision/page.js"
+}

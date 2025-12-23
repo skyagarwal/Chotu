@@ -1,0 +1,204 @@
+{
+  "name": "Movies Module Training Dataset",
+  "module": "movies",
+  "description": "Training dataset for movie bookings, show times, and cinema services",
+  "version": "1.0.0",
+  "intents": [
+    {
+      "intent": "search_movies",
+      "examples": [
+        { "text": "Show movies", "entities": {} },
+        { "text": "What movies are playing?", "entities": {} },
+        { "text": "Movies near me", "entities": { "location": "nearby" } },
+        { "text": "Playing now", "entities": {} },
+        { "text": "Current movies", "entities": {} },
+        { "text": "Find movies in Bangalore", "entities": { "location": "Bangalore" } },
+        { "text": "What's showing?", "entities": {} },
+        { "text": "New releases", "entities": {} },
+        { "text": "Search for Avatar", "entities": { "movie_name": "Avatar" } },
+        { "text": "Hindi movies", "entities": { "language": "Hindi" } }
+      ]
+    },
+    {
+      "intent": "get_movie_details",
+      "examples": [
+        { "text": "Tell me about this movie", "entities": {} },
+        { "text": "Movie details", "entities": {} },
+        { "text": "What's it about?", "entities": {} },
+        { "text": "Movie info", "entities": {} },
+        { "text": "Cast and crew", "entities": {} },
+        { "text": "Movie rating", "entities": {} },
+        { "text": "Reviews", "entities": {} },
+        { "text": "Duration", "entities": {} },
+        { "text": "Movie plot", "entities": {} },
+        { "text": "More about Avatar", "entities": { "movie_name": "Avatar" } }
+      ]
+    },
+    {
+      "intent": "search_theaters",
+      "examples": [
+        { "text": "Theaters nearby", "entities": { "location": "nearby" } },
+        { "text": "Cinemas in Koramangala", "entities": { "location": "Koramangala" } },
+        { "text": "Show theaters", "entities": {} },
+        { "text": "Find cinema halls", "entities": {} },
+        { "text": "Theaters near me", "entities": { "location": "nearby" } },
+        { "text": "PVR cinemas", "entities": { "theater_name": "PVR" } },
+        { "text": "INOX theaters", "entities": { "theater_name": "INOX" } },
+        { "text": "Cineplex location", "entities": {} },
+        { "text": "Where to watch?", "entities": {} },
+        { "text": "Movie theaters", "entities": {} }
+      ]
+    },
+    {
+      "intent": "view_showtimes",
+      "examples": [
+        { "text": "Show times", "entities": {} },
+        { "text": "When is the next show?", "entities": {} },
+        { "text": "Available shows", "entities": {} },
+        { "text": "Movie timings", "entities": {} },
+        { "text": "Shows today", "entities": { "date": "today" } },
+        { "text": "Tomorrow's shows", "entities": { "date": "tomorrow" } },
+        { "text": "Evening shows", "entities": { "time": "evening" } },
+        { "text": "Morning show", "entities": { "time": "morning" } },
+        { "text": "Show schedule", "entities": {} },
+        { "text": "What time does it start?", "entities": {} }
+      ]
+    },
+    {
+      "intent": "book_tickets",
+      "examples": [
+        { "text": "Book tickets", "entities": {} },
+        { "text": "I want 2 tickets", "entities": { "quantity": 2 } },
+        { "text": "Book for 3 people", "entities": { "quantity": 3 } },
+        { "text": "Reserve seats", "entities": {} },
+        { "text": "Book this show", "entities": {} },
+        { "text": "I'll take 4 tickets", "entities": { "quantity": 4 } },
+        { "text": "Book tickets for Avatar", "entities": { "movie_name": "Avatar" } },
+        { "text": "Reserve", "entities": {} },
+        { "text": "Make booking", "entities": {} },
+        { "text": "Purchase tickets", "entities": {} }
+      ]
+    },
+    {
+      "intent": "select_seats",
+      "examples": [
+        { "text": "Choose seats", "entities": {} },
+        { "text": "Select seats", "entities": {} },
+        { "text": "I want A1 and A2", "entities": { "seats": "A1,A2" } },
+        { "text": "Seat selection", "entities": {} },
+        { "text": "Pick seats", "entities": {} },
+        { "text": "Premium seats", "entities": { "seat_type": "premium" } },
+        { "text": "Recliner seats", "entities": { "seat_type": "recliner" } },
+        { "text": "Back row seats", "entities": { "seat_location": "back" } },
+        { "text": "Center seats", "entities": { "seat_location": "center" } },
+        { "text": "Show seat map", "entities": {} }
+      ]
+    },
+    {
+      "intent": "filter_by_language",
+      "examples": [
+        { "text": "Hindi movies", "entities": { "language": "Hindi" } },
+        { "text": "English films", "entities": { "language": "English" } },
+        { "text": "Tamil movies", "entities": { "language": "Tamil" } },
+        { "text": "Telugu films", "entities": { "language": "Telugu" } },
+        { "text": "Show in Hindi", "entities": { "language": "Hindi" } },
+        { "text": "Kannada movies", "entities": { "language": "Kannada" } },
+        { "text": "Malayalam films", "entities": { "language": "Malayalam" } },
+        { "text": "Dubbed movies", "entities": { "version": "dubbed" } },
+        { "text": "Original language", "entities": {} },
+        { "text": "Regional movies", "entities": {} }
+      ]
+    },
+    {
+      "intent": "filter_by_genre",
+      "examples": [
+        { "text": "Action movies", "entities": { "genre": "action" } },
+        { "text": "Comedy films", "entities": { "genre": "comedy" } },
+        { "text": "Horror movies", "entities": { "genre": "horror" } },
+        { "text": "Romance films", "entities": { "genre": "romance" } },
+        { "text": "Thriller movies", "entities": { "genre": "thriller" } },
+        { "text": "Show sci-fi", "entities": { "genre": "sci-fi" } },
+        { "text": "Drama films", "entities": { "genre": "drama" } },
+        { "text": "Family movies", "entities": { "genre": "family" } },
+        { "text": "Animated movies", "entities": { "genre": "animation" } },
+        { "text": "Adventure films", "entities": { "genre": "adventure" } }
+      ]
+    },
+    {
+      "intent": "add_food",
+      "examples": [
+        { "text": "Add popcorn", "entities": { "food_item": "popcorn" } },
+        { "text": "I want nachos", "entities": { "food_item": "nachos" } },
+        { "text": "Order food", "entities": {} },
+        { "text": "Add combo", "entities": { "food_item": "combo" } },
+        { "text": "Get drinks", "entities": { "food_item": "drinks" } },
+        { "text": "Add snacks", "entities": {} },
+        { "text": "Popcorn and coke", "entities": { "food_item": "popcorn and coke" } },
+        { "text": "Food menu", "entities": {} },
+        { "text": "Snacks available?", "entities": {} },
+        { "text": "Add beverages", "entities": {} }
+      ]
+    },
+    {
+      "intent": "apply_offers",
+      "examples": [
+        { "text": "Any offers?", "entities": {} },
+        { "text": "Apply coupon", "entities": {} },
+        { "text": "Discount code", "entities": {} },
+        { "text": "Use promo", "entities": {} },
+        { "text": "Bank offers", "entities": {} },
+        { "text": "Credit card discount", "entities": {} },
+        { "text": "Weekend offer", "entities": {} },
+        { "text": "Apply MOVIE50", "entities": { "promo_code": "MOVIE50" } },
+        { "text": "Show deals", "entities": {} },
+        { "text": "Special offers", "entities": {} }
+      ]
+    },
+    {
+      "intent": "cancel_booking",
+      "examples": [
+        { "text": "Cancel tickets", "entities": {} },
+        { "text": "I want to cancel", "entities": {} },
+        { "text": "Cancel booking", "entities": {} },
+        { "text": "Refund tickets", "entities": {} },
+        { "text": "Cancel my show", "entities": {} },
+        { "text": "Don't want tickets", "entities": {} },
+        { "text": "Cancellation", "entities": {} },
+        { "text": "Cancel reservation", "entities": {} },
+        { "text": "Drop booking", "entities": {} },
+        { "text": "I want refund", "entities": {} }
+      ]
+    },
+    {
+      "intent": "get_ticket_details",
+      "examples": [
+        { "text": "Show my tickets", "entities": {} },
+        { "text": "Booking details", "entities": {} },
+        { "text": "My bookings", "entities": {} },
+        { "text": "Ticket information", "entities": {} },
+        { "text": "Show booking", "entities": {} },
+        { "text": "View tickets", "entities": {} },
+        { "text": "Booking confirmation", "entities": {} },
+        { "text": "Ticket receipt", "entities": {} },
+        { "text": "Show QR code", "entities": {} },
+        { "text": "Booking history", "entities": {} }
+      ]
+    }
+  ],
+  "entities": [
+    { "name": "location", "description": "Theater or city location" },
+    { "name": "movie_name", "description": "Name of the movie" },
+    { "name": "language", "description": "Movie language" },
+    { "name": "genre", "description": "Movie genre" },
+    { "name": "theater_name", "description": "Theater name" },
+    { "name": "date", "description": "Show date" },
+    { "name": "time", "description": "Show time" },
+    { "name": "quantity", "description": "Number of tickets" },
+    { "name": "seats", "description": "Seat numbers" },
+    { "name": "seat_type", "description": "Type of seats" },
+    { "name": "seat_location", "description": "Seat location preference" },
+    { "name": "food_item", "description": "Food or snack item" },
+    { "name": "promo_code", "description": "Promotional code" },
+    { "name": "version", "description": "Movie version (dubbed, etc.)" }
+  ]
+}

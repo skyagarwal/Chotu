@@ -1,0 +1,189 @@
+{
+  "name": "Parcel Module Training Dataset",
+  "module": "parcel",
+  "description": "Training dataset for parcel booking, tracking, and delivery management",
+  "version": "1.0.0",
+  "intents": [
+    {
+      "intent": "book_parcel",
+      "examples": [
+        { "text": "I want to send a parcel", "entities": {} },
+        { "text": "Book parcel delivery", "entities": {} },
+        { "text": "Send package", "entities": {} },
+        { "text": "I need courier service", "entities": {} },
+        { "text": "Book pickup", "entities": {} },
+        { "text": "Send documents", "entities": { "parcel_type": "documents" } },
+        { "text": "Ship a package", "entities": {} },
+        { "text": "Courier booking", "entities": {} },
+        { "text": "I want to send something", "entities": {} },
+        { "text": "Book delivery", "entities": {} }
+      ]
+    },
+    {
+      "intent": "track_parcel",
+      "examples": [
+        { "text": "Track my parcel", "entities": {} },
+        { "text": "Where is my package?", "entities": {} },
+        { "text": "Parcel status", "entities": {} },
+        { "text": "Track #ABC123", "entities": { "tracking_id": "ABC123" } },
+        { "text": "Show tracking details", "entities": {} },
+        { "text": "Delivery status", "entities": {} },
+        { "text": "When will it be delivered?", "entities": {} },
+        { "text": "Track shipment", "entities": {} },
+        { "text": "Where's my courier?", "entities": {} },
+        { "text": "Package location", "entities": {} }
+      ]
+    },
+    {
+      "intent": "get_price_estimate",
+      "examples": [
+        { "text": "How much will it cost?", "entities": {} },
+        { "text": "Price estimate", "entities": {} },
+        { "text": "Delivery charges", "entities": {} },
+        { "text": "Cost to send to Mumbai?", "entities": { "destination": "Mumbai" } },
+        { "text": "Calculate price", "entities": {} },
+        { "text": "Shipping cost", "entities": {} },
+        { "text": "How much for 5kg?", "entities": { "weight": 5 } },
+        { "text": "Pricing", "entities": {} },
+        { "text": "What's the rate?", "entities": {} },
+        { "text": "Estimate delivery cost", "entities": {} }
+      ]
+    },
+    {
+      "intent": "provide_pickup_address",
+      "examples": [
+        { "text": "Pickup from Koramangala", "entities": { "location": "Koramangala" } },
+        { "text": "Collect from my office", "entities": { "location_type": "office" } },
+        { "text": "My address is 123 Main St", "entities": { "address": "123 Main St" } },
+        { "text": "Pick up from home", "entities": { "location_type": "home" } },
+        { "text": "Pickup location is...", "entities": {} },
+        { "text": "Collect from Whitefield", "entities": { "location": "Whitefield" } },
+        { "text": "Pick up address", "entities": {} },
+        { "text": "From this location", "entities": {} },
+        { "text": "My current location", "entities": {} },
+        { "text": "Pickup at HSR Layout", "entities": { "location": "HSR Layout" } }
+      ]
+    },
+    {
+      "intent": "provide_delivery_address",
+      "examples": [
+        { "text": "Deliver to Mumbai", "entities": { "destination": "Mumbai" } },
+        { "text": "Send to this address", "entities": {} },
+        { "text": "Delivery at Indiranagar", "entities": { "location": "Indiranagar" } },
+        { "text": "Recipient address is...", "entities": {} },
+        { "text": "Drop at office", "entities": { "location_type": "office" } },
+        { "text": "Send to home", "entities": { "location_type": "home" } },
+        { "text": "Destination: Delhi", "entities": { "destination": "Delhi" } },
+        { "text": "Deliver here", "entities": {} },
+        { "text": "Drop location", "entities": {} },
+        { "text": "To address", "entities": {} }
+      ]
+    },
+    {
+      "intent": "provide_parcel_details",
+      "examples": [
+        { "text": "Weight is 2kg", "entities": { "weight": 2 } },
+        { "text": "Documents parcel", "entities": { "parcel_type": "documents" } },
+        { "text": "Fragile items", "entities": { "special": "fragile" } },
+        { "text": "Small package", "entities": { "size": "small" } },
+        { "text": "Contains electronics", "entities": { "contents": "electronics" } },
+        { "text": "5 kilograms", "entities": { "weight": 5 } },
+        { "text": "Large box", "entities": { "size": "large" } },
+        { "text": "Books and clothes", "entities": { "contents": "books and clothes" } },
+        { "text": "Perishable items", "entities": { "special": "perishable" } },
+        { "text": "Medium size", "entities": { "size": "medium" } }
+      ]
+    },
+    {
+      "intent": "schedule_pickup",
+      "examples": [
+        { "text": "Pick up today", "entities": { "date": "today" } },
+        { "text": "Tomorrow morning", "entities": { "date": "tomorrow", "time": "morning" } },
+        { "text": "Schedule for 3 PM", "entities": { "time": "3 PM" } },
+        { "text": "Pickup in 2 hours", "entities": { "duration": "2 hours" } },
+        { "text": "Come tomorrow", "entities": { "date": "tomorrow" } },
+        { "text": "Urgent pickup", "entities": { "urgency": "urgent" } },
+        { "text": "Pick up on Monday", "entities": { "date": "Monday" } },
+        { "text": "Same day pickup", "entities": { "date": "today" } },
+        { "text": "Evening pickup", "entities": { "time": "evening" } },
+        { "text": "Schedule for next week", "entities": { "date": "next week" } }
+      ]
+    },
+    {
+      "intent": "modify_booking",
+      "examples": [
+        { "text": "Cancel my booking", "entities": { "action": "cancel" } },
+        { "text": "Change pickup time", "entities": { "action": "change_time" } },
+        { "text": "Update address", "entities": { "action": "update_address" } },
+        { "text": "Modify parcel details", "entities": { "action": "modify" } },
+        { "text": "Reschedule pickup", "entities": { "action": "reschedule" } },
+        { "text": "I want to cancel", "entities": { "action": "cancel" } },
+        { "text": "Change delivery address", "entities": { "action": "change_address" } },
+        { "text": "Update booking", "entities": { "action": "update" } },
+        { "text": "Cancel parcel", "entities": { "action": "cancel" } },
+        { "text": "Edit details", "entities": { "action": "edit" } }
+      ]
+    },
+    {
+      "intent": "get_delivery_info",
+      "examples": [
+        { "text": "How long will it take?", "entities": {} },
+        { "text": "Delivery time", "entities": {} },
+        { "text": "When will it reach?", "entities": {} },
+        { "text": "Expected delivery date", "entities": {} },
+        { "text": "Delivery timeframe", "entities": {} },
+        { "text": "How many days?", "entities": {} },
+        { "text": "Estimated arrival", "entities": {} },
+        { "text": "Transit time", "entities": {} },
+        { "text": "Delivery speed", "entities": {} },
+        { "text": "Same day delivery?", "entities": { "delivery_type": "same_day" } }
+      ]
+    },
+    {
+      "intent": "report_issue",
+      "examples": [
+        { "text": "Parcel not delivered", "entities": { "issue": "not_delivered" } },
+        { "text": "Package is damaged", "entities": { "issue": "damaged" } },
+        { "text": "Delay in delivery", "entities": { "issue": "delayed" } },
+        { "text": "Wrong address delivery", "entities": { "issue": "wrong_address" } },
+        { "text": "Item missing", "entities": { "issue": "missing" } },
+        { "text": "Complaint", "entities": {} },
+        { "text": "I have an issue", "entities": {} },
+        { "text": "Parcel lost", "entities": { "issue": "lost" } },
+        { "text": "Not picked up yet", "entities": { "issue": "pickup_delayed" } },
+        { "text": "Delivery person didn't come", "entities": { "issue": "no_show" } }
+      ]
+    },
+    {
+      "intent": "ask_service_details",
+      "examples": [
+        { "text": "Do you deliver to Delhi?", "entities": { "location": "Delhi" } },
+        { "text": "Service areas", "entities": {} },
+        { "text": "What can I send?", "entities": {} },
+        { "text": "Delivery options", "entities": {} },
+        { "text": "Express delivery available?", "entities": { "service_type": "express" } },
+        { "text": "International shipping?", "entities": { "service_type": "international" } },
+        { "text": "Insurance option?", "entities": { "service": "insurance" } },
+        { "text": "COD available?", "entities": { "service": "cod" } },
+        { "text": "What are the timings?", "entities": {} },
+        { "text": "Service information", "entities": {} }
+      ]
+    }
+  ],
+  "entities": [
+    { "name": "tracking_id", "description": "Parcel tracking ID" },
+    { "name": "destination", "description": "Delivery destination" },
+    { "name": "location", "description": "Location name" },
+    { "name": "location_type", "description": "Type of location (home, office)" },
+    { "name": "weight", "description": "Parcel weight" },
+    { "name": "size", "description": "Parcel size" },
+    { "name": "parcel_type", "description": "Type of parcel" },
+    { "name": "contents", "description": "Parcel contents" },
+    { "name": "special", "description": "Special handling" },
+    { "name": "date", "description": "Pickup/delivery date" },
+    { "name": "time", "description": "Pickup/delivery time" },
+    { "name": "action", "description": "Action to perform" },
+    { "name": "issue", "description": "Issue type" },
+    { "name": "service_type", "description": "Service type" }
+  ]
+}

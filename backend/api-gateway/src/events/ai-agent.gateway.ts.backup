@@ -1,0 +1,178 @@
+import {
+  WebSocketGateway,
+  WebSocketServer,
+  SubscribeMessage,
+  OnGatewayConnection,
+  OnGatewayDisconnect,
+} from '@nestjs/websockets';
+import { Server, Socket } from 'socket.io';
+import { randomUUID } from 'crypto';
+import { Logger } from '@nestjs/common';
+import { FlowEngineService } from '../flow-engine/flow-engine.service';
+
+// Track active flow runs per socket
+interface SocketSession {
+  sessionId: string;
+  phoneNumber: string;
+  activeFlowRunId?: string;
+  activeAgent: string;
+}
+
+// Socket.IO namespace for the Super Assistant
+@WebSocketGateway({
+  cors: {
+    origin: [
+      'http://localhost:3001',
+      'http://100.121.40.69:3001',
+      'https://headless.mangwale.com',
+      'https://mangwale.ai',
+      'https://app.mangwale.ai',
+    ],
+    credentials: true,
+  },
+  namespace: '/ai-agent',
+})
+export class AiAgentGateway implements OnGatewayConnection, OnGatewayDisconnect {
+  @WebSocketServer()
+  server: Server;
+
+  private logger = new Logger('AiAgentGateway');
+  private socketSessions = new Map<string, SocketSession>();
+
+  constructor(private readonly flowEngineService: FlowEngineService) {}
+
+  handleConnection(client: Socket) {
+    const sessionId = (client.handshake.query.session as string) || randomUUID();
+    const phoneNumber = (client.handshake.query.phone as string) || `guest_${randomUUID().slice(0, 8)}`;
+    
+    this.logger.log(`AI client connected: ${client.id}, session: ${sessionId}`);
+
+    // Store socket session
+    this.socketSessions.set(client.id, {
+      sessionId,
+      phoneNumber,
+      activeAgent: 'parcels', // Default to parcels
+    });
+
+    // Send connect ack with available agents
+    client.emit('connect_ack', {
+      sessionId,
+      phoneNumber,
+      user: { id: phoneNumber },
+      agents: [
+        { id: 'shop', label: 'Shop' },
+        { id: 'food', label: 'Food' },
+        { id: 'parcels', label: 'Parcels' },
+        { id: 'payments', label: 'Payments' },
+        { id: 'ride', label: 'Ride' },
+        { id: 'health', label: 'Health' },
+      ],
+    });
+
+    // Greet with chips (Food agent by default)
+    const msgId = randomUUID();
+    client.emit('bot_final', {
+      msgId,
+      content:
+        "Hello! I'm your Conversational Food Assistant. What cuisine are you craving today?",
+      blocks: {
+        options: [
+          { id: 'italian', label: 'Italian' },
+          { id: 'mexican', label: 'Mexican' },
+          { id: 'asian', label: 'Asian' },
+          { id: 'american', label: 'American' },
+          { id: 'dessert', label: 'Dessert' },
+          { id: 'healthy', label: 'Healthy' },
+          { id: 'other', label: 'Something Else' },
+        ],
+      },
+    });
+  }
+
+  handleDisconnect(client: Socket) {
+    this.logger.log(`AI client disconnected: ${client.id}`);
+  }
+
+  @SubscribeMessage('context_update')
+  handleContextUpdate(client: Socket, payload: any) {
+    const active = payload?.activeAgent || 'food';
+    // Basic agent-specific greeting - more conversational, less pushy
+    let content = 'How can I help you today?';
+    if (active === 'parcels') {
+      content = 'Hi! 👋 I can help you send parcels anywhere in Nashik. When you\'re ready to book a delivery, just let me know your pickup and drop locations. What would you like to know?';
+    } else if (active === 'payments') {
+      content = 'Payment support is here. What do you need help with?';
+    }
+
+    client.emit('bot_final', {
+      msgId: randomUUID(),
+      content,
+      blocks: active === 'food'
+        ? {
+            options: [
+              { id: 'italian', label: 'Italian' },
+              { id: 'mexican', label: 'Mexican' },
+              { id: 'asian', label: 'Asian' },
+              { id: 'american', label: 'American' },
+              { id: 'dessert', label: 'Dessert' },
+              { id: 'healthy', label: 'Healthy' },
+              { id: 'other', label: 'Something Else' },
+            ],
+          }
+        : undefined,
+    });
+  }
+
+  @SubscribeMessage('user_message')
+  handleUserMessage(
+    client: Socket,
+    payload: {
+      id: string;
+      type: 'text' | 'chip' | 'form';
+      text?: string;
+      optionId?: string;
+      agentId?: string;
+      meta?: any;
+    },
+  ) {
+    const { type, text, optionId } = payload || {};
+
+    // Very simple demo logic
+    if (type === 'chip') {
+      if (optionId === 'italian') {
+        // Stream a small response
+        const streamId = randomUUID();
+        const content = 'Great! Any preference for pizza or pasta?';
+        // Simulate streaming by sending a couple of deltas
+        const parts = ['Great! ', 'Any preference for ', 'pizza or pasta?'];
+        parts.forEach((delta, i) => {
+          setTimeout(() => {
+            client.emit('bot_stream', { msgId: streamId, delta, done: i === parts.length - 1 });
+            if (i === parts.length - 1) {
+              client.emit('bot_final', {
+                msgId: streamId,
+                content,
+                blocks: {
+                  options: [
+                    { id: 'pizza', label: 'Pizza' },
+                    { id: 'pasta', label: 'Pasta' },
+                  ],
+                },
+              });
+            }
+          }, 200 * (i + 1));
+        });
+      } else {
+        client.emit('bot_final', {
+          msgId: randomUUID(),
+          content: `Nice choice! Tell me more about what you are in the mood for.`,
+        });
+      }
+    } else if (type === 'text' && text) {
+      client.emit('bot_final', {
+        msgId: randomUUID(),
+        content: `You said: "${text}". Let me think...`,
+      });
+    }
+  }
+}

@@ -1,0 +1,203 @@
+{
+  "name": "Ecom Module Training Dataset",
+  "module": "ecom",
+  "description": "Training dataset for e-commerce shopping, product search, and cart management",
+  "version": "1.0.0",
+  "intents": [
+    {
+      "intent": "search_product",
+      "examples": [
+        { "text": "Show me laptops", "entities": { "product_type": "laptops" } },
+        { "text": "I need a phone", "entities": { "product_type": "phone" } },
+        { "text": "Looking for headphones", "entities": { "product_type": "headphones" } },
+        { "text": "Show electronics", "entities": { "category": "electronics" } },
+        { "text": "Where can I find shoes?", "entities": { "product_type": "shoes" } },
+        { "text": "Search for Samsung Galaxy", "entities": { "brand": "Samsung", "product": "Galaxy" } },
+        { "text": "Any deals on cameras?", "entities": { "product_type": "cameras" } },
+        { "text": "Show me wireless earbuds", "entities": { "product_type": "wireless earbuds" } },
+        { "text": "Looking for bluetooth speakers", "entities": { "product_type": "bluetooth speakers" } },
+        { "text": "Find iPhone 15", "entities": { "brand": "Apple", "product": "iPhone 15" } }
+      ]
+    },
+    {
+      "intent": "add_to_cart",
+      "examples": [
+        { "text": "Add to cart", "entities": {} },
+        { "text": "Add this", "entities": {} },
+        { "text": "I'll take it", "entities": {} },
+        { "text": "Add 2 items", "entities": { "quantity": 2 } },
+        { "text": "Put in cart", "entities": {} },
+        { "text": "Buy this", "entities": {} },
+        { "text": "Add to bag", "entities": {} },
+        { "text": "I want this", "entities": {} },
+        { "text": "Select this product", "entities": {} },
+        { "text": "Add one more", "entities": { "quantity": 1 } }
+      ]
+    },
+    {
+      "intent": "view_cart",
+      "examples": [
+        { "text": "Show my cart", "entities": {} },
+        { "text": "What's in my cart?", "entities": {} },
+        { "text": "View cart", "entities": {} },
+        { "text": "Check cart", "entities": {} },
+        { "text": "Cart items", "entities": {} },
+        { "text": "My bag", "entities": {} },
+        { "text": "Shopping cart", "entities": {} },
+        { "text": "What did I add?", "entities": {} },
+        { "text": "Cart summary", "entities": {} },
+        { "text": "Show cart", "entities": {} }
+      ]
+    },
+    {
+      "intent": "checkout",
+      "examples": [
+        { "text": "Proceed to checkout", "entities": {} },
+        { "text": "Place order", "entities": {} },
+        { "text": "Buy now", "entities": {} },
+        { "text": "Complete purchase", "entities": {} },
+        { "text": "Checkout", "entities": {} },
+        { "text": "Make payment", "entities": {} },
+        { "text": "Order now", "entities": {} },
+        { "text": "Go to checkout", "entities": {} },
+        { "text": "I want to buy", "entities": {} },
+        { "text": "Purchase", "entities": {} }
+      ]
+    },
+    {
+      "intent": "filter_products",
+      "examples": [
+        { "text": "Under 5000 rupees", "entities": { "price_max": 5000 } },
+        { "text": "Sort by price", "entities": { "sort": "price" } },
+        { "text": "Show 4 star rated", "entities": { "rating_min": 4 } },
+        { "text": "Filter by brand", "entities": {} },
+        { "text": "Show only Samsung", "entities": { "brand": "Samsung" } },
+        { "text": "Price low to high", "entities": { "sort": "price_asc" } },
+        { "text": "Highest rated first", "entities": { "sort": "rating" } },
+        { "text": "In stock only", "entities": { "availability": "in_stock" } },
+        { "text": "Show discounted items", "entities": { "discount": true } },
+        { "text": "Filter by color black", "entities": { "color": "black" } }
+      ]
+    },
+    {
+      "intent": "compare_products",
+      "examples": [
+        { "text": "Compare these phones", "entities": {} },
+        { "text": "What's the difference?", "entities": {} },
+        { "text": "Compare", "entities": {} },
+        { "text": "Which one is better?", "entities": {} },
+        { "text": "Product comparison", "entities": {} },
+        { "text": "Show comparison", "entities": {} },
+        { "text": "Compare prices", "entities": {} },
+        { "text": "Compare features", "entities": {} },
+        { "text": "Difference between these", "entities": {} },
+        { "text": "Compare specifications", "entities": {} }
+      ]
+    },
+    {
+      "intent": "track_order",
+      "examples": [
+        { "text": "Track my order", "entities": {} },
+        { "text": "Where is my package?", "entities": {} },
+        { "text": "Order status", "entities": {} },
+        { "text": "When will it arrive?", "entities": {} },
+        { "text": "Track order #67890", "entities": { "order_id": "67890" } },
+        { "text": "Delivery status", "entities": {} },
+        { "text": "Show shipment details", "entities": {} },
+        { "text": "Order tracking", "entities": {} },
+        { "text": "Where's my order?", "entities": {} },
+        { "text": "Track shipment", "entities": {} }
+      ]
+    },
+    {
+      "intent": "return_product",
+      "examples": [
+        { "text": "I want to return", "entities": {} },
+        { "text": "Return policy", "entities": {} },
+        { "text": "How do I return this?", "entities": {} },
+        { "text": "Initiate return", "entities": {} },
+        { "text": "Product return", "entities": {} },
+        { "text": "Exchange product", "entities": { "action": "exchange" } },
+        { "text": "Return this item", "entities": {} },
+        { "text": "I received wrong item", "entities": { "reason": "wrong_item" } },
+        { "text": "Product is defective", "entities": { "reason": "defective" } },
+        { "text": "Refund request", "entities": { "action": "refund" } }
+      ]
+    },
+    {
+      "intent": "get_product_details",
+      "examples": [
+        { "text": "Tell me more about this", "entities": {} },
+        { "text": "Product details", "entities": {} },
+        { "text": "What are the specifications?", "entities": {} },
+        { "text": "Features", "entities": {} },
+        { "text": "Product info", "entities": {} },
+        { "text": "Describe this product", "entities": {} },
+        { "text": "What's included?", "entities": {} },
+        { "text": "Product description", "entities": {} },
+        { "text": "Technical specs", "entities": {} },
+        { "text": "More information", "entities": {} }
+      ]
+    },
+    {
+      "intent": "check_availability",
+      "examples": [
+        { "text": "Is this in stock?", "entities": {} },
+        { "text": "Available?", "entities": {} },
+        { "text": "When will it be available?", "entities": {} },
+        { "text": "Out of stock?", "entities": {} },
+        { "text": "Check stock", "entities": {} },
+        { "text": "Is it available in blue?", "entities": { "color": "blue" } },
+        { "text": "Do you have size M?", "entities": { "size": "M" } },
+        { "text": "Stock status", "entities": {} },
+        { "text": "Coming soon?", "entities": {} },
+        { "text": "When will you restock?", "entities": {} }
+      ]
+    },
+    {
+      "intent": "ask_recommendations",
+      "examples": [
+        { "text": "What do you recommend?", "entities": {} },
+        { "text": "Best laptops under 50000", "entities": { "product_type": "laptops", "price_max": 50000 } },
+        { "text": "Popular products", "entities": {} },
+        { "text": "Trending items", "entities": {} },
+        { "text": "What's best for gaming?", "entities": { "use_case": "gaming" } },
+        { "text": "Top rated products", "entities": {} },
+        { "text": "Best seller", "entities": {} },
+        { "text": "Suggest something", "entities": {} },
+        { "text": "Good options for students", "entities": { "target": "students" } },
+        { "text": "Recommend headphones", "entities": { "product_type": "headphones" } }
+      ]
+    },
+    {
+      "intent": "check_offers",
+      "examples": [
+        { "text": "Any offers?", "entities": {} },
+        { "text": "Show deals", "entities": {} },
+        { "text": "Discounts available?", "entities": {} },
+        { "text": "Sale items", "entities": {} },
+        { "text": "Coupon codes", "entities": {} },
+        { "text": "Best deals today", "entities": {} },
+        { "text": "Flash sale", "entities": {} },
+        { "text": "Clearance sale", "entities": {} },
+        { "text": "Special offers", "entities": {} },
+        { "text": "Promo codes", "entities": {} }
+      ]
+    }
+  ],
+  "entities": [
+    { "name": "product_type", "description": "Type of product" },
+    { "name": "category", "description": "Product category" },
+    { "name": "brand", "description": "Product brand" },
+    { "name": "product", "description": "Specific product name" },
+    { "name": "quantity", "description": "Item quantity" },
+    { "name": "price_max", "description": "Maximum price" },
+    { "name": "rating_min", "description": "Minimum rating" },
+    { "name": "sort", "description": "Sort criteria" },
+    { "name": "color", "description": "Product color" },
+    { "name": "size", "description": "Product size" },
+    { "name": "order_id", "description": "Order ID" },
+    { "name": "action", "description": "Action type" },
+    { "name": "reason", "description": "Return/issue reason" }
+  ]
+}

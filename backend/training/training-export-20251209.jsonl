@@ -1,0 +1,139 @@
+{"text" : "which vechiles you have ?", "intent" : "service_inquiry", "entities" : {}, "tone" : "neutral", "confidence" : 0.9}
+{"text" : "what can you do more", "intent" : "service_inquiry", "entities" : {}, "tone" : "neutral", "confidence" : 0.9}
+{"text" : "priya 9923383838", "intent" : "use_my_details", "entities" : {"phone": "9923383838"}, "tone" : "neutral", "confidence" : 0.9}
+{"text" : "delivery location is https://maps.app.goo.gl/XPQkgjfSVZ1oQoCBA", "intent" : "manage_address", "entities" : {"location": "https://maps.app.goo.gl/XPQkgjfSVZ1oQoCBA"}, "tone" : "neutral", "confidence" : 0.9}
+{"text" : "Get my shoes picked up from my home and send it to https://maps.app.goo.gl/XPQkgjfSVZ1oQoCBA his name is ramesh 9923383838", "intent" : "parcel_booking", "entities" : {"recipient_name": "ramesh", "pickup_location": "my home", "recipient_phone": "9923383838", "delivery_location": "https://maps.app.goo.gl/XPQkgjfSVZ1oQoCBA"}, "tone" : "polite", "confidence" : 0.95}
+{"text" : "📍 Location shared:\nXQ5V+H8J, Gandhi Nagar Airport Area, Wadala Gaon, Nashik, Maharashtra 422006, India\n\nCoordinates: 19.959507, 73.793863", "intent" : "manage_address", "entities" : {"location": "Gandhi Nagar Airport Area, Wadala Gaon, Nashik, Maharashtra 422006, India"}, "tone" : "neutral", "confidence" : 0.95}
+{"text" : "📍 Location shared:\nASC-42, Ashwin Nagar, Nashik, Maharashtra 422009, India\nHouse/Flat: BE3/60/4\nRoad: Sihsth Nagar Road\n\nCoordinates: 19.960475, 73.758758", "intent" : "manage_address", "entities" : {"road": "Sihsth Nagar Road", "location": "ASC-42, Ashwin Nagar, Nashik, Maharashtra 422009, India", "house_flat": "BE3/60/4"}, "tone" : "neutral", "confidence" : 0.95}
+{"text" : "mangwale offic on google maps", "intent" : "manage_address", "entities" : {"location": "mangwale offic"}, "tone" : "neutral", "confidence" : 0.9}
+{"text" : "rahul 9923383838", "intent" : "use_my_details", "entities" : {"phone": "9923383838"}, "tone" : "neutral", "confidence" : 0.9}
+{"text" : "put mine", "intent" : "repeat_order", "entities" : {}, "tone" : "neutral", "confidence" : 0.9}
+{"text" : "📍 Location shared:\nBE3/25/3, N52/BE3/25/3, Sambhaji Stadium Rd, Sinhasta Nagar, Nashik, Maharashtra 422009, India\nHouse/Flat: BE3/25/3\nRoad: Sambhaji Stadium Road\n\nCoordinates: 19.963719, 73.759542", "intent" : "manage_address", "entities" : {"road": "Sambhaji Stadium Road", "location": "Nashik, Maharashtra 422009, India", "house_flat": "BE3/25/3"}, "tone" : "neutral", "confidence" : 0.95}
+{"text" : "📍 Location shared:\nBE3/25/3, N52/BE3/25/3, Sambhaji Stadium Rd, Sinhasta Nagar, Nashik, Maharashtra 422009, India\nHouse/Flat: BE3/25/3\nRoad: Sambhaji Stadium Road\n\nCoordinates: 19.970256, 73.786782", "intent" : "manage_address", "entities" : {"road": "Sambhaji Stadium Road", "location": "Nashik, Maharashtra 422009, India", "house_flat": "BE3/25/3"}, "tone" : "neutral", "confidence" : 0.95}
+{"text" : "what problem", "intent" : "complaint", "entities" : {}, "tone" : "frustrated", "confidence" : 0.9}
+{"text" : "search my phone book", "intent" : "contact_search", "entities" : {}, "tone" : "neutral", "confidence" : 0.9}
+{"text" : "Pickup my shoes from my friends house and get it deliverd to my home", "intent" : "parcel_booking", "entities" : {"product": "shoes"}, "tone" : "neutral", "confidence" : 0.95}
+{"text" : "Put mine", "intent" : "create_parcel_order", "entities" : {}, "tone" : "neutral", "confidence" : 0.9}
+{"text" : "What more can you offer", "intent" : "service_inquiry", "entities" : {}, "tone" : "neutral", "confidence" : 0.9}
+{"text" : "Kya hai yeah , i didnt ask for this", "intent" : "complaint", "entities" : {}, "tone" : "frustrated", "confidence" : 0.95}
+{"text" : "Lets go", "intent" : "chitchat", "entities" : {}, "tone" : "polite", "confidence" : 0.95}
+{"text" : "contact_support", "intent" : "service_inquiry", "entities" : {}, "tone" : "neutral", "confidence" : 0.9}
+{"text" : "Complete my profile", "intent" : "manage_address", "entities" : {}, "tone" : "neutral", "confidence" : 0.9}
+{"text" : "What r u doing ??", "intent" : "chitchat", "entities" : {}, "tone" : "polite", "confidence" : 0.9}
+{"text" : "Complete the task", "intent" : "checkout", "entities" : {}, "tone" : "polite", "confidence" : 0.9}
+{"text" : "What's up", "intent" : "chitchat", "entities" : {}, "tone" : "polite", "confidence" : 0.9}
+{"text" : "Put my name", "intent" : "use_my_details", "entities" : {}, "tone" : "neutral", "confidence" : 0.9}
+{"text" : "📍 Location shared:\nP-17, Agra - Mumbai Hwy, MIDC Ambad, Nashik, Maharashtra 422010, India\nRoad: Agra - Mumbai Highway\n\nCoordinates: 19.957383, 73.754381", "intent" : "manage_address", "entities" : {"location": "P-17, Agra - Mumbai Hwy, MIDC Ambad, Nashik, Maharashtra 422010, India"}, "tone" : "neutral", "confidence" : 0.95}
+{"text" : "From Bombay ??", "intent" : "manage_address", "entities" : {"location": "Bombay"}, "tone" : "neutral", "confidence" : 0.9}
+{"text" : "📍 Location shared:\n11, P-11, Lekha Nagar Bypass Rd, Lekhanagar Colony, Cidco, Nashik, Maharashtra 422009, India\nHouse/Flat: 11\nRoad: Lekha Nagar Bypass Road\n\nCoordinates: 19.973463, 73.773071", "intent" : "manage_address", "entities" : {"location": "11, P-11, Lekha Nagar Bypass Rd, Lekhanagar Colony, Cidco, Nashik, Maharashtra 422009, India"}, "tone" : "neutral", "confidence" : 0.95}
+{"text" : "kaise ho", "intent" : "greeting", "entities" : {}, "tone" : "polite", "confidence" : 0.95}
+{"text" : "https://maps.app.goo.gl/QiEYWKZBWDkRqXZa7 rakesh 9934657867", "intent" : "manage_address", "entities" : {"name": "rakesh", "phone": "9934657867", "location": "https://maps.app.goo.gl/QiEYWKZBWDkRqXZa7"}, "tone" : "neutral", "confidence" : 0.9}
+{"text" : "what r u good at", "intent" : "service_inquiry", "entities" : {}, "tone" : "neutral", "confidence" : 0.9}
+{"text" : "📍 Location shared:\nASC-42, Ashwin Nagar, Nashik, Maharashtra 422009, India\nRoad: Bhujbal Farm Road\n\nCoordinates: 19.960518, 73.758770", "intent" : "manage_address", "entities" : {"road": "Bhujbal Farm Road", "location": "ASC-42, Ashwin Nagar, Nashik, Maharashtra 422009, India"}, "tone" : "neutral", "confidence" : 0.95}
+{"text" : "📍 Location shared:\nPlot No.ME-38 , Sunderban Colony, Bhujbal Farm Rd, Shanti Nagar, Cidco, Nashik, Maharashtra 422009, India\nRoad: Bhujbal Farm Road\n\nCoordinates: 19.977704, 73.776280", "intent" : "manage_address", "entities" : {"location": "Plot No.ME-38 , Sunderban Colony, Bhujbal Farm Rd, Shanti Nagar, Cidco, Nashik, Maharashtra 422009, India"}, "tone" : "neutral", "confidence" : 0.95}
+{"text" : "what vechiles you have ?", "intent" : "service_inquiry", "entities" : {}, "tone" : "neutral", "confidence" : 0.9}
+{"text" : "📍 Location shared:\nXPHG+QVG, Ambad Satpur Link Rd, Bajrang Nagar, Medage Nagar, Nashik, Maharashtra 422010, India\nRoad: Ambad Satpur Link Road\n\nCoordinates: 19.980098, 73.727259", "intent" : "manage_address", "entities" : {"location": "Ambad Satpur Link Rd, Bajrang Nagar, Medage Nagar, Nashik, Maharashtra 422010, India"}, "tone" : "neutral", "confidence" : 0.95}
+{"text" : "https://maps.app.goo.gl/ihnHG6fdcVMBxfjg9 - pickup location \n19.95061912699634, 73.80737438807638 - drop location", "intent" : "parcel_booking", "entities" : {}, "tone" : "neutral", "confidence" : 0.95}
+{"text" : "i am", "intent" : "greeting", "entities" : {}, "tone" : "polite", "confidence" : 0.95}
+{"text" : "i am the rcecipt", "intent" : "use_my_details", "entities" : {}, "tone" : "neutral", "confidence" : 0.9}
+{"text" : "can you pickup my shoes from my home and send to office , right now", "intent" : "parcel_booking", "entities" : {"product": "shoes"}, "tone" : "urgent", "confidence" : 0.95}
+{"text" : "📍 Location shared:\nWQVG+HFX, Pathardi Gaon, Pathardi Phata, Nashik, Maharashtra 422009, India\n\nCoordinates: 19.944689, 73.776456", "intent" : "manage_address", "entities" : {"location": "Pathardi Gaon, Pathardi Phata, Nashik, Maharashtra 422009, India"}, "tone" : "neutral", "confidence" : 0.95}
+{"text" : "https://maps.app.goo.gl/jtztDWiqAihCsFLY8 pickup", "intent" : "parcel_booking", "entities" : {"pickup_location": "jatpur"}, "tone" : "neutral", "confidence" : 0.95}
+{"text" : "ok do it", "intent" : "create_parcel_order", "entities" : {}, "tone" : "polite", "confidence" : 0.9}
+{"text" : "whta can you do", "intent" : "service_inquiry", "entities" : {}, "tone" : "neutral", "confidence" : 0.9}
+{"text" : "📍 Location shared:\nAkash Bunglow, Plot No.ME-38 , Sunderban Colony , Bhujbal farm lane, Shanti Nagar, Lekha Nagar, Nashik, Maharashtra 422009, India\nHouse/Flat: 3\nRoad: Avdumber Cidco Road\n\nCoordinates: 19.977659, 73.776215", "intent" : "manage_address", "entities" : {"road": "Avdumber Cidco Road", "location": "Akash Bunglow, Plot No.ME-38, Sunderban Colony, Bhujbal farm lane, Shanti Nagar, Lekha Nagar, Nashik, Maharashtra 422009, India", "house_flat": "3"}, "tone" : "neutral", "confidence" : 0.95}
+{"text" : "cacncel", "intent" : "cancel_order", "entities" : {}, "tone" : "neutral", "confidence" : 0.9}
+{"text" : "📍 Location shared:\nASC-42, Ashwin Nagar, Nashik, Maharashtra 422009, India\nHouse/Flat: 3\nRoad: Avdumber Cidco Road\n\nCoordinates: 19.960518, 73.758770", "intent" : "manage_address", "entities" : {"road": "Avdumber Cidco Road", "location": "ASC-42, Ashwin Nagar, Nashik, Maharashtra 422009, India", "house_flat": "3"}, "tone" : "neutral", "confidence" : 0.95}
+{"text" : "📍 Location shared:\nXQCP+4JH, Chintamani Colony, Bhagirath Sankul, Nashik, Maharashtra 422009, India\nHouse/Flat: 3\nRoad: Avdumber Cidco Road\n\nCoordinates: 19.970256, 73.786782", "intent" : "manage_address", "entities" : {"road": "Avdumber Cidco Road", "location": "Chintamani Colony, Bhagirath Sankul, Nashik, Maharashtra 422009, India", "house_flat": "3"}, "tone" : "neutral", "confidence" : 0.95}
+{"text" : "Sector 17, Chandigarh", "intent" : "manage_address", "entities" : {"location": "Sector 17, Chandigarh"}, "tone" : "neutral", "confidence" : 0.9}
+{"text" : "📍 location shared:\ncbs bus stand, nashik\ncoordinates: 19.9834, 73.7800", "intent" : "manage_address", "entities" : {"location": "cbs bus stand, nashik"}, "tone" : "neutral", "confidence" : 0.95}
+{"text" : "📍 location shared:\ncbs bus stand, gangapur road, nashik\ncoordinates: 19.9834, 73.7800", "intent" : "manage_address", "entities" : {"location": "cbs bus stand, gangapur road, nashik"}, "tone" : "neutral", "confidence" : 0.95}
+{"text" : "📍 location shared:\nnashik road railway station\ncoordinates: 19.9975, 73.7898", "intent" : "manage_address", "entities" : {"location": "nashik road railway station"}, "tone" : "neutral", "confidence" : 0.9}
+{"text" : "📍 location shared:\nnear cbs bus stand, gangapur road, nashik\ncoordinates: 19.9834, 73.7800", "intent" : "manage_address", "entities" : {"location": "near cbs bus stand, gangapur road, nashik"}, "tone" : "neutral", "confidence" : 0.95}
+{"text" : "near cbs bus stand opposite hdfc bank, gangapur road, nashik 422001", "intent" : "manage_address", "entities" : {"location": "near cbs bus stand opposite hdfc bank, gangapur road, nashik 422001"}, "tone" : "neutral", "confidence" : 0.95}
+{"text" : "old mumbai highway, nashik, maharashtra 422001", "intent" : "manage_address", "entities" : {"location": "old mumbai highway, nashik, maharashtra 422001"}, "tone" : "neutral", "confidence" : 0.95}
+{"text" : "cbs bus stand nashik", "intent" : "manage_address", "entities" : {"location": "cbs bus stand nashik"}, "tone" : "neutral", "confidence" : 0.9}
+{"text" : "nashik road railway station", "intent" : "manage_address", "entities" : {"location": "nashik road railway station"}, "tone" : "neutral", "confidence" : 0.9}
+{"text" : "cbs nashik", "intent" : "manage_address", "entities" : {"location": "nashik"}, "tone" : "neutral", "confidence" : 0.9}
+{"text" : "nashik road railway station, nashik", "intent" : "manage_address", "entities" : {"location": "nashik road railway station, nashik"}, "tone" : "neutral", "confidence" : 0.9}
+{"text" : "priya 9123456789", "intent" : "use_my_details", "entities" : {"name": "priya", "phone": "9123456789"}, "tone" : "neutral", "confidence" : 0.9}
+{"text" : "near cbs, nashik", "intent" : "search_product", "entities" : {"location": "near cbs, nashik"}, "tone" : "neutral", "confidence" : 0.9}
+{"text" : "rahul 9876543210", "intent" : "use_my_details", "entities" : {"name": "Rahul", "phone": "9876543210"}, "tone" : "neutral", "confidence" : 0.9}
+{"text" : "college road", "intent" : "manage_address", "entities" : {"location": "college road"}, "tone" : "neutral", "confidence" : 0.9}
+{"text" : "nashik road", "intent" : "manage_address", "entities" : {"location": "nashik road"}, "tone" : "neutral", "confidence" : 0.9}
+{"text" : "rahul sharma 9876543210", "intent" : "use_my_details", "entities" : {"name": "Rahul Sharma", "phone": "9876543210"}, "tone" : "neutral", "confidence" : 0.95}
+{"text" : "small box with documents", "intent" : "parcel_booking", "entities" : {"product": "small box with documents"}, "tone" : "neutral", "confidence" : 0.9}
+{"text" : "college road, nashik", "intent" : "manage_address", "entities" : {"location": "college road, nashik"}, "tone" : "neutral", "confidence" : 0.9}
+{"text" : "nashik road, near railway station", "intent" : "manage_address", "entities" : {"location": "nashik road, near railway station"}, "tone" : "neutral", "confidence" : 0.9}
+{"text" : "📍 Location shared:\nAkash Bunglow, Plot No.ME-38 , Sunderban Colony , Bhujbal farm lane, Shanti Nagar, Lekha Nagar, Nashik, Maharashtra 422009, India\nHouse/Flat: 10\nRoad: Fatehabad Road\n\nCoordinates: 19.977659, 73.776215", "intent" : "manage_address", "entities" : {"road": "Fatehabad Road", "location": "Akash Bunglow, Plot No.ME-38, Sunderban Colony, Bhujbal farm lane, Shanti Nagar, Lekha Nagar, Nashik, Maharashtra 422009, India", "house_flat": "10"}, "tone" : "neutral", "confidence" : 0.95}
+{"text" : "send a parcel", "intent" : "create_parcel_order", "entities" : {}, "tone" : "neutral", "confidence" : 0.8888230323791504}
+{"text" : "cacnecl", "intent" : "cancel_order", "entities" : {}, "tone" : "neutral", "confidence" : 0.9}
+{"text" : "how are you today?", "intent" : "chitchat", "entities" : {}, "tone" : "polite", "confidence" : 0.9}
+{"text" : "📍 Location shared:\nASC-42, Ashwin Nagar, Nashik, Maharashtra 422009, India\nHouse/Flat: 10\nRoad: Fatehabad Road\n\nCoordinates: 19.960518, 73.758770", "intent" : "manage_address", "entities" : {"road": "Fatehabad Road", "location": "ASC-42, Ashwin Nagar, Nashik, Maharashtra 422009, India", "house_flat": "10"}, "tone" : "neutral", "confidence" : 0.95}
+{"text" : "Akash 9923383838", "intent" : "use_my_details", "entities" : {"name": "Akash", "phone": "9923383838"}, "tone" : "neutral", "confidence" : 0.9}
+{"text" : "📍 Location shared:\nASC-42, Ashwin Nagar, Nashik, Maharashtra 422009, India\nRoad: road\n\nCoordinates: 19.960518, 73.758770", "intent" : "manage_address", "entities" : {"location": "ASC-42, Ashwin Nagar, Nashik, Maharashtra 422009, India", "coordinates": "19.960518, 73.758770"}, "tone" : "neutral", "confidence" : 0.95}
+{"text" : "option-3", "intent" : "manage_address", "entities" : {}, "tone" : "neutral", "confidence" : 0.9}
+{"text" : "I want to order food", "intent" : "order_food", "entities" : {}, "tone" : "neutral", "confidence" : 0.8713856339454651}
+{"text" : "I want to book a parcel", "intent" : "create_parcel_order", "entities" : {}, "tone" : "neutral", "confidence" : 0.8508889079093933}
+{"text" : "show me restaurants near me", "intent" : "search_product", "entities" : {"location": "near me"}, "tone" : "neutral", "confidence" : 0.9}
+{"text" : "hello, i want to order food", "intent" : "order_food", "entities" : {}, "tone" : "polite", "confidence" : 0.95}
+{"text" : "my name and number", "intent" : "use_my_details", "entities" : {}, "tone" : "neutral", "confidence" : 0.9}
+{"text" : "my home", "intent" : "parcel_booking", "entities" : {}, "tone" : "neutral", "confidence" : 0.95}
+{"text" : "Recipient: Rahul, Phone: 9876543210", "intent" : "use_my_details", "entities" : {"phone": "9876543210", "recipient_name": "Rahul"}, "tone" : "neutral", "confidence" : 0.95}
+{"text" : "Recipient name is Rahul and phone is 9123456789", "intent" : "use_my_details", "entities" : {"recipient_name": "Rahul", "recipient_phone": "9123456789"}, "tone" : "neutral", "confidence" : 0.95}
+{"text" : "put my details on it", "intent" : "login", "entities" : {}, "tone" : "neutral", "confidence" : 0.9}
+{"text" : "pickup my home and drop at my frineds place", "intent" : "parcel_booking", "entities" : {}, "tone" : "polite", "confidence" : 0.95}
+{"text" : "📍 Location shared:\nAkash Bunglow, Plot No.ME-38 , Sunderban Colony , Bhujbal farm lane, Shanti Nagar, Lekha Nagar, Nashik, Maharashtra 422009, India\n\nCoordinates: 19.977659, 73.776215", "intent" : "manage_address", "entities" : {"location": "Akash Bunglow, Plot No.ME-38, Sunderban Colony, Bhujbal farm lane, Shanti Nagar, Lekha Nagar, Nashik, Maharashtra 422009, India"}, "tone" : "neutral", "confidence" : 0.95}
+{"text" : "use my name and number", "intent" : "login", "entities" : {"phone": "use my number"}, "tone" : "neutral", "confidence" : 0.9}
+{"text" : "pickup items from my home and delivery it to my office", "intent" : "parcel_booking", "entities" : {}, "tone" : "neutral", "confidence" : 0.95}
+{"text" : "pickup location is my home address and drop is my friend suresh , bike would be fine", "intent" : "parcel_booking", "entities" : {"vehicle_type": "bike", "drop_location": "suresh", "pickup_location": "my home address"}, "tone" : "polite", "confidence" : 0.95}
+{"text" : "u there", "intent" : "greeting", "entities" : {}, "tone" : "polite", "confidence" : 0.9}
+{"text" : "📍 Location shared:\nASC-42, Ashwin Nagar, Nashik, Maharashtra 422009, India\n\nCoordinates: 19.960545, 73.758758", "intent" : "manage_address", "entities" : {"address": "ASC-42, Ashwin Nagar, Nashik, Maharashtra 422009, India", "coordinates": "19.960545, 73.758758"}, "tone" : "neutral", "confidence" : 0.95}
+{"text" : "📍 Location shared:\nASC-42, Ashwin Nagar, Nashik, Maharashtra 422009, India\n\nCoordinates: 19.960518, 73.758770", "intent" : "manage_address", "entities" : {"address": "ASC-42, Ashwin Nagar, Nashik, Maharashtra 422009, India", "coordinates": "19.960518, 73.758770"}, "tone" : "neutral", "confidence" : 0.95}
+{"text" : "📍 Location shared:\nB-931/5, Maa Ganga Colony, Kalewadi, Pimpri-Chinchwad, Maharashtra 411017, India\n\nCoordinates: 19.970256, 73.786782", "intent" : "manage_address", "entities" : {"location": "B-931/5, Maa Ganga Colony, Kalewadi, Pimpri-Chinchwad, Maharashtra 411017, India"}, "tone" : "neutral", "confidence" : 0.95}
+{"text" : "Track my parcel delivery", "intent" : "track_order", "entities" : {}, "tone" : "neutral", "confidence" : 0.95}
+{"text" : "Book a cab to airport", "intent" : "service_inquiry", "entities" : {}, "tone" : "neutral", "confidence" : 0.9}
+{"text" : "Add Amul Pav Bhaji (2 Butter Pav) to cart", "intent" : "add_to_cart", "entities" : {}, "tone" : "neutral", "confidence" : 0.95}
+{"text" : "I need help", "intent" : "help", "entities" : {}, "tone" : "polite", "confidence" : 0.95}
+{"text" : "cancle", "intent" : "cancel_order", "entities" : {}, "tone" : "neutral", "confidence" : 0.9}
+{"text" : "help me", "intent" : "help", "entities" : {}, "tone" : "polite", "confidence" : 0.95}
+{"text" : "show me paneer dishes", "intent" : "search_product", "entities" : {"product_name": "paneer dishes"}, "tone" : "confused", "confidence" : 0.9}
+{"text" : "i need help", "intent" : "help", "entities" : {}, "tone" : "polite", "confidence" : 0.95}
+{"text" : "where is my order", "intent" : "track_order", "entities" : {}, "tone" : "neutral", "confidence" : 0.95}
+{"text" : "order_food", "intent" : "order_food", "entities" : {}, "tone" : "neutral", "confidence" : 0.95}
+{"text" : "Show me catogery", "intent" : "service_inquiry", "entities" : {}, "tone" : "neutral", "confidence" : 0.9}
+{"text" : "📍 Location shared:\n2Q97+RFQ, Nashik Rd, D. K. Nagar, Nashik, Maharashtra 422013, India\nRoad: Nashik Road\n\nCoordinates: 20.019313, 73.763671", "intent" : "manage_address", "entities" : {"location": "Nashik Rd, D. K. Nagar, Nashik, Maharashtra 422013, India"}, "tone" : "neutral", "confidence" : 0.95}
+{"text" : "btn food", "intent" : "order_food", "entities" : {}, "tone" : "neutral", "confidence" : 0.9}
+{"text" : "i want to order some food", "intent" : "order_food", "entities" : {}, "tone" : "neutral", "confidence" : 0.9}
+{"text" : "📍 Location shared:\nASC-42, Ashwin Nagar, Nashik, Maharashtra 422009, India\nRoad: Barne Road\n\nCoordinates: 19.960518, 73.758770", "intent" : "manage_address", "entities" : {"address": "ASC-42, Ashwin Nagar, Nashik, Maharashtra 422009, India"}, "tone" : "neutral", "confidence" : 0.95}
+{"text" : "📍 Location shared:\nXQCP+4JH, Chintamani Colony, Bhagirath Sankul, Nashik, Maharashtra 422009, India\nRoad: Barne Road\n\nCoordinates: 19.970256, 73.786782", "intent" : "manage_address", "entities" : {"location": "Chintamani Colony, Bhagirath Sankul, Nashik, Maharashtra 422009, India"}, "tone" : "neutral", "confidence" : 0.95}
+{"text" : "i want to search for pizza", "intent" : "search_product", "entities" : {"product": "pizza"}, "tone" : "polite", "confidence" : 0.9}
+{"text" : "search for pizza", "intent" : "search_product", "entities" : {"product": "pizza"}, "tone" : "neutral", "confidence" : 0.9}
+{"text" : "Add Chicken Hakka Noodles to cart", "intent" : "add_to_cart", "entities" : {"product": "Chicken Hakka Noodles"}, "tone" : "polite", "confidence" : 0.9}
+{"text" : "Add Chicken Good Chilli to cart", "intent" : "add_to_cart", "entities" : {"product": "Chicken Good Chilli"}, "tone" : "neutral", "confidence" : 0.9}
+{"text" : "food", "intent" : "order_food", "entities" : {}, "tone" : "neutral", "confidence" : 0.9}
+{"text" : "📍 Location shared:\nPlot No.ME-38 , Sunderban Colony, Bhujbal Farm Rd, Shanti Nagar, Cidco, Nashik, Maharashtra 422009, India\nRoad: Bhujbal Farm Road\n\nCoordinates: 19.977687, 73.776268", "intent" : "manage_address", "entities" : {"location": "Plot No.ME-38 , Sunderban Colony, Bhujbal Farm Rd, Shanti Nagar, Cidco, Nashik, Maharashtra 422009, India"}, "tone" : "neutral", "confidence" : 0.9}
+{"text" : "📍 Location shared:\nXQCP+4JH, Chintamani Colony, Bhagirath Sankul, Nashik, Maharashtra 422009, India\n\nCoordinates: 19.970256, 73.786782", "intent" : "manage_address", "entities" : {"location": "Chintamani Colony, Bhagirath Sankul, Nashik, Maharashtra 422009, India"}, "tone" : "neutral", "confidence" : 0.95}
+{"text" : "parcel_booking", "intent" : "parcel_booking", "entities" : {}, "tone" : "neutral", "confidence" : 1}
+{"text" : "what can you do", "intent" : "service_inquiry", "entities" : {}, "tone" : "neutral", "confidence" : 0.9}
+{"text" : "btn parcel", "intent" : "parcel_booking", "entities" : {}, "tone" : "neutral", "confidence" : 0.9}
+{"text" : "repeat my last order", "intent" : "repeat_order", "entities" : {}, "tone" : "polite", "confidence" : 0.95}
+{"text" : "what can you do?", "intent" : "service_inquiry", "entities" : {}, "tone" : "neutral", "confidence" : 0.9}
+{"text" : "i want pizza", "intent" : "order_food", "entities" : {"product": "pizza"}, "tone" : "polite", "confidence" : 0.9}
+{"text" : "gangapur road nashik", "intent" : "manage_address", "entities" : {"location": "gangapur road nashik"}, "tone" : "neutral", "confidence" : 0.9}
+{"text" : "i want biryani", "intent" : "order_food", "entities" : {"product": "biryani"}, "tone" : "polite", "confidence" : 0.9}
+{"text" : "send parcel", "intent" : "parcel_booking", "entities" : {}, "tone" : "neutral", "confidence" : 0.9}
+{"text" : "i want to order biryani", "intent" : "order_food", "entities" : {"product": "biryani"}, "tone" : "polite", "confidence" : 0.9}
+{"text" : "i want to send a parcel from college road nashik to gangapur road nashik", "intent" : "parcel_booking", "entities" : {"to_location": "gangapur road nashik", "from_location": "college road nashik"}, "tone" : "neutral", "confidence" : 0.95}
+{"text" : "pizza", "intent" : "order_food", "entities" : {"product": "pizza"}, "tone" : "neutral", "confidence" : 0.9}
+{"text" : "i want to order food", "intent" : "order_food", "entities" : {}, "tone" : "polite", "confidence" : 0.9}
+{"text" : "i want to send a parcel from cidco to gangapur road", "intent" : "parcel_booking", "entities" : {"to_location": "gangapur road", "from_location": "cidco"}, "tone" : "neutral", "confidence" : 0.95}
+{"text" : "I need to send a parcel", "intent" : "parcel_booking", "entities" : {}, "tone" : "neutral", "confidence" : 0.9}
+{"text" : "I want to send a parcel from College Road to Gangapur", "intent" : "parcel_booking", "entities" : {"to_location": "Gangapur", "from_location": "College Road"}, "tone" : "neutral", "confidence" : 0.95}
+{"text" : "I want to send a parcel", "intent" : "parcel_booking", "entities" : {}, "tone" : "polite", "confidence" : 0.9}
+{"text" : "i want to send a parcel", "intent" : "parcel_booking", "entities" : {}, "tone" : "polite", "confidence" : 0.9}
+{"text" : "I want to send a package", "intent" : "parcel_booking", "entities" : {}, "tone" : "polite", "confidence" : 0.9}
+{"text" : "Add pizza to my cart", "intent" : "add_to_cart", "entities" : {"product": "pizza"}, "tone" : "polite", "confidence" : 0.9}
+{"text" : "Add 12998 to cart", "intent" : "search_product", "entities" : {"order_id": "12998"}, "tone" : "neutral", "confidence" : 0.9}
+{"text" : "Add pizza to cart", "intent" : "order_food", "entities" : {"product": "pizza"}, "tone" : "polite", "confidence" : 0.9}
+{"text" : "Can you find me some samosas", "intent" : "order_food", "entities" : {"product": "samosas"}, "tone" : "polite", "confidence" : 0.9}

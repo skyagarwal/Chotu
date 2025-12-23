@@ -1,0 +1,201 @@
+{
+  "name": "Services Module Training Dataset",
+  "module": "services",
+  "description": "Training dataset for professional services booking - plumbers, electricians, cleaners, etc.",
+  "version": "1.0.0",
+  "intents": [
+    {
+      "intent": "search_services",
+      "examples": [
+        { "text": "Find plumber", "entities": { "service_type": "plumber" } },
+        { "text": "Need electrician", "entities": { "service_type": "electrician" } },
+        { "text": "Show cleaners", "entities": { "service_type": "cleaner" } },
+        { "text": "Find carpenter", "entities": { "service_type": "carpenter" } },
+        { "text": "Pest control services", "entities": { "service_type": "pest control" } },
+        { "text": "AC repair", "entities": { "service_type": "AC repair" } },
+        { "text": "Home services", "entities": {} },
+        { "text": "Find handyman", "entities": { "service_type": "handyman" } },
+        { "text": "Painters near me", "entities": { "service_type": "painter", "location": "nearby" } },
+        { "text": "Show all services", "entities": {} }
+      ]
+    },
+    {
+      "intent": "book_service",
+      "examples": [
+        { "text": "Book a plumber", "entities": { "service_type": "plumber" } },
+        { "text": "I want to book", "entities": {} },
+        { "text": "Schedule service", "entities": {} },
+        { "text": "Book this professional", "entities": {} },
+        { "text": "Book electrician", "entities": { "service_type": "electrician" } },
+        { "text": "Make appointment", "entities": {} },
+        { "text": "I need this service", "entities": {} },
+        { "text": "Book for tomorrow", "entities": { "date": "tomorrow" } },
+        { "text": "Reserve slot", "entities": {} },
+        { "text": "Confirm booking", "entities": {} }
+      ]
+    },
+    {
+      "intent": "specify_problem",
+      "examples": [
+        { "text": "Pipe leaking", "entities": { "problem": "pipe leaking" } },
+        { "text": "Power outage", "entities": { "problem": "power outage" } },
+        { "text": "AC not cooling", "entities": { "problem": "AC not cooling" } },
+        { "text": "Tap is broken", "entities": { "problem": "tap broken" } },
+        { "text": "Need cleaning", "entities": { "problem": "cleaning" } },
+        { "text": "Fan not working", "entities": { "problem": "fan not working" } },
+        { "text": "Wall painting needed", "entities": { "problem": "painting" } },
+        { "text": "Drain clogged", "entities": { "problem": "drain clogged" } },
+        { "text": "Switch issue", "entities": { "problem": "switch issue" } },
+        { "text": "Cockroach infestation", "entities": { "problem": "pest infestation" } }
+      ]
+    },
+    {
+      "intent": "schedule_appointment",
+      "examples": [
+        { "text": "Tomorrow morning", "entities": { "date": "tomorrow", "time": "morning" } },
+        { "text": "Schedule for today", "entities": { "date": "today" } },
+        { "text": "Next Monday at 3 PM", "entities": { "date": "next Monday", "time": "3 PM" } },
+        { "text": "This evening", "entities": { "time": "evening" } },
+        { "text": "Sunday at 10 AM", "entities": { "date": "Sunday", "time": "10 AM" } },
+        { "text": "Emergency service", "entities": { "urgency": "emergency" } },
+        { "text": "Urgent", "entities": { "urgency": "urgent" } },
+        { "text": "As soon as possible", "entities": { "urgency": "urgent" } },
+        { "text": "Next week", "entities": { "date": "next week" } },
+        { "text": "Book for afternoon", "entities": { "time": "afternoon" } }
+      ]
+    },
+    {
+      "intent": "provide_address",
+      "examples": [
+        { "text": "Koramangala", "entities": { "location": "Koramangala" } },
+        { "text": "BTM Layout", "entities": { "location": "BTM Layout" } },
+        { "text": "123 MG Road", "entities": { "address": "123 MG Road" } },
+        { "text": "My address is...", "entities": {} },
+        { "text": "Come to Indiranagar", "entities": { "location": "Indiranagar" } },
+        { "text": "Address", "entities": {} },
+        { "text": "Flat 203, Building A", "entities": { "address": "Flat 203, Building A" } },
+        { "text": "Near City Mall", "entities": { "landmark": "City Mall" } },
+        { "text": "Whitefield", "entities": { "location": "Whitefield" } },
+        { "text": "Electronic City", "entities": { "location": "Electronic City" } }
+      ]
+    },
+    {
+      "intent": "get_pricing",
+      "examples": [
+        { "text": "How much does it cost?", "entities": {} },
+        { "text": "Price", "entities": {} },
+        { "text": "Service charges", "entities": {} },
+        { "text": "What's the cost?", "entities": {} },
+        { "text": "How much?", "entities": {} },
+        { "text": "Pricing details", "entities": {} },
+        { "text": "Cost estimate", "entities": {} },
+        { "text": "Rates", "entities": {} },
+        { "text": "Hourly charges", "entities": {} },
+        { "text": "Total cost", "entities": {} }
+      ]
+    },
+    {
+      "intent": "get_professional_details",
+      "examples": [
+        { "text": "Professional details", "entities": {} },
+        { "text": "Tell me about this pro", "entities": {} },
+        { "text": "Professional experience", "entities": {} },
+        { "text": "Show reviews", "entities": {} },
+        { "text": "Rating", "entities": {} },
+        { "text": "Professional info", "entities": {} },
+        { "text": "About this professional", "entities": {} },
+        { "text": "Qualifications", "entities": {} },
+        { "text": "Years of experience", "entities": {} },
+        { "text": "Past work", "entities": {} }
+      ]
+    },
+    {
+      "intent": "filter_by_rating",
+      "examples": [
+        { "text": "4 star and above", "entities": { "rating_min": 4 } },
+        { "text": "Highly rated", "entities": {} },
+        { "text": "Top rated professionals", "entities": {} },
+        { "text": "Best plumbers", "entities": { "service_type": "plumber" } },
+        { "text": "5 star only", "entities": { "rating_min": 5 } },
+        { "text": "Show best", "entities": {} },
+        { "text": "Verified professionals", "entities": { "verified": true } },
+        { "text": "Top professionals", "entities": {} },
+        { "text": "Good ratings", "entities": {} },
+        { "text": "Most recommended", "entities": {} }
+      ]
+    },
+    {
+      "intent": "track_booking",
+      "examples": [
+        { "text": "Track my booking", "entities": {} },
+        { "text": "Where is the professional?", "entities": {} },
+        { "text": "Booking status", "entities": {} },
+        { "text": "Track service", "entities": {} },
+        { "text": "Is professional coming?", "entities": {} },
+        { "text": "Show status", "entities": {} },
+        { "text": "Track #SRV123", "entities": { "booking_id": "SRV123" } },
+        { "text": "Check booking", "entities": {} },
+        { "text": "Service status", "entities": {} },
+        { "text": "Arrival time", "entities": {} }
+      ]
+    },
+    {
+      "intent": "modify_booking",
+      "examples": [
+        { "text": "Change time", "entities": {} },
+        { "text": "Reschedule", "entities": {} },
+        { "text": "Modify appointment", "entities": {} },
+        { "text": "Change date", "entities": {} },
+        { "text": "Update booking", "entities": {} },
+        { "text": "Reschedule to tomorrow", "entities": { "date": "tomorrow" } },
+        { "text": "Change to evening", "entities": { "time": "evening" } },
+        { "text": "Edit booking", "entities": {} },
+        { "text": "Postpone", "entities": {} },
+        { "text": "Prepone", "entities": {} }
+      ]
+    },
+    {
+      "intent": "cancel_booking",
+      "examples": [
+        { "text": "Cancel booking", "entities": {} },
+        { "text": "I want to cancel", "entities": {} },
+        { "text": "Cancel service", "entities": {} },
+        { "text": "Don't need service", "entities": {} },
+        { "text": "Drop booking", "entities": {} },
+        { "text": "Cancellation", "entities": {} },
+        { "text": "Cancel appointment", "entities": {} },
+        { "text": "I want refund", "entities": {} },
+        { "text": "Not needed anymore", "entities": {} },
+        { "text": "Cancel this", "entities": {} }
+      ]
+    },
+    {
+      "intent": "report_issue",
+      "examples": [
+        { "text": "Report issue", "entities": {} },
+        { "text": "Problem with service", "entities": {} },
+        { "text": "Professional didn't come", "entities": {} },
+        { "text": "Not satisfied", "entities": {} },
+        { "text": "Raise complaint", "entities": {} },
+        { "text": "Service not good", "entities": {} },
+        { "text": "I have a complaint", "entities": {} },
+        { "text": "Quality issue", "entities": {} },
+        { "text": "Service incomplete", "entities": {} },
+        { "text": "Need help", "entities": {} }
+      ]
+    }
+  ],
+  "entities": [
+    { "name": "service_type", "description": "Type of professional service" },
+    { "name": "location", "description": "Service location or area" },
+    { "name": "problem", "description": "Description of the problem" },
+    { "name": "date", "description": "Service appointment date" },
+    { "name": "time", "description": "Service appointment time" },
+    { "name": "urgency", "description": "Service urgency level" },
+    { "name": "address", "description": "Complete service address" },
+    { "name": "landmark", "description": "Nearby landmark" },
+    { "name": "rating_min", "description": "Minimum rating filter" },
+    { "name": "verified", "description": "Verified professional filter" },
+    { "name": "booking_id", "description": "Service booking ID" }
+  ]
+}

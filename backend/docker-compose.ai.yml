@@ -1,0 +1,316 @@
+version: '3.8'
+
+#############################################################################
+# MANGWALE-AI STACK - AI SERVICES ONLY
+# Core AI infrastructure without search (search has its own project)
+# Network: mangwale_ai_network
+# Date: November 13, 2025
+#############################################################################
+
+networks:
+  mangwale_ai:
+    driver: bridge
+    name: mangwale_ai_network
+
+volumes:
+  postgres_data:
+    name: mangwale_postgres_data
+  redis_data:
+    name: mangwale_redis_data
+  minio_data:
+    name: mangwale_minio_data
+  labelstudio_data:
+    name: mangwale_labelstudio_data
+  tts_cache:
+    name: mangwale_tts_cache
+
+services:
+  #############################################################################
+  # CORE INFRASTRUCTURE
+  #############################################################################
+
+  postgres:
+    image: postgres:16-alpine
+    container_name: mangwale_postgres
+    restart: unless-stopped
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=mangwale_config
+      - POSTGRES_PASSWORD=config_secure_pass_2024
+      - POSTGRES_DB=headless_mangwale
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - mangwale_ai
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U mangwale_config"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7.2-alpine
+    container_name: mangwale_redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - mangwale_ai
+    command: redis-server --appendonly yes
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  minio:
+    image: minio/minio:latest
+    container_name: mangwale_minio
+    restart: unless-stopped
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    environment:
+      - MINIO_ROOT_USER=minioadmin
+      - MINIO_ROOT_PASSWORD=minioadmin123
+    volumes:
+      - minio_data:/data
+    networks:
+      - mangwale_ai
+    command: server /data --console-address ":9001"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 30s
+      timeout: 20s
+      retries: 3
+
+  #############################################################################
+  # AI SERVICES
+  #############################################################################
+
+  vllm:
+    image: vllm/vllm-openai:v0.4.2
+    container_name: mangwale_vllm
+    restart: unless-stopped
+    runtime: nvidia
+    ports:
+      - "8002:8002"
+    environment:
+      - HF_TOKEN=${HF_TOKEN:-}
+      - NVIDIA_VISIBLE_DEVICES=0
+      - CUDA_VISIBLE_DEVICES=0
+    volumes:
+      - ./models:/root/.cache/huggingface
+    networks:
+      - mangwale_ai
+    command: >
+      --model Qwen/Qwen2.5-7B-Instruct-AWQ
+      --port 8002
+      --host 0.0.0.0
+      --max-model-len 4096
+      --tensor-parallel-size 1
+      --gpu-memory-utilization 0.9
+      --dtype auto
+      --quantization awq
+
+  nlu:
+    image: admin-nlu:latest
+    container_name: mangwale_nlu
+    restart: unless-stopped
+    runtime: nvidia
+    ports:
+      - "7010:7010"
+    environment:
+      # IndicBERTv2 Configuration (MLM-Back-TLM variant for best Hinglish support)
+      - HF_MODEL_NAME=${NLU_MODEL_NAME:-ai4bharat/IndicBERTv2-MLM-Back-TLM}
+      - BASE_ENCODER=  # Leave empty to use HF_MODEL_NAME
+      - INTENT_MODEL=${INTENT_MODEL_PATH:-/models/intent_v1}
+      - SLOTS_MODEL=
+      - TONE_MODEL=
+      # Service Configuration
+      - PORT=7010
+      - HOST=0.0.0.0
+      - TOKENIZERS_PARALLELISM=false
+      - LOG_LEVEL=${LOG_LEVEL:-info}
+      - NVIDIA_VISIBLE_DEVICES=0
+    volumes:
+      - ./models:/models
+      - ./training:/app/training
+      - ./logs/nlu:/app/logs
+    networks:
+      - mangwale_ai
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:7010/healthz"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  asr:
+    image: admin-asr-proxy:latest
+    container_name: mangwale_asr
+    restart: unless-stopped
+    ports:
+      - "7000:8000"
+    environment:
+      - MODEL_SIZE=base
+      - DEVICE=cpu
+    networks:
+      - mangwale_ai
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  tts:
+    image: admin-xtts:latest
+    container_name: mangwale_tts
+    restart: unless-stopped
+    ports:
+      - "8010:5501"
+    volumes:
+      - ./models/xtts:/app/models
+      - tts_cache:/root/.local/share/tts
+    environment:
+      - COQUI_TOS_AGREED=1
+      - XTTS_DEVICE=cpu
+    networks:
+      - mangwale_ai
+    healthcheck:
+      test: ["CMD-SHELL", "python3 -c \"import urllib.request; urllib.request.urlopen('http://localhost:5501/health', timeout=5)\""]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 120s
+
+  cv:
+    image: admin-cv:latest
+    container_name: mangwale_cv
+    restart: unless-stopped
+    ports:
+      - "7011:7011"
+    volumes:
+      - ./models/cv:/app/models
+    networks:
+      - mangwale_ai
+
+  #############################################################################
+  # ANALYTICS & TRAINING
+  #############################################################################
+
+  # ClickHouse removed - part of Search project (/home/ubuntu/Devs/Search)
+  # OpenSearch removed - part of Search project (/home/ubuntu/Devs/Search)
+
+  labelstudio:
+    image: heartexlabs/label-studio:1.21.0
+    container_name: mangwale_labelstudio
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    environment:
+      - DJANGO_DB=default
+      - POSTGRE_NAME=headless_mangwale
+      - POSTGRE_USER=mangwale_config
+      - POSTGRE_PASSWORD=config_secure_pass_2024
+      - POSTGRE_PORT=5432
+      - POSTGRE_HOST=postgres
+    volumes:
+      - labelstudio_data:/label-studio/data
+    networks:
+      - mangwale_ai
+    depends_on:
+      - postgres
+
+  #############################################################################
+  # MAIN APPLICATION
+  #############################################################################
+
+  mangwale-ai:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: mangwale_ai_server
+    restart: unless-stopped
+    ports:
+      - "3200:3200"
+    environment:
+      # Core Configuration
+      - NODE_ENV=${NODE_ENV:-production}
+      - PORT=${PORT:-3200}
+      - LOG_LEVEL=${LOG_LEVEL:-info}
+      
+      # Database & Cache
+      - DATABASE_URL=postgresql://mangwale_config:config_secure_pass_2024@postgres:5432/headless_mangwale
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      
+      # AI Services (Container-to-container communication)
+      - VLLM_URL=http://host.docker.internal:8002
+      - NLU_ENDPOINT=http://nlu:7010
+      - NLU_AI_ENABLED=${NLU_AI_ENABLED:-true}
+      - NLU_CONFIDENCE_THRESHOLD=${NLU_CONFIDENCE_THRESHOLD:-0.85}
+      - ASR_SERVICE_URL=http://asr:8000
+      - TTS_SERVICE_URL=http://tts:5501
+      - CV_SERVICE_URL=http://cv:7011
+      - MINIO_ENDPOINT=minio:9000
+      - MINIO_ACCESS_KEY=minioadmin
+      - MINIO_SECRET_KEY=minioadmin123
+    volumes:
+      - ./logs:/app/logs
+      - ./uploads:/app/uploads
+      - ./training:/app/training
+    networks:
+      - mangwale_ai
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    depends_on:
+      - postgres
+      - redis
+      - nlu
+      - asr
+      - tts
+      - cv
+      - minio
+      - labelstudio
+
+  # mangwale-ai:
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile
+  #   container_name: mangwale_ai
+  #   restart: unless-stopped
+  #   ports:
+  #     - "3200:3200"
+  #   environment:
+  #     - DATABASE_URL=postgresql://mangwale_config:config_secure_pass_2024@postgres:5432/headless_mangwale
+  #     - REDIS_HOST=redis
+  #     - REDIS_PORT=6379
+  #     - VLLM_URL=http://vllm:8002
+  #     - NLU_ENDPOINT=http://nlu:7010
+  #     - ASR_SERVICE_URL=http://asr:7000
+  #     - TTS_SERVICE_URL=http://tts:8010
+  #     - MINIO_ENDPOINT=minio:9000
+  #   volumes:
+  #     - ./logs:/app/logs
+  #     - ./uploads:/app/uploads
+  #     - ./training:/app/training
+  #   networks:
+  #     - mangwale_ai
+  #   depends_on:
+  #     - postgres
+  #     - redis
+  #     - vllm
+  #     - nlu
+  #     - asr
+  #     - tts
+  #     - minio
+  #     - clickhouse
+  #     - labelstudio

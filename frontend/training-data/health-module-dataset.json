@@ -1,0 +1,201 @@
+{
+  "name": "Health Module Training Dataset",
+  "module": "health",
+  "description": "Training dataset for health services, doctor appointments, and medicine orders",
+  "version": "1.0.0",
+  "intents": [
+    {
+      "intent": "book_appointment",
+      "examples": [
+        { "text": "Book doctor appointment", "entities": {} },
+        { "text": "I need to see a doctor", "entities": {} },
+        { "text": "Schedule appointment", "entities": {} },
+        { "text": "Book consultation", "entities": {} },
+        { "text": "Find a cardiologist", "entities": { "specialization": "cardiologist" } },
+        { "text": "I need a dentist", "entities": { "specialization": "dentist" } },
+        { "text": "Appointment for tomorrow", "entities": { "date": "tomorrow" } },
+        { "text": "See general physician", "entities": { "specialization": "general physician" } },
+        { "text": "Book checkup", "entities": {} },
+        { "text": "Doctor visit", "entities": {} }
+      ]
+    },
+    {
+      "intent": "search_doctor",
+      "examples": [
+        { "text": "Find doctors nearby", "entities": { "location": "nearby" } },
+        { "text": "Show me cardiologists", "entities": { "specialization": "cardiologists" } },
+        { "text": "Best doctors in Bangalore", "entities": { "location": "Bangalore" } },
+        { "text": "Pediatrician near me", "entities": { "specialization": "pediatrician", "location": "nearby" } },
+        { "text": "Find orthopedic surgeon", "entities": { "specialization": "orthopedic surgeon" } },
+        { "text": "Search for dermatologist", "entities": { "specialization": "dermatologist" } },
+        { "text": "Top rated doctors", "entities": {} },
+        { "text": "Find gynecologist", "entities": { "specialization": "gynecologist" } },
+        { "text": "Show ENT specialists", "entities": { "specialization": "ENT" } },
+        { "text": "Available doctors", "entities": {} }
+      ]
+    },
+    {
+      "intent": "order_medicine",
+      "examples": [
+        { "text": "Order medicine", "entities": {} },
+        { "text": "I need Paracetamol", "entities": { "medicine": "Paracetamol" } },
+        { "text": "Buy medicines", "entities": {} },
+        { "text": "Order prescription drugs", "entities": {} },
+        { "text": "I want to order Crocin", "entities": { "medicine": "Crocin" } },
+        { "text": "Buy health supplements", "entities": { "category": "supplements" } },
+        { "text": "Order vitamins", "entities": { "category": "vitamins" } },
+        { "text": "Need diabetes medicine", "entities": { "condition": "diabetes" } },
+        { "text": "Order BP tablets", "entities": { "condition": "BP" } },
+        { "text": "Buy antibiotics", "entities": { "category": "antibiotics" } }
+      ]
+    },
+    {
+      "intent": "upload_prescription",
+      "examples": [
+        { "text": "Upload prescription", "entities": {} },
+        { "text": "I have a prescription", "entities": {} },
+        { "text": "Send prescription", "entities": {} },
+        { "text": "Upload doctor's note", "entities": {} },
+        { "text": "Share prescription image", "entities": {} },
+        { "text": "Attach prescription", "entities": {} },
+        { "text": "Submit prescription", "entities": {} },
+        { "text": "Upload medical prescription", "entities": {} },
+        { "text": "Send prescription photo", "entities": {} },
+        { "text": "Add prescription", "entities": {} }
+      ]
+    },
+    {
+      "intent": "book_lab_test",
+      "examples": [
+        { "text": "Book blood test", "entities": { "test_type": "blood test" } },
+        { "text": "Schedule lab test", "entities": {} },
+        { "text": "I need X-ray", "entities": { "test_type": "X-ray" } },
+        { "text": "Book ECG", "entities": { "test_type": "ECG" } },
+        { "text": "Sugar test at home", "entities": { "test_type": "sugar test", "location": "home" } },
+        { "text": "Book health checkup package", "entities": { "test_type": "health checkup" } },
+        { "text": "CT scan appointment", "entities": { "test_type": "CT scan" } },
+        { "text": "Book ultrasound", "entities": { "test_type": "ultrasound" } },
+        { "text": "Full body checkup", "entities": { "test_type": "full body checkup" } },
+        { "text": "MRI scan", "entities": { "test_type": "MRI" } }
+      ]
+    },
+    {
+      "intent": "track_order",
+      "examples": [
+        { "text": "Track medicine order", "entities": {} },
+        { "text": "Where is my order?", "entities": {} },
+        { "text": "Order status", "entities": {} },
+        { "text": "When will medicines arrive?", "entities": {} },
+        { "text": "Track my order", "entities": {} },
+        { "text": "Show delivery status", "entities": {} },
+        { "text": "Medicine delivery status", "entities": {} },
+        { "text": "Track order #12345", "entities": { "order_id": "12345" } },
+        { "text": "Delivery tracking", "entities": {} },
+        { "text": "Where's my medicine?", "entities": {} }
+      ]
+    },
+    {
+      "intent": "get_doctor_info",
+      "examples": [
+        { "text": "Tell me about this doctor", "entities": {} },
+        { "text": "Doctor's qualifications", "entities": {} },
+        { "text": "Doctor's experience", "entities": {} },
+        { "text": "Show doctor profile", "entities": {} },
+        { "text": "Doctor reviews", "entities": {} },
+        { "text": "Consultation fee", "entities": {} },
+        { "text": "Doctor's availability", "entities": {} },
+        { "text": "Clinic address", "entities": {} },
+        { "text": "Doctor's specialization", "entities": {} },
+        { "text": "More about this doctor", "entities": {} }
+      ]
+    },
+    {
+      "intent": "reschedule_appointment",
+      "examples": [
+        { "text": "Reschedule appointment", "entities": {} },
+        { "text": "Change appointment time", "entities": {} },
+        { "text": "Move to next day", "entities": { "new_date": "next day" } },
+        { "text": "Change date", "entities": {} },
+        { "text": "Postpone appointment", "entities": {} },
+        { "text": "Reschedule for tomorrow", "entities": { "new_date": "tomorrow" } },
+        { "text": "Change timing", "entities": {} },
+        { "text": "Modify appointment", "entities": {} },
+        { "text": "Update appointment", "entities": {} },
+        { "text": "Different time slot", "entities": {} }
+      ]
+    },
+    {
+      "intent": "cancel_appointment",
+      "examples": [
+        { "text": "Cancel appointment", "entities": {} },
+        { "text": "I want to cancel", "entities": {} },
+        { "text": "Cancel my booking", "entities": {} },
+        { "text": "Cancel doctor visit", "entities": {} },
+        { "text": "Don't need appointment", "entities": {} },
+        { "text": "Cancel consultation", "entities": {} },
+        { "text": "Remove appointment", "entities": {} },
+        { "text": "I can't come", "entities": {} },
+        { "text": "Cancel booking", "entities": {} },
+        { "text": "Drop appointment", "entities": {} }
+      ]
+    },
+    {
+      "intent": "get_health_tips",
+      "examples": [
+        { "text": "Health tips", "entities": {} },
+        { "text": "How to stay healthy?", "entities": {} },
+        { "text": "Diabetes diet", "entities": { "condition": "diabetes" } },
+        { "text": "BP management tips", "entities": { "condition": "BP" } },
+        { "text": "Weight loss tips", "entities": { "goal": "weight loss" } },
+        { "text": "Healthy lifestyle", "entities": {} },
+        { "text": "Exercise recommendations", "entities": {} },
+        { "text": "Nutrition advice", "entities": {} },
+        { "text": "Health advice", "entities": {} },
+        { "text": "Wellness tips", "entities": {} }
+      ]
+    },
+    {
+      "intent": "check_medicine_availability",
+      "examples": [
+        { "text": "Is Paracetamol available?", "entities": { "medicine": "Paracetamol" } },
+        { "text": "Do you have this medicine?", "entities": {} },
+        { "text": "Check availability", "entities": {} },
+        { "text": "In stock?", "entities": {} },
+        { "text": "Is this available?", "entities": {} },
+        { "text": "Medicine stock", "entities": {} },
+        { "text": "Available medicines", "entities": {} },
+        { "text": "Check stock for insulin", "entities": { "medicine": "insulin" } },
+        { "text": "Do you have antibiotics?", "entities": { "category": "antibiotics" } },
+        { "text": "Out of stock?", "entities": {} }
+      ]
+    },
+    {
+      "intent": "ask_about_symptoms",
+      "examples": [
+        { "text": "I have fever", "entities": { "symptom": "fever" } },
+        { "text": "What medicine for headache?", "entities": { "symptom": "headache" } },
+        { "text": "I have cold and cough", "entities": { "symptom": "cold and cough" } },
+        { "text": "Stomach pain", "entities": { "symptom": "stomach pain" } },
+        { "text": "Having body ache", "entities": { "symptom": "body ache" } },
+        { "text": "Sore throat", "entities": { "symptom": "sore throat" } },
+        { "text": "I'm feeling weak", "entities": { "symptom": "weakness" } },
+        { "text": "Difficulty breathing", "entities": { "symptom": "breathing difficulty" } },
+        { "text": "Chest pain", "entities": { "symptom": "chest pain" } },
+        { "text": "What should I do for fever?", "entities": { "symptom": "fever" } }
+      ]
+    }
+  ],
+  "entities": [
+    { "name": "specialization", "description": "Doctor specialization" },
+    { "name": "location", "description": "Location for search" },
+    { "name": "date", "description": "Appointment date" },
+    { "name": "medicine", "description": "Medicine name" },
+    { "name": "category", "description": "Medicine category" },
+    { "name": "condition", "description": "Health condition" },
+    { "name": "test_type", "description": "Type of lab test" },
+    { "name": "order_id", "description": "Order tracking ID" },
+    { "name": "new_date", "description": "New appointment date" },
+    { "name": "symptom", "description": "Health symptom" },
+    { "name": "goal", "description": "Health goal" }
+  ]
+}

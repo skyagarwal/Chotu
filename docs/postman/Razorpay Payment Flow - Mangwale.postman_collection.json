@@ -1,0 +1,361 @@
+{
+	"info": {
+		"_postman_id": "2670aa32-01b2-4e91-8e7c-07b0205dd274",
+		"name": "Razorpay Payment Flow - Mangwale",
+		"description": "Complete Razorpay payment flow for Mangwale application including payment confirmation and order processing",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "43040121",
+		"_collection_link": "https://gold-shadow-790474.postman.co/workspace/My-Workspace~cd106445-c08f-498a-8f2f-ea9cb89a8fee/collection/43040121-2670aa32-01b2-4e91-8e7c-07b0205dd274?action=share&source=collection_link&creator=43040121"
+	},
+	"item": [
+		{
+			"name": "1. Payment Initialization",
+			"item": [
+				{
+					"name": "Get Payment Page",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/payment/razor-pay/pay?payment_id={{payment_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"payment",
+								"razor-pay",
+								"pay"
+							],
+							"query": [
+								{
+									"key": "payment_id",
+									"value": "{{payment_id}}",
+									"description": "UUID of the payment request"
+								}
+							]
+						},
+						"description": "Initialize payment page with payment request ID"
+					},
+					"response": []
+				},
+				{
+					"name": "Create Razorpay Order",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"payment_amount\": {{amount_rupees}},\n  \"currency_code\": \"{{currency_code}}\",\n  \"payment_request_id\": \"{{payment_id}}\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/payment/razor-pay/create-order",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"payment",
+								"razor-pay",
+								"create-order"
+							]
+						},
+						"description": "Create a Razorpay order for the payment amount"
+					},
+					"response": []
+				}
+			],
+			"description": "Initial payment setup and order creation"
+		},
+		{
+			"name": "2. Flutter SDK Callback",
+			"item": [
+				{
+					"name": "Verify Payment (SDK Success)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"order_id\": \"{{razorpay_order_id}}\",\n  \"payment_id\": \"{{razorpay_payment_id}}\",\n  \"signature\": \"{{razorpay_signature}}\",\n  \"payment_request_id\": \"{{payment_id}}\",\n  \"payment_platform\": \"android\"\n}\n"
+						},
+						"url": {
+							"raw": "{{base_url}}/payment/razor-pay/verify-payment",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"payment",
+								"razor-pay",
+								"verify-payment"
+							]
+						},
+						"description": "Call this immediately after the Flutter SDK returns success. Uses the SDK callback values to capture and confirm payment."
+					},
+					"response": []
+				},
+				{
+					"name": "[Optional] Legacy Web Form Capture",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "razorpay_payment_id",
+									"value": "{{razorpay_payment_id}}",
+									"description": "Payment ID from Razorpay"
+								},
+								{
+									"key": "razorpay_order_id",
+									"value": "{{razorpay_order_id}}",
+									"description": "Order ID from Razorpay"
+								},
+								{
+									"key": "razorpay_signature",
+									"value": "{{razorpay_signature}}",
+									"description": "Signature from Razorpay"
+								},
+								{
+									"key": "payment_id",
+									"value": "{{payment_id}}",
+									"description": "Internal payment request ID"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/payment/razor-pay/payment",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"payment",
+								"razor-pay",
+								"payment"
+							]
+						},
+						"description": "Legacy web checkout capture endpoint. Keep for reference; not used by the Flutter SDK."
+					},
+					"response": []
+				}
+			],
+			"description": "Endpoints the Flutter SDK calls after the user confirms payment."
+		},
+		{
+			"name": "3. Payment Callbacks",
+			"item": [
+				{
+					"name": "Payment Success Callback",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "razorpay_payment_id",
+									"value": "{{razorpay_payment_id}}",
+									"description": "Payment ID from Razorpay"
+								},
+								{
+									"key": "payment_data",
+									"value": "{{encoded_payment_data}}",
+									"description": "Base64 encoded payment request ID"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/payment/razor-pay/callback",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"payment",
+								"razor-pay",
+								"callback"
+							]
+						},
+						"description": "Callback for successful payment processing"
+					},
+					"response": []
+				},
+				{
+					"name": "Payment Cancel",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/payment/razor-pay/cancel?payment_id={{payment_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"payment",
+								"razor-pay",
+								"cancel"
+							],
+							"query": [
+								{
+									"key": "payment_id",
+									"value": "{{payment_id}}",
+									"description": "Internal payment request ID"
+								}
+							]
+						},
+						"description": "Handle payment cancellation"
+					},
+					"response": []
+				}
+			],
+			"description": "Payment callback handling"
+		},
+		{
+			"name": "4. Order Status Check",
+			"item": [
+				{
+					"name": "Check Payment Request Status",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/order/status/{{order_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"order",
+								"status",
+								"{{order_id}}"
+							]
+						},
+						"description": "Check the status of an order after payment"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Order Details",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/order/details/{{order_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"order",
+								"details",
+								"{{order_id}}"
+							]
+						},
+						"description": "Get detailed order information"
+					},
+					"response": []
+				}
+			],
+			"description": "Check order status and details"
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"// Set default values if not already set",
+					"if (!pm.environment.get('base_url')) {",
+					"    pm.environment.set('base_url', 'https://new.mangwale.com');",
+					"}",
+					"",
+					"// Generate a sample payment ID if not set",
+					"if (!pm.environment.get('payment_id')) {",
+					"    pm.environment.set('payment_id', '86bdebfa-1913-49aa-b9a8-0e3d557d837a');",
+					"}",
+					"",
+					"// Generate sample Razorpay IDs if not set",
+					"if (!pm.environment.get('razorpay_payment_id')) {",
+					"    pm.environment.set('razorpay_payment_id', 'pay_sample123456789');",
+					"}",
+					"",
+					"if (!pm.environment.get('razorpay_order_id')) {",
+					"    pm.environment.set('razorpay_order_id', 'order_sample123456789');",
+					"}",
+					"",
+					"if (!pm.environment.get('razorpay_signature')) {",
+					"    pm.environment.set('razorpay_signature', 'sample_signature_123456789');",
+					"}",
+					"",
+					"// Encode payment ID for callback",
+					"const paymentId = pm.environment.get('payment_id');",
+					"const encodedPaymentData = Buffer.from(paymentId).toString('base64');",
+					"pm.environment.set('encoded_payment_data', encodedPaymentData);"
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"// Log response for debugging",
+					"console.log('Response Status:', pm.response.status);",
+					"console.log('Response Body:', pm.response.text());",
+					"",
+					"// Extract useful data from responses",
+					"if (pm.response.json && pm.response.json().order_id) {",
+					"    pm.environment.set('order_id', pm.response.json().order_id);",
+					"}",
+					"",
+					"if (pm.response.json && pm.response.json().transaction_id) {",
+					"    pm.environment.set('transaction_id', pm.response.json().transaction_id);",
+					"}"
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "https://new.mangwale.com",
+			"type": "string"
+		},
+		{
+			"key": "payment_id",
+			"value": "86bdebfa-1913-49aa-b9a8-0e3d557d837a",
+			"type": "string"
+		},
+		{
+			"key": "amount_rupees",
+			"value": "73.00",
+			"type": "string"
+		},
+		{
+			"key": "currency_code",
+			"value": "INR",
+			"type": "string"
+		}
+	]
+}

@@ -1,0 +1,318 @@
+# ============================================================
+# DELIVERY MAN AUTHENTICATION FLOW v1.0
+# ============================================================
+# Authentication flow for delivery partners:
+#   - Email + Password login
+#   - Profile loading
+#   - Online/Offline status toggle
+#   - Quick actions for deliveries
+# ============================================================
+
+id: delivery_auth_v1
+name: Delivery Man Authentication
+description: Login flow for delivery partners
+version: "1.0.0"
+module: delivery
+trigger: delivery_login
+enabled: true
+
+contextSchema:
+  # Credentials
+  email: { type: string }
+  password: { type: string }
+  
+  # Delivery Man Profile
+  dm_id: { type: number }
+  dm_name: { type: string }
+  dm_phone: { type: string }
+  vehicle_type: { type: string }
+  is_online: { type: boolean, default: false }
+  rating: { type: number }
+  total_deliveries: { type: number }
+  
+  # Session
+  dm_token: { type: string }
+  is_dm_authenticated: { type: boolean, default: false }
+  login_attempts: { type: number, default: 0 }
+  
+  # Location
+  current_lat: { type: number }
+  current_lng: { type: number }
+
+initialState: welcome_dm
+finalStates: [dm_authenticated, dm_cancelled]
+
+constants:
+  MAX_LOGIN_ATTEMPTS: 3
+
+states:
+  # ============================================================
+  # WELCOME
+  # ============================================================
+  welcome_dm:
+    type: action
+    description: Greet delivery partner and ask for credentials
+    actions:
+      - id: greet
+        executor: response
+        config:
+          message: |
+            🚚 *Delivery Partner Portal*
+            
+            Welcome! Please login to start delivering.
+            
+            Enter your registered *email address*:
+    transitions:
+      success: collect_email
+
+  # ============================================================
+  # EMAIL COLLECTION
+  # ============================================================
+  collect_email:
+    type: input
+    description: Collect delivery man email
+    inputConfig:
+      variable: email
+      validation:
+        pattern: "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$"
+        errorMessage: "Please enter a valid email address"
+      prompt: "Enter your email:"
+    actions:
+      - id: save_email
+        executor: response
+        config:
+          saveToContext:
+            email: "{{input}}"
+    transitions:
+      valid: ask_password
+      invalid: invalid_email
+
+  invalid_email:
+    type: action
+    actions:
+      - id: error_msg
+        executor: response
+        config:
+          message: |
+            ❌ Invalid email format.
+            
+            Please enter your registered email (e.g., rider@example.com):
+    transitions:
+      success: collect_email
+
+  # ============================================================
+  # PASSWORD COLLECTION
+  # ============================================================
+  ask_password:
+    type: action
+    actions:
+      - id: ask
+        executor: response
+        config:
+          message: |
+            ✅ Email: *{{email}}*
+            
+            Now enter your *password*:
+    transitions:
+      success: collect_password
+
+  collect_password:
+    type: input
+    description: Collect password
+    inputConfig:
+      variable: password
+      validation:
+        minLength: 4
+        errorMessage: "Password must be at least 4 characters"
+      prompt: "Enter password:"
+      sensitive: true
+    actions:
+      - id: save_password
+        executor: response
+        config:
+          saveToContext:
+            password: "{{input}}"
+    transitions:
+      valid: attempt_login
+      invalid: invalid_password
+
+  invalid_password:
+    type: action
+    actions:
+      - id: error_msg
+        executor: response
+        config:
+          message: "❌ Password too short. Please try again:"
+    transitions:
+      success: collect_password
+
+  # ============================================================
+  # LOGIN ATTEMPT
+  # ============================================================
+  attempt_login:
+    type: action
+    description: Attempt delivery man login via PHP backend
+    actions:
+      - id: login
+        executor: php_api
+        config:
+          action: delivery_man_login
+          email: "{{email}}"
+          password: "{{password}}"
+        output: login_result
+    transitions:
+      success: check_login_result
+      error: login_failed
+
+  check_login_result:
+    type: decision
+    conditions:
+      - expression: "context.login_result?.success && context.login_result?.data?.token"
+        event: success
+      - expression: "context.login_attempts >= 2"
+        event: max_attempts
+    transitions:
+      success: load_dm_profile
+      max_attempts: too_many_attempts
+      default: login_failed
+
+  login_failed:
+    type: action
+    actions:
+      - id: increment_attempts
+        executor: response
+        config:
+          saveToContext:
+            login_attempts: "{{login_attempts + 1}}"
+      
+      - id: error_msg
+        executor: response
+        config:
+          message: |
+            ❌ Login failed. Please check your credentials.
+            
+            Attempt {{login_attempts + 1}} of 3
+            
+            Enter your *email* again:
+    transitions:
+      success: collect_email
+
+  too_many_attempts:
+    type: action
+    actions:
+      - id: blocked
+        executor: response
+        config:
+          message: |
+            🚫 Too many failed attempts.
+            
+            Please try again later or contact support.
+          buttons:
+            - id: contact_support
+              title: Contact Support
+            - id: try_later
+              title: Try Later
+    transitions:
+      success: dm_cancelled
+
+  # ============================================================
+  # PROFILE LOADING
+  # ============================================================
+  load_dm_profile:
+    type: action
+    description: Load delivery man profile after successful login
+    actions:
+      - id: save_token
+        executor: response
+        config:
+          saveToContext:
+            dm_token: "{{login_result.data.token}}"
+            is_dm_authenticated: true
+      
+      - id: get_profile
+        executor: php_api
+        config:
+          action: get_delivery_man_profile
+          token: "{{login_result.data.token}}"
+        output: dm_profile
+    transitions:
+      success: profile_loaded
+      error: profile_error
+
+  profile_loaded:
+    type: action
+    actions:
+      - id: save_profile
+        executor: response
+        config:
+          saveToContext:
+            dm_id: "{{dm_profile.id}}"
+            dm_name: "{{dm_profile.firstName}}"
+            dm_phone: "{{dm_profile.phone}}"
+            vehicle_type: "{{dm_profile.vehicleType}}"
+            is_online: "{{dm_profile.isOnline}}"
+            rating: "{{dm_profile.rating}}"
+            total_deliveries: "{{dm_profile.totalDeliveries}}"
+      
+      - id: welcome_back
+        executor: response
+        config:
+          message: |
+            ✅ *Welcome, {{dm_profile.firstName}}!* 🚚
+            
+            ⭐ Rating: *{{dm_profile.rating || 'N/A'}}*
+            📦 Total Deliveries: *{{dm_profile.totalDeliveries || 0}}*
+            🚗 Vehicle: *{{dm_profile.vehicleType || 'Not set'}}*
+            
+            Status: {{dm_profile.isOnline ? '🟢 Online' : '🔴 Offline'}}
+            
+            What would you like to do?
+          buttons:
+            - id: view_orders
+              title: 📦 My Orders
+            - id: go_online
+              title: 🟢 Go Online
+            - id: go_offline
+              title: 🔴 Go Offline
+            - id: earnings
+              title: 💰 My Earnings
+    transitions:
+      success: dm_authenticated
+
+  profile_error:
+    type: action
+    actions:
+      - id: error_msg
+        executor: response
+        config:
+          message: |
+            ⚠️ Login successful but couldn't load your profile.
+            
+            Please try again or contact support.
+    transitions:
+      success: dm_cancelled
+
+  # ============================================================
+  # FINAL STATES
+  # ============================================================
+  dm_authenticated:
+    type: final
+    description: Delivery man successfully authenticated
+    actions:
+      - id: complete
+        executor: response
+        config:
+          saveToContext:
+            flow_completed: true
+            authenticated_user_type: "delivery_man"
+
+  dm_cancelled:
+    type: final
+    description: Authentication cancelled or failed
+    actions:
+      - id: complete
+        executor: response
+        config:
+          saveToContext:
+            flow_completed: false
+            authenticated_user_type: null

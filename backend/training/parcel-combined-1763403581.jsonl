@@ -1,0 +1,275 @@
+{"text" : "please send my package to Chennai", "intent" : "create_parcel_order", "language" : "auto", "entities" : {"destination": "Chennai"}, "tone" : "polite"}
+{"text" : "book a parcel", "intent" : "create_parcel_order", "language" : "auto", "entities" : {}, "tone" : "neutral"}
+{"text" : "I need to ship something", "intent" : "create_parcel_order", "language" : "auto", "entities" : {}, "tone" : "neutral"}
+{"text" : "send courier", "intent" : "create_parcel_order", "language" : "auto", "entities" : {}, "tone" : "neutral"}
+{"text" : "parcel delivery needed", "intent" : "create_parcel_order", "language" : "auto", "entities" : {}, "tone" : "neutral"}
+{"text" : "ih", "intent" : "greeting", "language" : "auto", "entities" : {}, "tone" : "neutral"}
+{"text" : "ih", "intent" : "greeting", "language" : "auto", "entities" : {}, "tone" : "neutral"}
+{"text" : "Hello", "intent" : "greeting", "language" : "auto", "entities" : {}, "tone" : "polite"}
+{"text" : "hi", "intent" : "greeting", "language" : "auto", "entities" : {}, "tone" : "polite"}
+{"text" : "Hello", "intent" : "greeting", "language" : "auto", "entities" : {}, "tone" : "polite"}
+{"text" : "game", "intent" : "play_game", "language" : "auto", "entities" : {}, "tone" : "neutral"}
+{"text" : "hi", "intent" : "greeting", "language" : "auto", "entities" : {}, "tone" : "polite"}
+{"text" : "hello", "intent" : "greeting", "language" : "auto", "entities" : {}, "tone" : "neutral"}
+{"text" : "hi", "intent" : "greeting", "language" : "auto", "entities" : {}, "tone" : "polite"}
+{"text" : "food", "intent" : "order_food", "language" : "auto", "entities" : {}, "tone" : "neutral"}
+{"text" : "some think quick", "intent" : "greeting", "language" : "auto", "entities" : {}, "tone" : "neutral"}
+{"text" : "some think quick", "intent" : "greeting", "language" : "auto", "entities" : {}, "tone" : "neutral"}
+{"text" : "ganesh sweets", "intent" : "order_food", "language" : "auto", "entities" : {"product": "ganesh sweets"}, "tone" : "neutral"}
+{"text" : "ganesh sweets", "intent" : "search_product", "language" : "auto", "entities" : {}, "tone" : "neutral"}
+{"text" : "game", "intent" : "play_game", "language" : "auto", "entities" : {}, "tone" : "neutral"}
+{"text" : "game", "intent" : "play_game", "language" : "auto", "entities" : {}, "tone" : "neutral"}
+{"text" : "hello", "intent" : "greeting", "language" : "auto", "entities" : {}, "tone" : "polite"}
+{"text" : "hi", "intent" : "greeting", "language" : "auto", "entities" : {}, "tone" : "polite"}
+{"text" : "hi", "intent" : "greeting", "language" : "auto", "entities" : {}, "tone" : "polite"}
+{"text" : "what can you do", "intent" : "browse_menu", "language" : "auto", "entities" : {}, "tone" : "neutral"}
+{"text" : "hello", "intent" : "greeting", "language" : "auto", "entities" : {}, "tone" : "polite"}
+{"text" : "hi", "intent" : "greeting", "language" : "auto", "entities" : {}, "tone" : "polite"}
+{"text" : "hello", "intent" : "greeting", "language" : "auto", "entities" : {}, "tone" : "neutral"}
+{"text" : "hi", "intent" : "greeting", "language" : "auto", "entities" : {}, "tone" : "polite"}
+{"text" : "hello", "intent" : "greeting", "language" : "auto", "entities" : {}, "tone" : "polite"}
+{"text" : "hi", "intent" : "greeting", "language" : "auto", "entities" : {}, "tone" : "polite"}
+{"text" : "hello", "intent" : "greeting", "language" : "auto", "entities" : {}, "tone" : "polite"}
+{"text" : "parcel", "intent" : "create_parcel_order", "language" : "auto", "entities" : {}, "tone" : "neutral"}
+{"text" : "my home", "intent" : "browse_menu", "language" : "auto", "entities" : {}, "tone" : "neutral"}
+{"text" : "its there my address", "intent" : "track_order", "language" : "auto", "entities" : {}, "tone" : "neutral"}
+{"text" : "login", "intent" : "account_login", "language" : "auto", "entities" : {}, "tone" : "neutral"}
+{"text" : "hello", "intent" : "greeting", "language" : "auto", "entities" : {}, "tone" : "polite"}
+{"text" : "hi", "intent" : "greeting", "language" : "auto", "entities" : {}, "tone" : "polite"}
+{"text" : "hi", "intent" : "greeting", "language" : "auto", "entities" : {}, "tone" : "polite"}
+{"text" : "hello", "intent" : "greeting", "language" : "auto", "entities" : {}, "tone" : "polite"}
+{"text" : "parcel", "intent" : "create_parcel_order", "language" : "auto", "entities" : {}, "tone" : "neutral"}
+{"text" : "📍 My current location is: 19.977685, 73.776274", "intent" : "share_location", "language" : "auto", "entities" : {}, "tone" : "neutral"}
+{"text" : "📍 My current location is: 19.977685, 73.776274", "intent" : "share_location", "language" : "auto", "entities" : {}, "tone" : "neutral"}
+{"text" : "Hello", "intent" : "greeting", "language" : "auto", "entities" : {}, "tone" : "polite"}
+{"text" : "Hello", "intent" : "greeting", "language" : "auto", "entities" : {}, "tone" : "neutral"}
+{"text" : "Any games", "intent" : "play_game", "language" : "auto", "entities" : {}, "tone" : "neutral"}
+{"text" : "hello", "intent" : "greeting", "language" : "auto", "entities" : {}, "tone" : "polite"}
+{"text" : "lets play some game", "intent" : "play_game", "language" : "auto", "entities" : {}, "tone" : "neutral"}
+{"text" : "yes", "intent" : "greeting", "language" : "auto", "entities" : {}, "tone" : "neutral"}
+{"text" : "lets play the game", "intent" : "play_game", "language" : "auto", "entities" : {}, "tone" : "neutral"}
+{"text" : "parcel", "intent" : "create_parcel_order", "language" : "auto", "entities" : {}, "tone" : "neutral"}
+{"text" : "pick up from my home and give it to my office address are saved if not ask me", "intent" : "create_parcel_order", "language" : "auto", "entities" : {}, "tone" : "neutral"}
+{"text" : "yes lets proceed", "intent" : "confirm", "language" : "auto", "entities" : {}, "tone" : "neutral"}
+{"text" : "book a parcel", "intent" : "create_parcel_order", "language" : "auto", "entities" : {}, "tone" : "neutral"}
+{"text" : "can you book a parvel pickup from https://maps.app.goo.gl/k2pysWPmw316cGbJ7 and drop to my home address a bike would be fine , its just a small food parcel", "intent" : "create_parcel_order", "language" : "auto", "entities" : {"bike": "true", "product": "food parcel", "location": "https://maps.app.goo.gl/k2pysWPmw316cGbJ7", "drop_location": "user's home address (not provided)", "pickup_location": "https://maps.app.goo.gl/k2pysWPmw316cGbJ7"}, "tone" : "neutral"}
+{"text" : "parcel booking", "intent" : "create_parcel_order", "language" : "auto", "entities" : {}, "tone" : "neutral"}
+{"text" : "who are you ?", "intent" : "greeting", "language" : "auto", "entities" : {}, "tone" : "polite"}
+{"text" : "earn reawds", "intent" : "earn", "language" : "auto", "entities" : {}, "tone" : "neutral"}
+{"text" : "hi", "intent" : "greeting", "language" : "auto", "entities" : {}, "tone" : "polite"}
+{"text" : "plat game", "intent" : "play_game", "language" : "auto", "entities" : {}, "tone" : "neutral"}
+{"text" : "food", "intent" : "order_food", "language" : "auto", "entities" : {}, "tone" : "neutral"}
+{"text" : "food ordering", "intent" : "order_food", "language" : "auto", "entities" : {}, "tone" : "neutral"}
+{"text" : "ganesh sweet mali paneer 1kg", "intent" : "order_food", "language" : "auto", "entities" : {"product": "ganesh sweet mali paneer 1kg"}, "tone" : "neutral"}
+{"text" : "hi", "intent" : "greeting", "language" : "auto", "entities" : {}, "tone" : "polite"}
+{"text" : "lets play a game", "intent" : "play_game", "language" : "auto", "entities" : {}, "tone" : "neutral"}
+{"text" : "yes", "intent" : "greeting", "language" : "auto", "entities" : {}, "tone" : "polite"}
+{"text" : "yes", "intent" : "greeting", "language" : "auto", "entities" : {}, "tone" : "polite"}
+{"text" : "i want to get a parcel", "intent" : "create_parcel_order", "language" : "auto", "entities" : {}, "tone" : "polite"}
+{"text" : "yes now", "intent" : "greeting", "language" : "auto", "entities" : {}, "tone" : "polite"}
+{"text" : "cany i place the order here", "intent" : "create_parcel_order", "language" : "auto", "entities" : {}, "tone" : "neutral"}
+{"text" : "i can login", "intent" : "account_login", "language" : "auto", "entities" : {}, "tone" : "neutral"}
+{"text" : "what my name ?", "intent" : "account_info", "language" : "auto", "entities" : {}, "tone" : "neutral"}
+{"text" : "📍 My current location is: 19.977686, 73.776263", "intent" : "share_location", "language" : "auto", "entities" : {}, "tone" : "neutral"}
+{"text" : "can i order food", "intent" : "order_food", "language" : "auto", "entities" : {}, "tone" : "polite"}
+{"text" : "get me 1kg paneer to my home from ganesh sweets", "intent" : "order_food", "language" : "auto", "entities" : {"store": "ganesh sweets", "product": "paneer", "location": "home"}, "tone" : "polite"}
+{"text" : "📍 My current location is: 19.977687, 73.776273", "intent" : "share_location", "language" : "auto", "entities" : {}, "tone" : "neutral"}
+{"text" : "yes correct place the order", "intent" : "create_parcel_order", "language" : "auto", "entities" : {}, "tone" : "polite"}
+{"text" : "thats it", "intent" : "greeting", "language" : "auto", "entities" : {}, "tone" : "polite"}
+{"text" : "whats my order number", "intent" : "track_order", "language" : "auto", "entities" : {}, "tone" : "neutral"}
+{"text" : "no playment taken", "intent" : "support_request", "language" : "auto", "entities" : {}, "tone" : "neutral"}
+{"text" : "h", "intent" : "greeting", "language" : "auto", "entities" : {}, "tone" : "polite"}
+{"text" : "parcel", "intent" : "create_parcel_order", "language" : "auto", "entities" : {}, "tone" : "neutral"}
+{"text" : "Hi", "intent" : "greeting", "language" : "auto", "entities" : {}, "tone" : "polite"}
+{"text" : "Hello", "intent" : "greeting", "language" : "auto", "entities" : {}, "tone" : "polite"}
+{"text" : "Food", "intent" : "order_food", "language" : "auto", "entities" : {}, "tone" : "neutral"}
+{"text" : "paneer", "intent" : "order_food", "language" : "auto", "entities" : {"product": "paneer"}, "tone" : "neutral"}
+{"text" : "paneer", "intent" : "search_product", "language" : "auto", "entities" : {}, "tone" : "neutral"}
+{"text" : "I want 1kg Paneer from ganesh sweets , delivered at my home", "intent" : "order_food", "language" : "auto", "entities" : {"store": "ganesh sweets", "product": "1kg Paneer", "location": "my home"}, "tone" : "polite"}
+{"text" : "I want to send a parcel", "intent" : "create_parcel_order", "language" : "auto", "entities" : {}, "tone" : "polite"}
+{"text" : "I want to send a parcel", "intent" : "create_parcel_order", "language" : "auto", "entities" : {}, "tone" : "polite"}
+{"text" : "hi! i want to order biryani", "intent" : "order_food", "language" : "auto", "entities" : {"product": "biryani"}, "tone" : "polite"}
+{"text" : "i need to send a parcel from nashik to mumbai", "intent" : "parcel_booking", "language" : "auto", "entities" : {"to_location": "mumbai", "from_location": "nashik"}, "tone" : "neutral"}
+{"text" : "i want to buy a smartphone under 15000", "intent" : "search_product", "language" : "auto", "entities" : {"budget": "15000", "product": "smartphone"}, "tone" : "neutral"}
+{"text" : "can i get 2 chicken tikka pizzas delivered?", "intent" : "order_food", "language" : "auto", "entities" : {"product": "chicken tikka pizzas"}, "tone" : "polite"}
+{"text" : "hello! what can you do?", "intent" : "greeting", "language" : "auto", "entities" : {}, "tone" : "polite"}
+{"text" : "i need to send urgent documents to my client in pune by tomorrow morning, also want to order lunch for 5 people with vegetarian options, and buy a laptop bag under 2000 rupees", "intent" : "parcel_booking", "language" : "auto", "entities" : {"date": "tomorrow morning", "urgency": "urgent", "destination": "pune"}, "tone" : "polite"}
+{"text" : "hi", "intent" : "greeting", "language" : "auto", "entities" : {}, "tone" : "polite"}
+{"text" : "whats up", "intent" : "greeting", "language" : "auto", "entities" : {}, "tone" : "polite"}
+{"text" : "what do you do", "intent" : "support_request", "language" : "auto", "entities" : {}, "tone" : "neutral"}
+{"text" : "i never said parcel?", "intent" : "create_parcel_order", "language" : "auto", "entities" : {}, "tone" : "confused"}
+{"text" : "Hi! I want to order biryani", "intent" : "order_food", "language" : "auto", "entities" : {"product": "biryani"}, "tone" : "polite"}
+{"text" : "Make it spicy", "intent" : "order_food", "language" : "auto", "entities" : {"product": "spicy food"}, "tone" : "polite"}
+{"text" : "Make it spicy", "intent" : "search_product", "language" : "auto", "entities" : {}, "tone" : "neutral"}
+{"text" : "Hi! I want to order biryani", "intent" : "order_food", "language" : "auto", "entities" : {"product": "biryani"}, "tone" : "polite"}
+{"text" : "Make it spicy", "intent" : "order_food", "language" : "auto", "entities" : {"product": "spicy food"}, "tone" : "polite"}
+{"text" : "Make it spicy", "intent" : "search_product", "language" : "auto", "entities" : {}, "tone" : "neutral"}
+{"text" : "hi", "intent" : "greeting", "language" : "auto", "entities" : {}, "tone" : "polite"}
+{"text" : "hi", "intent" : "greeting", "language" : "auto", "entities" : {}, "tone" : "polite"}
+{"text" : "Lets play game", "intent" : "play_game", "language" : "auto", "entities" : {}, "tone" : "neutral"}
+{"text" : "i said lets play game", "intent" : "play_game", "language" : "auto", "entities" : {}, "tone" : "neutral"}
+{"text" : "lets play game", "intent" : "earn", "language" : "auto", "entities" : {}, "tone" : "polite"}
+{"text" : "Hello", "intent" : "greeting", "language" : "auto", "entities" : {}, "tone" : "polite"}
+{"text" : "Lets play a game", "intent" : "earn", "language" : "auto", "entities" : {}, "tone" : "polite"}
+{"text" : "i want to earn money", "intent" : "earn", "language" : "auto", "entities" : {}, "tone" : "polite"}
+{"text" : "I want to play intent quest game", "intent" : "earn", "language" : "auto", "entities" : {}, "tone" : "polite"}
+{"text" : "I want pizza", "intent" : "order_food", "language" : "auto", "entities" : {"product": "pizza"}, "tone" : "polite"}
+{"text" : "Hi", "intent" : "greeting", "language" : "auto", "entities" : {}, "tone" : "polite"}
+{"text" : "Let me earn some points", "intent" : "earn", "language" : "auto", "entities" : {}, "tone" : "neutral"}
+{"text" : "hi", "intent" : "greeting", "language" : "auto", "entities" : {}, "tone" : "polite"}
+{"text" : "Whats up", "intent" : "greeting", "language" : "auto", "entities" : {}, "tone" : "polite"}
+{"text" : "No i didnt know", "intent" : "confirm", "language" : "auto", "entities" : {}, "tone" : "neutral"}
+{"text" : "tell me more about it", "intent" : "browse_menu", "language" : "auto", "entities" : {}, "tone" : "neutral"}
+{"text" : "hi", "intent" : "greeting", "language" : "auto", "entities" : {}, "tone" : "polite"}
+{"text" : "lets go", "intent" : "confirm", "language" : "auto", "entities" : {}, "tone" : "neutral"}
+{"text" : "can u also order food here", "intent" : "order_food", "language" : "auto", "entities" : {}, "tone" : "polite"}
+{"text" : "place order to a resurant near me to 2  butter naan sent to my home i will pay online now", "intent" : "order_food", "language" : "auto", "entities" : {"product": "2 butter naan"}, "tone" : "polite"}
+{"text" : "place order to a resurant near me to 2  butter naan sent to my home i will pay online now", "intent" : "parcel_booking", "language" : "auto", "entities" : {}, "tone" : "urgent"}
+{"text" : "📍 My current location is: 18.579456, 73.816474", "intent" : "browse_menu", "language" : "auto", "entities" : {"location": "18.579456, 73.816474"}, "tone" : "neutral"}
+{"text" : "hi", "intent" : "greeting", "language" : "auto", "entities" : {}, "tone" : "polite"}
+{"text" : "game", "intent" : "earn", "language" : "auto", "entities" : {}, "tone" : "neutral"}
+{"text" : "hi", "intent" : "greeting", "language" : "auto", "entities" : {}, "tone" : "polite"}
+{"text" : "order food", "intent" : "order_food", "language" : "auto", "entities" : {}, "tone" : "neutral"}
+{"text" : "kuch aacha , aur jaldi aajaye", "intent" : "polite", "language" : "auto", "entities" : {}, "tone" : "polite"}
+{"text" : "kuch aacha , aur jaldi aajaye", "intent" : "neutral", "language" : "auto", "entities" : {}, "tone" : "urgent"}
+{"text" : "paneer tikka", "intent" : "order_food", "language" : "auto", "entities" : {"product": "paneer tikka"}, "tone" : "neutral"}
+{"text" : "earn", "intent" : "earn", "language" : "auto", "entities" : {}, "tone" : "neutral"}
+{"text" : "earn", "intent" : "earn", "language" : "auto", "entities" : {}, "tone" : "neutral"}
+{"text" : "lets play game", "intent" : "earn", "language" : "auto", "entities" : {}, "tone" : "polite"}
+{"text" : "earn", "intent" : "earn", "language" : "auto", "entities" : {}, "tone" : "neutral"}
+{"text" : "hello", "intent" : "greeting", "language" : "auto", "entities" : {}, "tone" : "polite"}
+{"text" : "earn", "intent" : "earn", "language" : "auto", "entities" : {}, "tone" : "neutral"}
+{"text" : "Hello", "intent" : "greeting", "language" : "auto", "entities" : {}, "tone" : "polite"}
+{"text" : "Parcel", "intent" : "parcel_booking", "language" : "auto", "entities" : {}, "tone" : "neutral"}
+{"text" : "📍 My current location is: 19.960491, 73.758813", "intent" : "browse_menu", "language" : "auto", "entities" : {"location": "19.960491, 73.758813"}, "tone" : "neutral"}
+{"text" : "📍 My current location is: 19.960491, 73.758813", "intent" : "share_location", "language" : "auto", "entities" : {}, "tone" : "neutral"}
+{"text" : "Drop location you don't need", "intent" : "cancel_order", "language" : "auto", "entities" : {}, "tone" : "polite"}
+{"text" : "Hello", "intent" : "greeting", "language" : "auto", "entities" : {}, "tone" : "polite"}
+{"text" : "What can you do for me", "intent" : "browse_menu", "language" : "auto", "entities" : {}, "tone" : "neutral"}
+{"text" : "📍 My current location is: 18.572902, 73.793536", "intent" : "browse_menu", "language" : "auto", "entities" : {"location": "18.572902, 73.793536"}, "tone" : "neutral"}
+{"text" : "Do you want drop address", "intent" : "parcel_booking", "language" : "auto", "entities" : {}, "tone" : "neutral"}
+{"text" : "📍 My current location is: 19.960547, 73.758779", "intent" : "browse_menu", "language" : "auto", "entities" : {"location": "19.960547, 73.758779"}, "tone" : "neutral"}
+{"text" : "📍 My current location is: 19.960547, 73.758779", "intent" : "share_location", "language" : "auto", "entities" : {}, "tone" : "neutral"}
+{"text" : "ok", "intent" : "greeting", "language" : "auto", "entities" : {}, "tone" : "polite"}
+{"text" : "Hello", "intent" : "greeting", "language" : "auto", "entities" : {}, "tone" : "polite"}
+{"text" : "What does mangwale do", "intent" : "search_product", "language" : "auto", "entities" : {"product": "mangwale"}, "tone" : "neutral"}
+{"text" : "i am looking for mali paneer", "intent" : "order_food", "language" : "auto", "entities" : {"product": "mali paneer"}, "tone" : "neutral"}
+{"text" : "i am looking for mali paneer", "intent" : "search_product", "language" : "auto", "entities" : {"product_name": "mali paneer"}, "tone" : "neutral"}
+{"text" : "mali paneer 1 kg from ganesh sweets", "intent" : "order_food", "language" : "auto", "entities" : {"vendor": "ganesh sweets", "product": "mali paneer", "quantity": "1 kg"}, "tone" : "neutral"}
+{"text" : "Hello", "intent" : "greeting", "language" : "auto", "entities" : {}, "tone" : "polite"}
+{"text" : "lets play a game", "intent" : "earn", "language" : "auto", "entities" : {}, "tone" : "polite"}
+{"text" : "hi", "intent" : "greeting", "language" : "auto", "entities" : {}, "tone" : "polite"}
+{"text" : "hello", "intent" : "greeting", "language" : "auto", "entities" : {}, "tone" : "polite"}
+{"text" : "hello", "intent" : "greeting", "language" : "auto", "entities" : {}, "tone" : "polite"}
+{"text" : "hi", "intent" : "greeting", "language" : "auto", "entities" : {}, "tone" : "polite"}
+{"text" : "I want to play a game", "intent" : "earn", "language" : "auto", "entities" : {}, "tone" : "polite"}
+{"text" : "hello", "intent" : "greeting", "language" : "auto", "entities" : {}, "tone" : "neutral"}
+{"text" : "Hello, I want to order food", "intent" : "order_food", "language" : "auto", "entities" : {}, "tone" : "neutral"}
+{"text" : "I want to play a game", "intent" : "unknown", "language" : "auto", "entities" : {}, "tone" : "neutral"}
+{"text" : "I want to earn", "intent" : "unknown", "language" : "auto", "entities" : {}, "tone" : "neutral"}
+{"text" : "hi", "intent" : "unknown", "language" : "auto", "entities" : {}, "tone" : "neutral"}
+{"text" : "hi", "intent" : "unknown", "language" : "auto", "entities" : {}, "tone" : "neutral"}
+{"text" : "hello", "intent" : "greeting", "language" : "auto", "entities" : {}, "tone" : "polite"}
+{"text" : "I want to play a game", "intent" : "unknown", "language" : "auto", "entities" : {}, "tone" : "neutral"}
+{"text" : "earn", "intent" : "unknown", "language" : "auto", "entities" : {}, "tone" : "neutral"}
+{"text" : "game", "intent" : "unknown", "language" : "auto", "entities" : {}, "tone" : "neutral"}
+{"text":"How much for College Road to Gangapur Road delivery?","intent":"parcel_pricing_inquiry","entities":{"pickup_location":"College Road","delivery_location":"Gangapur Road"},"language":"en","module_id":3,"module_type":"parcel","confidence":1,"source":"synthetic-vllm"}
+{"text":"Need to send a parcel from Satpur MIDC to Nashik Road, any rates?","intent":"parcel_pricing_inquiry","entities":{"pickup_location":"Satpur MIDC","delivery_location":"Nashik Road"},"language":"en","module_id":3,"module_type":"parcel","confidence":1,"source":"synthetic-vllm"}
+{"text":"Parcel from Cidco to Gangapur Road, cost?","intent":"parcel_pricing_inquiry","entities":{"pickup_location":"Gangapur Road","delivery_location":"Cidco"},"language":"en","module_id":3,"module_type":"parcel","confidence":1,"source":"synthetic-vllm"}
+{"text":"Picking up parcel from Ravivar Karanja, got rates?","intent":"parcel_pricing_inquiry","entities":{"pickup_location":"Ravivar Karanja"},"language":"en","module_id":3,"module_type":"parcel","confidence":1,"source":"synthetic-vllm"}
+{"text":"Satpur MIDC to Nashik Road parcel delivery, price?","intent":"parcel_pricing_inquiry","entities":{"pickup_location":"Satpur MIDC","delivery_location":"Nashik Road"},"language":"en","module_id":3,"module_type":"parcel","confidence":1,"source":"synthetic-vllm"}
+{"text":"Ravivar Karanja to Panchavati, parcel sending, how much?","intent":"parcel_pricing_inquiry","entities":{"pickup_location":"Ravivar Karanja","delivery_location":"Panchavati"},"language":"en","module_id":3,"module_type":"parcel","confidence":1,"source":"synthetic-vllm"}
+{"text":"गंगपुर रोड ते सतपुर MIDC पार्सल कित्ता हो?","intent":"parcel_pricing_inquiry","entities":{},"language":"hi","module_id":3,"module_type":"parcel","confidence":1,"source":"synthetic-vllm"}
+{"text":"बहुत तेजस्वी गंगपुर रोड ते नाशिक रोड पार्सल कित्ता कित्ता?","intent":"parcel_pricing_inquiry","entities":{},"language":"hi","module_id":3,"module_type":"parcel","confidence":1,"source":"synthetic-vllm"}
+{"text":"Satpur MIDC se Cidco tak kitni रिटा चाहिए?","intent":"parcel_pricing_inquiry","entities":{"pickup_location":"Satpur MIDC","delivery_location":"Cidco"},"language":"hinglish","module_id":3,"module_type":"parcel","confidence":1,"source":"synthetic-vllm"}
+{"text":"नाझीकड्यात गंगापुर रोड ते सतपुर मिड्सी तक पार्सल कितेच?","intent":"parcel_pricing_inquiry","entities":{},"language":"mr","module_id":3,"module_type":"parcel","confidence":1,"source":"synthetic-vllm"}
+{"text":"Need bike for College Road to Gangapur Road","intent":"vehicle_inquiry","entities":{"pickup_location":"College Road","delivery_location":"Gangapur Road","vehicle_type":"bike"},"language":"en","module_id":3,"module_type":"parcel","confidence":1,"source":"synthetic-vllm"}
+{"text":"Auto delivery available for Nashik Road area?","intent":"vehicle_inquiry","entities":{"pickup_location":"Nashik Road","vehicle_type":"auto"},"language":"en","module_id":3,"module_type":"parcel","confidence":1,"source":"synthetic-vllm"}
+{"text":"Tempo required for Panchavati, can you help?","intent":"vehicle_inquiry","entities":{"pickup_location":"Panchavati","vehicle_type":"tempo"},"language":"en","module_id":3,"module_type":"parcel","confidence":1,"source":"synthetic-vllm"}
+{"text":"Looking for bike delivery, urgent please","intent":"vehicle_inquiry","entities":{"vehicle_type":"bike","urgency":"high"},"language":"en","module_id":3,"module_type":"parcel","confidence":1,"source":"synthetic-vllm"}
+{"text":"Ravivar Karanja to Cidco, can you do auto?","intent":"vehicle_inquiry","entities":{"pickup_location":"Cidco","delivery_location":"Ravivar Karanja","vehicle_type":"auto"},"language":"en","module_id":3,"module_type":"parcel","confidence":1,"source":"synthetic-vllm"}
+{"text":"Need a bike, Satpur MIDC to Dwarka","intent":"vehicle_inquiry","entities":{"pickup_location":"Satpur MIDC","delivery_location":"Dwarka","vehicle_type":"bike"},"language":"en","module_id":3,"module_type":"parcel","confidence":1,"source":"synthetic-vllm"}
+{"text":"गंगपुर रोड येथे नशीक रोड तकी फोक्सिंग वाहन डेलीवर करण्यासाठी मिळती आहे","intent":"vehicle_inquiry","entities":{},"language":"hi","module_id":3,"module_type":"parcel","confidence":1,"source":"synthetic-vllm"}
+{"text":"डवरका येथे पंचावती तकी टेम्पो डेलीवर करण्यासाठी माहिती मिळवाती आहे","intent":"vehicle_inquiry","entities":{"vehicle_type":"टेम्पो"},"language":"hi","module_id":3,"module_type":"parcel","confidence":1,"source":"synthetic-vllm"}
+{"text":"College Road se Panchavati tak auto bhej sakte hain","intent":"vehicle_inquiry","entities":{"pickup_location":"College Road","delivery_location":"Panchavati","vehicle_type":"auto"},"language":"hinglish","module_id":3,"module_type":"parcel","confidence":1,"source":"synthetic-vllm"}
+{"text":"गंगापुर रोड ते सतपुर MIDC पार्सल कसे भेजतात?","intent":"vehicle_inquiry","entities":{},"language":"mr","module_id":3,"module_type":"parcel","confidence":1,"source":"synthetic-vllm"}
+{"text":"When will it reach Gangapur Road?","intent":"delivery_time_inquiry","entities":{"pickup_location":"Gangapur Road"},"language":"en","module_id":3,"module_type":"parcel","confidence":1,"source":"synthetic-vllm"}
+{"text":"Cidco to Panchavati, how long?","intent":"delivery_time_inquiry","entities":{"pickup_location":"Cidco","delivery_location":"Panchavati"},"language":"en","module_id":3,"module_type":"parcel","confidence":1,"source":"synthetic-vllm"}
+{"text":"急需从Cidco送到Panchvati的时间","intent":"delivery_time_inquiry","entities":{"pickup_location":"Cidco"},"language":"en","module_id":3,"module_type":"parcel","confidence":1,"source":"synthetic-vllm"}
+{"text":"Will my parcel be there by evening, College Road?","intent":"delivery_time_inquiry","entities":{"pickup_location":"College Road"},"language":"en","module_id":3,"module_type":"parcel","confidence":1,"source":"synthetic-vllm"}
+{"text":"Satpur MIDC_delivery_time_plz","intent":"delivery_time_inquiry","entities":{"pickup_location":"Satpur MIDC"},"language":"en","module_id":3,"module_type":"parcel","confidence":1,"source":"synthetic-vllm"}
+{"text":"How long does it usually take from Ravivar Karanja?","intent":"delivery_time_inquiry","entities":{"pickup_location":"Ravivar Karanja"},"language":"en","module_id":3,"module_type":"parcel","confidence":1,"source":"synthetic-vllm"}
+{"text":"गंगापुर रोड ते सतपुर मिडसी पासून पार्सल किती वेळ लेत जात?","intent":"delivery_time_inquiry","entities":{},"language":"hi","module_id":3,"module_type":"parcel","confidence":1,"source":"synthetic-vllm"}
+{"text":"मला नाशिक रोड ते रविवार करंजा पार्सल आणि ते कधी पहिले पासून आयेत?","intent":"delivery_time_inquiry","entities":{},"language":"hi","module_id":3,"module_type":"parcel","confidence":1,"source":"synthetic-vllm"}
+{"text":"Dwarka se Nashik Road tak kitni wakt lagegi parcel mein?","intent":"delivery_time_inquiry","entities":{"pickup_location":"Nashik Road","delivery_location":"Dwarka"},"language":"hinglish","module_id":3,"module_type":"parcel","confidence":1,"source":"synthetic-vllm"}
+{"text":"गोंगापूर रुड्ड्यावेसाठी आपाचे पार्सल केल्यानंतर तेही कित्या काळ मिळेल?","intent":"delivery_time_inquiry","entities":{},"language":"mr","module_id":3,"module_type":"parcel","confidence":1,"source":"synthetic-vllm"}
+{"text":"Can you deliver to Gangapur Road?","intent":"service_area_check","entities":{"pickup_location":"Gangapur Road"},"language":"en","module_id":3,"module_type":"parcel","confidence":1,"source":"synthetic-vllm"}
+{"text":"Need parcel to College Road urgently.","intent":"service_area_check","entities":{"pickup_location":"College Road","urgency":"high"},"language":"en","module_id":3,"module_type":"parcel","confidence":1,"source":"synthetic-vllm"}
+{"text":"Satpur MIDC par delivery karte re?","intent":"service_area_check","entities":{"pickup_location":"Satpur MIDC"},"language":"en","module_id":3,"module_type":"parcel","confidence":1,"source":"synthetic-vllm"}
+{"text":"Cidco mein bhejiya jata re?","intent":"service_area_check","entities":{"pickup_location":"Cidco"},"language":"en","module_id":3,"module_type":"parcel","confidence":1,"source":"synthetic-vllm"}
+{"text":"Delivering to Panchavati?","intent":"service_area_check","entities":{"pickup_location":"Panchavati"},"language":"en","module_id":3,"module_type":"parcel","confidence":1,"source":"synthetic-vllm"}
+{"text":"Can you drop a parcel in Ravivar Karanja?","intent":"service_area_check","entities":{"pickup_location":"Ravivar Karanja"},"language":"en","module_id":3,"module_type":"parcel","confidence":1,"source":"synthetic-vllm"}
+{"text":"गंगपुर रोड ते सतपुर MIDC ते पार्सल किस मानदर निकलते?","intent":"service_area_check","entities":{},"language":"hi","module_id":3,"module_type":"parcel","confidence":1,"source":"synthetic-vllm"}
+{"text":"रवीवर कारनाज़ाना ते नाशिक रोड ते पार्सल करते ना?","intent":"service_area_check","entities":{},"language":"hi","module_id":3,"module_type":"parcel","confidence":1,"source":"synthetic-vllm"}
+{"text":"Satpur MIDC mei to delivery karte hain kya?","intent":"service_area_check","entities":{"pickup_location":"Satpur MIDC"},"language":"hinglish","module_id":3,"module_type":"parcel","confidence":1,"source":"synthetic-vllm"}
+{"text":"रविवर करनाजे या क्षेत्रात भेटी पार्सल भेटू शकतात?","intent":"service_area_check","entities":{},"language":"mr","module_id":3,"module_type":"parcel","confidence":1,"source":"synthetic-vllm"}
+{"text":"College Road to Gangapur Road parcel please","intent":"create_parcel_order","entities":{"pickup_location":"College Road","delivery_location":"Gangapur Road"},"language":"en","module_id":3,"module_type":"parcel","confidence":1,"source":"synthetic-vllm"}
+{"text":"Need urgent delivery from Satpur MIDC","intent":"create_parcel_order","entities":{"pickup_location":"Satpur MIDC","urgency":"high"},"language":"en","module_id":3,"module_type":"parcel","confidence":1,"source":"synthetic-vllm"}
+{"text":"Panchavati to Dwarka parcel order made","intent":"create_parcel_order","entities":{"pickup_location":"Dwarka","delivery_location":"Panchavati"},"language":"en","module_id":3,"module_type":"parcel","confidence":1,"source":"synthetic-vllm"}
+{"text":"Satpur MIDC se Cidco tak parcel bhejni hai","intent":"create_parcel_order","entities":{"pickup_location":"Satpur MIDC","delivery_location":"Cidco"},"language":"en","module_id":3,"module_type":"parcel","confidence":1,"source":"synthetic-vllm"}
+{"text":"Gangapur Road to College Road parcel needed","intent":"create_parcel_order","entities":{"pickup_location":"College Road","delivery_location":"Gangapur Road"},"language":"en","module_id":3,"module_type":"parcel","confidence":1,"source":"synthetic-vllm"}
+{"text":"Ravivar Karanja to Nashik Road parcel order","intent":"create_parcel_order","entities":{"pickup_location":"Nashik Road","delivery_location":"Ravivar Karanja"},"language":"en","module_id":3,"module_type":"parcel","confidence":1,"source":"synthetic-vllm"}
+{"text":"गोंगापुर रोड से सातपुर टक पार्सल भेजणा है","intent":"create_parcel_order","entities":{},"language":"hi","module_id":3,"module_type":"parcel","confidence":1,"source":"synthetic-vllm"}
+{"text":"बहुत त्यक्त गोंगापुर रोड से सातपुर मिड्सी टक पार्सल भेजना चाहिए","intent":"create_parcel_order","entities":{},"language":"hi","module_id":3,"module_type":"parcel","confidence":1,"source":"synthetic-vllm"}
+{"text":"College Road se Cidco tak parcel rakhne hogi","intent":"create_parcel_order","entities":{"pickup_location":"College Road","delivery_location":"Cidco"},"language":"hinglish","module_id":3,"module_type":"parcel","confidence":1,"source":"synthetic-vllm"}
+{"text":"गॅंगापुर रोड ते सतपुर मिड्सीकडे पार्सल भेजण्याचा आहे","intent":"create_parcel_order","entities":{},"language":"mr","module_id":3,"module_type":"parcel","confidence":1,"source":"synthetic-vllm"}
+{"text":"Pickup Nashik Road, drop at Cidco and Satpur MIDC","intent":"multi_delivery_booking","entities":{"pickup_location":"Satpur MIDC","delivery_location":"Nashik Road"},"language":"en","module_id":3,"module_type":"parcel","confidence":1,"source":"synthetic-vllm"}
+{"text":"Need urgent delivery to Ravivar Karanja","intent":"multi_delivery_booking","entities":{"pickup_location":"Ravivar Karanja","urgency":"high"},"language":"en","module_id":3,"module_type":"parcel","confidence":1,"source":"synthetic-vllm"}
+{"text":"Satpur MIDC and Dwarka se panchavati tak delivery bhejiya jaye","intent":"multi_delivery_booking","entities":{"pickup_location":"Satpur MIDC","delivery_location":"Dwarka"},"language":"en","module_id":3,"module_type":"parcel","confidence":1,"source":"synthetic-vllm"}
+{"text":"College Road se Gangapur Road par multi drop booking karna hai","intent":"multi_delivery_booking","entities":{"pickup_location":"College Road","delivery_location":"Gangapur Road"},"language":"en","module_id":3,"module_type":"parcel","confidence":1,"source":"synthetic-vllm"}
+{"text":"Panchavati, Cidco, and Satpur MIDC drops karne ki booking karo","intent":"multi_delivery_booking","entities":{"pickup_location":"Satpur MIDC","delivery_location":"Cidco","multi_delivery":true},"language":"en","module_id":3,"module_type":"parcel","confidence":1,"source":"synthetic-vllm"}
+{"text":"Ravivar Karanja se Panchavati tak multi-drop booking karna hai","intent":"multi_delivery_booking","entities":{"pickup_location":"Ravivar Karanja","delivery_location":"Panchavati"},"language":"en","module_id":3,"module_type":"parcel","confidence":1,"source":"synthetic-vllm"}
+{"text":"गोंगापुर रुड़ो माल भेजणाऱ्या अधिक धोरणांसाठी मदत करा","intent":"multi_delivery_booking","entities":{},"language":"hi","module_id":3,"module_type":"parcel","confidence":1,"source":"synthetic-vllm"}
+{"text":"सितपुर मिड्सी, नाशिक रूड आणि रवीवर करांजात चाहिए तो माल भेजणाऱ्या मदत करा","intent":"multi_delivery_booking","entities":{},"language":"hi","module_id":3,"module_type":"parcel","confidence":1,"source":"synthetic-vllm"}
+{"text":"College Road se Cidco tak multiple drop points hai, urgent","intent":"multi_delivery_booking","entities":{"pickup_location":"College Road","delivery_location":"Cidco","urgency":"high","multi_delivery":true},"language":"hinglish","module_id":3,"module_type":"parcel","confidence":1,"source":"synthetic-vllm"}
+{"text":"ऑर्डर कराल आणि College Road, Gangapur Road, Satpur MIDC तयार करा, नंतर Nashik Road ते Cidco ते ले बेहतरीन माहिती आहे","intent":"multi_delivery_booking","entities":{"pickup_location":"College Road","delivery_location":"Gangapur Road"},"language":"mr","module_id":3,"module_type":"parcel","confidence":1,"source":"synthetic-vllm"}
+{"text":"Track my parcel status please","intent":"track_order","entities":{},"language":"en","module_id":3,"module_type":"parcel","confidence":1,"source":"synthetic-vllm"}
+{"text":"When will it reach Nashik Road?","intent":"track_order","entities":{"pickup_location":"Nashik Road"},"language":"en","module_id":3,"module_type":"parcel","confidence":1,"source":"synthetic-vllm"}
+{"text":"Parcel aaye ga kya from College Road?","intent":"track_order","entities":{"pickup_location":"College Road"},"language":"en","module_id":3,"module_type":"parcel","confidence":1,"source":"synthetic-vllm"}
+{"text":"Need status update急（corrected to English: \"Need status update\"）","intent":"track_order","entities":{},"language":"en","module_id":3,"module_type":"parcel","confidence":1,"source":"synthetic-vllm"}
+{"text":"When will my parcel arrive in Cidco?","intent":"track_order","entities":{"pickup_location":"Cidco"},"language":"en","module_id":3,"module_type":"parcel","confidence":1,"source":"synthetic-vllm"}
+{"text":"Parcels aaye hain kya from Gangapur Road?","intent":"track_order","entities":{"pickup_location":"Gangapur Road"},"language":"en","module_id":3,"module_type":"parcel","confidence":1,"source":"synthetic-vllm"}
+{"text":"गंगापुर रोड येथ्या फेरीत नेशिके तुमचा पार्सल आहे, तो काय माहित आहे?","intent":"track_order","entities":{},"language":"hi","module_id":3,"module_type":"parcel","confidence":1,"source":"synthetic-vllm"}
+{"text":"मला नेशिके तुमचा व्यावसायिक पार्सल Satpur MIDC येथून पाठवले आहे, तो काय आहे?","intent":"track_order","entities":{"pickup_location":"Satpur MIDC"},"language":"hi","module_id":3,"module_type":"parcel","confidence":1,"source":"synthetic-vllm"}
+{"text":"College Road se Nashik Road tak mein parcel bhejni hui hai, status dikhayeonga","intent":"track_order","entities":{"pickup_location":"College Road","delivery_location":"Nashik Road"},"language":"hinglish","module_id":3,"module_type":"parcel","confidence":1,"source":"synthetic-vllm"}
+{"text":"गंगापुर रोड ते सतपुर MIDC पर्यंत माल कोरण्याची माहिती मिळवी लागते","intent":"track_order","entities":{},"language":"mr","module_id":3,"module_type":"parcel","confidence":1,"source":"synthetic-vllm"}
+{"text":"Cancel my parcel from Cidco to Gangapur Road","intent":"cancel_order","entities":{"pickup_location":"Gangapur Road","delivery_location":"Cidco"},"language":"en","module_id":3,"module_type":"parcel","confidence":1,"source":"synthetic-vllm"}
+{"text":"Can I cancel the parcel from Nashik Road?","intent":"cancel_order","entities":{"pickup_location":"Nashik Road"},"language":"en","module_id":3,"module_type":"parcel","confidence":1,"source":"synthetic-vllm"}
+{"text":"Cancel my parcel, it's going to College Road","intent":"cancel_order","entities":{"pickup_location":"College Road"},"language":"en","module_id":3,"module_type":"parcel","confidence":1,"source":"synthetic-vllm"}
+{"text":"I need to cancel the parcel from Panchavati","intent":"cancel_order","entities":{"pickup_location":"Panchavati"},"language":"en","module_id":3,"module_type":"parcel","confidence":1,"source":"synthetic-vllm"}
+{"text":"Cancel please, it's going to Dwarka","intent":"cancel_order","entities":{"pickup_location":"Dwarka"},"language":"en","module_id":3,"module_type":"parcel","confidence":1,"source":"synthetic-vllm"}
+{"text":"Can I cancel this parcel, it's urgent and going to Gangapur Road","intent":"cancel_order","entities":{"pickup_location":"Gangapur Road","urgency":"high"},"language":"en","module_id":3,"module_type":"parcel","confidence":1,"source":"synthetic-vllm"}
+{"text":"गंगापुर रोड ते सतपुर मिड्सीकडे पार्सल रद्द करावी लागवी","intent":"cancel_order","entities":{},"language":"hi","module_id":3,"module_type":"parcel","confidence":1,"source":"synthetic-vllm"}
+{"text":"सतपुर मिड्सी ते नाशिक रोड पर्यंत दिलेल्या पार्सलाला रद्द करावी लागेस नाही?","intent":"cancel_order","entities":{},"language":"hi","module_id":3,"module_type":"parcel","confidence":1,"source":"synthetic-vllm"}
+{"text":"College Road se Cidco tak cancel karwani hai, zaroor karo yaar","intent":"cancel_order","entities":{"pickup_location":"College Road","delivery_location":"Cidco"},"language":"hinglish","module_id":3,"module_type":"parcel","confidence":1,"source":"synthetic-vllm"}
+{"text":"गंगापुर रोड ते सातपुर मिड्सीकड्या पार्सल न केला म्हणून मी चांगल्या शॉट मेल्सातील असा आहे","intent":"cancel_order","entities":{},"language":"mr","module_id":3,"module_type":"parcel","confidence":1,"source":"synthetic-vllm"}
+{"text":"Change address to Cidco","intent":"change_delivery_address","entities":{"pickup_location":"Cidco"},"language":"en","module_id":3,"module_type":"parcel","confidence":1,"source":"synthetic-vllm"}
+{"text":"Gangapur Road address bhej","intent":"change_delivery_address","entities":{"pickup_location":"Gangapur Road"},"language":"en","module_id":3,"module_type":"parcel","confidence":1,"source":"synthetic-vllm"}
+{"text":"Need to change to Panchavati","intent":"change_delivery_address","entities":{"pickup_location":"Panchavati"},"language":"en","module_id":3,"module_type":"parcel","confidence":1,"source":"synthetic-vllm"}
+{"text":"Ravivar Karanja ke delivery change karo","intent":"change_delivery_address","entities":{"pickup_location":"Ravivar Karanja"},"language":"en","module_id":3,"module_type":"parcel","confidence":1,"source":"synthetic-vllm"}
+{"text":"Address change karo College Road to Satpur MIDC","intent":"change_delivery_address","entities":{"pickup_location":"College Road","delivery_location":"Satpur MIDC"},"language":"en","module_id":3,"module_type":"parcel","confidence":1,"source":"synthetic-vllm"}
+{"text":"Can we change to Nashik Road please","intent":"change_delivery_address","entities":{"pickup_location":"Nashik Road"},"language":"en","module_id":3,"module_type":"parcel","confidence":1,"source":"synthetic-vllm"}
+{"text":"गंगपुर रोड सेबं College Road तक परासल बदलना है","intent":"change_delivery_address","entities":{"pickup_location":"College Road"},"language":"hi","module_id":3,"module_type":"parcel","confidence":1,"source":"synthetic-vllm"}
+{"text":"रवीवर करांजना से द्वारका तक पार्सल कहां जा रहा है?","intent":"change_delivery_address","entities":{},"language":"hi","module_id":3,"module_type":"parcel","confidence":1,"source":"synthetic-vllm"}
+{"text":"College Road se Panchavati tak change karna hai,急死我了","intent":"change_delivery_address","entities":{"pickup_location":"College Road","delivery_location":"Panchavati"},"language":"hinglish","module_id":3,"module_type":"parcel","confidence":1,"source":"synthetic-vllm"}
+{"text":"गंगापुर रोड ते सतपुर मिड्सी ते पाठवण्यासाठी बदलवा, मी तुमच्या सेवेत अत्यंत आवश्यक आहे!","intent":"change_delivery_address","entities":{},"language":"mr","module_id":3,"module_type":"parcel","confidence":1,"source":"synthetic-vllm"}
+{"text":"Add Gangapur Road as next stop","intent":"add_delivery_stop","entities":{"pickup_location":"Gangapur Road"},"language":"en","module_id":3,"module_type":"parcel","confidence":1,"source":"synthetic-vllm"}
+{"text":"Need to add Satpur MIDC","intent":"add_delivery_stop","entities":{"pickup_location":"Satpur MIDC"},"language":"en","module_id":3,"module_type":"parcel","confidence":1,"source":"synthetic-vllm"}
+{"text":"Can I add College Road?","intent":"add_delivery_stop","entities":{"pickup_location":"College Road"},"language":"en","module_id":3,"module_type":"parcel","confidence":1,"source":"synthetic-vllm"}
+{"text":"Gangapur Road se delivery karna hai","intent":"add_delivery_stop","entities":{"pickup_location":"Gangapur Road"},"language":"en","module_id":3,"module_type":"parcel","confidence":1,"source":"synthetic-vllm"}
+{"text":"Add Nashik Road, urgent!","intent":"add_delivery_stop","entities":{"pickup_location":"Nashik Road","urgency":"high"},"language":"en","module_id":3,"module_type":"parcel","confidence":1,"source":"synthetic-vllm"}
+{"text":"Ravivar Karanja se Satpur MIDC","intent":"add_delivery_stop","entities":{"pickup_location":"Satpur MIDC","delivery_location":"Ravivar Karanja"},"language":"en","module_id":3,"module_type":"parcel","confidence":1,"source":"synthetic-vllm"}
+{"text":"गंगापुर रोड याबद्दल पार्सल भेजणी ही आहे","intent":"add_delivery_stop","entities":{},"language":"hi","module_id":3,"module_type":"parcel","confidence":1,"source":"synthetic-vllm"}
+{"text":"रव्हिबार करंजा याही डलवा नाही, सतपुर MIDC ते विलकून आणणारा पार्सल मिळवा मागात आहे","intent":"add_delivery_stop","entities":{},"language":"hi","module_id":3,"module_type":"parcel","confidence":1,"source":"synthetic-vllm"}
+{"text":"College Road se Cidco tak add karne laga","intent":"add_delivery_stop","entities":{"pickup_location":"College Road","delivery_location":"Cidco"},"language":"hinglish","module_id":3,"module_type":"parcel","confidence":1,"source":"synthetic-vllm"}
+{"text":"दिलेली सामान रविवार करंजना येथून ट्रकमध्ये नोकरी करण्याची आहे","intent":"add_delivery_stop","entities":{},"language":"mr","module_id":3,"module_type":"parcel","confidence":1,"source":"synthetic-vllm"}

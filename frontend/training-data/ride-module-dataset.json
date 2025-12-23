@@ -1,0 +1,203 @@
+{
+  "name": "Ride Module Training Dataset",
+  "module": "ride",
+  "description": "Training dataset for ride booking, cab services, and trip management",
+  "version": "1.0.0",
+  "intents": [
+    {
+      "intent": "book_ride",
+      "examples": [
+        { "text": "Book a cab", "entities": {} },
+        { "text": "I need a ride", "entities": {} },
+        { "text": "Book taxi", "entities": {} },
+        { "text": "Get me a car", "entities": {} },
+        { "text": "I want to go to airport", "entities": { "destination": "airport" } },
+        { "text": "Book ride to Whitefield", "entities": { "destination": "Whitefield" } },
+        { "text": "Need cab for 4 people", "entities": { "passengers": 4 } },
+        { "text": "Book SUV", "entities": { "vehicle_type": "SUV" } },
+        { "text": "I need a ride now", "entities": { "urgency": "now" } },
+        { "text": "Schedule cab for tomorrow", "entities": { "schedule": "tomorrow" } }
+      ]
+    },
+    {
+      "intent": "set_pickup_location",
+      "examples": [
+        { "text": "Pick up from Koramangala", "entities": { "location": "Koramangala" } },
+        { "text": "My current location", "entities": { "location_type": "current" } },
+        { "text": "Pickup at MG Road", "entities": { "location": "MG Road" } },
+        { "text": "From this address", "entities": {} },
+        { "text": "Start from home", "entities": { "location_type": "home" } },
+        { "text": "Pick me up at office", "entities": { "location_type": "office" } },
+        { "text": "Pickup location is HSR", "entities": { "location": "HSR" } },
+        { "text": "Come to Indiranagar", "entities": { "location": "Indiranagar" } },
+        { "text": "My location", "entities": {} },
+        { "text": "Here", "entities": {} }
+      ]
+    },
+    {
+      "intent": "set_destination",
+      "examples": [
+        { "text": "Drop me at airport", "entities": { "destination": "airport" } },
+        { "text": "Going to Whitefield", "entities": { "destination": "Whitefield" } },
+        { "text": "To Electronic City", "entities": { "destination": "Electronic City" } },
+        { "text": "Destination is mall", "entities": { "destination": "mall" } },
+        { "text": "Take me home", "entities": { "destination_type": "home" } },
+        { "text": "Drop at office", "entities": { "destination_type": "office" } },
+        { "text": "I want to go to Bangalore airport", "entities": { "destination": "Bangalore airport" } },
+        { "text": "Drop location", "entities": {} },
+        { "text": "To this location", "entities": {} },
+        { "text": "Destination saved location", "entities": {} }
+      ]
+    },
+    {
+      "intent": "choose_vehicle_type",
+      "examples": [
+        { "text": "I want a sedan", "entities": { "vehicle_type": "sedan" } },
+        { "text": "Book SUV", "entities": { "vehicle_type": "SUV" } },
+        { "text": "Mini car", "entities": { "vehicle_type": "mini" } },
+        { "text": "Bike ride", "entities": { "vehicle_type": "bike" } },
+        { "text": "Auto rickshaw", "entities": { "vehicle_type": "auto" } },
+        { "text": "Luxury car", "entities": { "vehicle_type": "luxury" } },
+        { "text": "Shared ride", "entities": { "ride_type": "shared" } },
+        { "text": "Premium car", "entities": { "vehicle_type": "premium" } },
+        { "text": "XL vehicle", "entities": { "vehicle_type": "XL" } },
+        { "text": "Economy car", "entities": { "vehicle_type": "economy" } }
+      ]
+    },
+    {
+      "intent": "get_fare_estimate",
+      "examples": [
+        { "text": "How much will it cost?", "entities": {} },
+        { "text": "Fare estimate", "entities": {} },
+        { "text": "What's the price?", "entities": {} },
+        { "text": "Calculate fare", "entities": {} },
+        { "text": "How much to airport?", "entities": { "destination": "airport" } },
+        { "text": "Price for this trip", "entities": {} },
+        { "text": "Estimated cost", "entities": {} },
+        { "text": "Fare breakdown", "entities": {} },
+        { "text": "Show me the fare", "entities": {} },
+        { "text": "Trip cost", "entities": {} }
+      ]
+    },
+    {
+      "intent": "track_ride",
+      "examples": [
+        { "text": "Where is my cab?", "entities": {} },
+        { "text": "Track driver", "entities": {} },
+        { "text": "Show ride status", "entities": {} },
+        { "text": "Where is the driver?", "entities": {} },
+        { "text": "ETA", "entities": {} },
+        { "text": "When will driver arrive?", "entities": {} },
+        { "text": "Track my ride", "entities": {} },
+        { "text": "Driver location", "entities": {} },
+        { "text": "How far is the driver?", "entities": {} },
+        { "text": "Ride tracking", "entities": {} }
+      ]
+    },
+    {
+      "intent": "cancel_ride",
+      "examples": [
+        { "text": "Cancel ride", "entities": {} },
+        { "text": "I want to cancel", "entities": {} },
+        { "text": "Cancel booking", "entities": {} },
+        { "text": "Cancel this trip", "entities": {} },
+        { "text": "I don't need the cab", "entities": {} },
+        { "text": "Cancel my ride", "entities": {} },
+        { "text": "Stop the booking", "entities": {} },
+        { "text": "I changed my mind", "entities": {} },
+        { "text": "Cancel order", "entities": {} },
+        { "text": "Don't need ride anymore", "entities": {} }
+      ]
+    },
+    {
+      "intent": "contact_driver",
+      "examples": [
+        { "text": "Call driver", "entities": {} },
+        { "text": "Contact driver", "entities": {} },
+        { "text": "Message driver", "entities": {} },
+        { "text": "Talk to driver", "entities": {} },
+        { "text": "Driver contact", "entities": {} },
+        { "text": "Phone driver", "entities": {} },
+        { "text": "Send message to driver", "entities": {} },
+        { "text": "Call the driver", "entities": {} },
+        { "text": "Speak with driver", "entities": {} },
+        { "text": "Chat with driver", "entities": {} }
+      ]
+    },
+    {
+      "intent": "add_stops",
+      "examples": [
+        { "text": "Add a stop", "entities": {} },
+        { "text": "I need to stop at mall", "entities": { "stop_location": "mall" } },
+        { "text": "Multiple stops", "entities": {} },
+        { "text": "Stop at Indiranagar first", "entities": { "stop_location": "Indiranagar" } },
+        { "text": "Add another destination", "entities": {} },
+        { "text": "Can we stop somewhere?", "entities": {} },
+        { "text": "Pick up my friend", "entities": {} },
+        { "text": "Stop at ATM", "entities": { "stop_location": "ATM" } },
+        { "text": "Add stop", "entities": {} },
+        { "text": "Multiple destinations", "entities": {} }
+      ]
+    },
+    {
+      "intent": "schedule_ride",
+      "examples": [
+        { "text": "Schedule for tomorrow", "entities": { "schedule": "tomorrow" } },
+        { "text": "Book for 3 PM", "entities": { "time": "3 PM" } },
+        { "text": "Schedule ride for Monday", "entities": { "schedule": "Monday" } },
+        { "text": "Book for later", "entities": {} },
+        { "text": "Schedule pickup at 9 AM", "entities": { "time": "9 AM" } },
+        { "text": "Book cab for next week", "entities": { "schedule": "next week" } },
+        { "text": "Schedule in advance", "entities": {} },
+        { "text": "Book for tomorrow morning", "entities": { "schedule": "tomorrow morning" } },
+        { "text": "Pre-book ride", "entities": {} },
+        { "text": "Schedule for tonight", "entities": { "schedule": "tonight" } }
+      ]
+    },
+    {
+      "intent": "apply_promo",
+      "examples": [
+        { "text": "Apply coupon", "entities": {} },
+        { "text": "Use promo code", "entities": {} },
+        { "text": "I have a discount code", "entities": {} },
+        { "text": "Apply FIRST50", "entities": { "promo_code": "FIRST50" } },
+        { "text": "Use this code", "entities": {} },
+        { "text": "Promo code", "entities": {} },
+        { "text": "Discount available?", "entities": {} },
+        { "text": "Apply offer", "entities": {} },
+        { "text": "Use discount", "entities": {} },
+        { "text": "Enter promo", "entities": {} }
+      ]
+    },
+    {
+      "intent": "report_issue",
+      "examples": [
+        { "text": "Driver is rude", "entities": { "issue": "driver_behavior" } },
+        { "text": "Wrong route taken", "entities": { "issue": "wrong_route" } },
+        { "text": "Overcharged", "entities": { "issue": "overcharge" } },
+        { "text": "Car is dirty", "entities": { "issue": "cleanliness" } },
+        { "text": "Driver didn't come", "entities": { "issue": "no_show" } },
+        { "text": "I have a complaint", "entities": {} },
+        { "text": "Safety issue", "entities": { "issue": "safety" } },
+        { "text": "Driver was late", "entities": { "issue": "late" } },
+        { "text": "Report problem", "entities": {} },
+        { "text": "Issue with ride", "entities": {} }
+      ]
+    }
+  ],
+  "entities": [
+    { "name": "destination", "description": "Drop location" },
+    { "name": "location", "description": "Pickup or general location" },
+    { "name": "location_type", "description": "Type of location (home, office, current)" },
+    { "name": "destination_type", "description": "Type of destination" },
+    { "name": "vehicle_type", "description": "Type of vehicle (sedan, SUV, etc.)" },
+    { "name": "ride_type", "description": "Type of ride (shared, solo)" },
+    { "name": "passengers", "description": "Number of passengers" },
+    { "name": "urgency", "description": "Urgency level" },
+    { "name": "schedule", "description": "Scheduled time/date" },
+    { "name": "time", "description": "Specific time" },
+    { "name": "stop_location", "description": "Intermediate stop location" },
+    { "name": "promo_code", "description": "Promotional code" },
+    { "name": "issue", "description": "Issue type" }
+  ]
+}

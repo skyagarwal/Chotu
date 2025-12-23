@@ -1,0 +1,30 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: mangwale-backend
+  namespace: mangwale
+  labels:
+    app: mangwale-backend
+spec:
+  type: ClusterIP
+  ports:
+    - port: 3200
+      targetPort: 3200
+      protocol: TCP
+      name: http
+  selector:
+    app: mangwale-backend
+---
+# Headless service for DNS-based service discovery
+apiVersion: v1
+kind: Service
+metadata:
+  name: mangwale-backend-headless
+  namespace: mangwale
+spec:
+  clusterIP: None
+  ports:
+    - port: 3200
+      targetPort: 3200
+  selector:
+    app: mangwale-backend

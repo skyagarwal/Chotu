@@ -1,0 +1,752 @@
+# ============================================================
+# DELIVERY MAN ORDERS FLOW v1.0
+# ============================================================
+# Order management flow for delivery partners:
+#   - View assigned orders
+#   - Accept/Reject orders
+#   - Update delivery status (picked, on_way, delivered)
+#   - Location sharing
+#   - Navigation support
+# ============================================================
+
+id: delivery_orders_v1
+name: Delivery Orders Management
+description: Order and delivery management for delivery partners
+version: "1.0.0"
+module: delivery
+trigger: delivery_orders
+enabled: true
+requiresAuth: delivery_man
+
+contextSchema:
+  # From Auth
+  dm_token: { type: string }
+  dm_id: { type: number }
+  dm_name: { type: string }
+  is_online: { type: boolean }
+  
+  # Orders
+  current_orders: { type: array, default: [] }
+  selected_order_id: { type: number }
+  selected_order: { type: object }
+  
+  # Location
+  current_lat: { type: number }
+  current_lng: { type: number }
+  
+  # Delivery
+  delivery_otp: { type: string }
+
+initialState: check_online_status
+finalStates: [delivery_done, delivery_error]
+
+states:
+  # ============================================================
+  # ONLINE STATUS CHECK
+  # ============================================================
+  check_online_status:
+    type: decision
+    conditions:
+      - expression: "context.is_online === true"
+        event: online
+    transitions:
+      online: fetch_orders
+      default: ask_go_online
+
+  ask_go_online:
+    type: action
+    actions:
+      - id: ask
+        executor: response
+        config:
+          message: |
+            🔴 You are currently *OFFLINE*
+            
+            Go online to receive and manage orders.
+          buttons:
+            - id: go_online
+              title: 🟢 Go Online
+            - id: view_history
+              title: 📜 Order History
+            - id: earnings
+              title: 💰 My Earnings
+    transitions:
+      success: wait_online_choice
+
+  wait_online_choice:
+    type: input
+    inputConfig:
+      variable: online_choice
+    transitions:
+      valid: process_online_choice
+
+  process_online_choice:
+    type: decision
+    conditions:
+      - expression: "context.online_choice === 'go_online'"
+        event: go_online
+      - expression: "context.online_choice === 'view_history'"
+        event: history
+      - expression: "context.online_choice === 'earnings'"
+        event: earnings
+    transitions:
+      go_online: set_online
+      history: show_history
+      earnings: show_earnings
+      default: delivery_done
+
+  set_online:
+    type: action
+    actions:
+      - id: update_status
+        executor: php_api
+        config:
+          action: dm_update_active_status
+          token: "{{dm_token}}"
+          isActive: true
+        output: status_result
+      
+      - id: save_status
+        executor: response
+        config:
+          saveToContext:
+            is_online: true
+          message: |
+            🟢 You are now *ONLINE*!
+            
+            You'll receive order notifications. Stay safe! 🚚
+    transitions:
+      success: fetch_orders
+      error: status_error
+
+  # ============================================================
+  # FETCH ORDERS
+  # ============================================================
+  fetch_orders:
+    type: action
+    description: Fetch assigned orders from PHP backend
+    actions:
+      - id: get_orders
+        executor: php_api
+        config:
+          action: dm_get_current_orders
+          token: "{{dm_token}}"
+        output: orders_result
+    transitions:
+      success: check_orders
+      error: fetch_error
+
+  check_orders:
+    type: decision
+    conditions:
+      - expression: "context.orders_result?.success && context.orders_result?.orders?.length > 0"
+        event: has_orders
+      - expression: "context.orders_result?.success"
+        event: no_orders
+    transitions:
+      has_orders: display_orders
+      no_orders: no_orders_message
+      default: fetch_error
+
+  no_orders_message:
+    type: action
+    actions:
+      - id: no_orders
+        executor: response
+        config:
+          message: |
+            📭 *No assigned orders*
+            
+            You're online and ready! We'll notify you when a new order is assigned. 🔔
+            
+            Stay in your zone for more orders! 📍
+          buttons:
+            - id: refresh
+              title: 🔄 Refresh
+            - id: go_offline
+              title: 🔴 Go Offline
+            - id: earnings
+              title: 💰 My Earnings
+    transitions:
+      success: wait_for_action
+
+  fetch_error:
+    type: action
+    actions:
+      - id: error
+        executor: response
+        config:
+          message: "❌ Failed to fetch orders. Please try again."
+          buttons:
+            - id: retry
+              title: 🔄 Try Again
+    transitions:
+      success: delivery_error
+
+  # ============================================================
+  # DISPLAY ORDERS
+  # ============================================================
+  display_orders:
+    type: action
+    actions:
+      - id: save_orders
+        executor: response
+        config:
+          saveToContext:
+            current_orders: "{{orders_result.orders}}"
+      
+      - id: show_orders
+        executor: response
+        config:
+          message: |
+            📦 *Your Orders ({{orders_result.orders.length}})*
+            
+            {% for order in orders_result.orders %}
+            ━━━━━━━━━━━━━━━━━━━━
+            🆔 *Order {{order.orderId}}*
+            📍 Status: *{{order.status | upper}}*
+            💰 ₹{{order.totalAmount}}
+            
+            🏪 *Pickup:* {{order.restaurantName}}
+            📍 {{order.pickupAddress}}
+            
+            🏠 *Deliver to:* {{order.customerName}}
+            📍 {{order.deliveryAddress}}
+            📱 {{order.customerPhone}}
+            
+            📏 Distance: {{order.distance || 'N/A'}} km
+            {% endfor %}
+            ━━━━━━━━━━━━━━━━━━━━
+          buttons:
+            - id: order_{{orders_result.orders[0].id}}
+              title: "Manage #{{orders_result.orders[0].id}}"
+            - id: refresh
+              title: 🔄 Refresh
+    transitions:
+      success: wait_for_selection
+
+  # ============================================================
+  # ORDER SELECTION
+  # ============================================================
+  wait_for_selection:
+    type: input
+    inputConfig:
+      variable: user_selection
+      prompt: "Select an order or action:"
+    transitions:
+      valid: process_selection
+      default: process_selection
+
+  process_selection:
+    type: decision
+    conditions:
+      - expression: "context.user_selection?.startsWith('order_')"
+        event: order_selected
+      - expression: "context.user_selection === 'refresh'"
+        event: refresh
+      - expression: "context.user_selection === 'go_offline'"
+        event: go_offline
+      - expression: "context.user_selection === 'earnings'"
+        event: earnings
+    transitions:
+      order_selected: extract_order_id
+      refresh: fetch_orders
+      go_offline: set_offline
+      earnings: show_earnings
+      default: fetch_orders
+
+  extract_order_id:
+    type: action
+    actions:
+      - id: extract
+        executor: response
+        config:
+          saveToContext:
+            selected_order_id: "{{user_selection | replace('order_', '') | int}}"
+    transitions:
+      success: get_order_details
+
+  # ============================================================
+  # ORDER DETAILS
+  # ============================================================
+  get_order_details:
+    type: action
+    actions:
+      - id: fetch_details
+        executor: php_api
+        config:
+          action: dm_get_order_details
+          token: "{{dm_token}}"
+          orderId: "{{selected_order_id}}"
+        output: order_details
+    transitions:
+      success: show_order_actions
+      error: show_order_actions
+
+  show_order_actions:
+    type: action
+    actions:
+      - id: show
+        executor: response
+        config:
+          message: |
+            📋 *Order #{{selected_order_id}}*
+            
+            What would you like to do?
+          buttons:
+            - id: accept_order
+              title: ✅ Accept Order
+            - id: picked_up
+              title: 📦 Picked Up
+            - id: delivered
+              title: ✅ Delivered
+            - id: navigate_pickup
+              title: 🗺️ Navigate to Pickup
+            - id: navigate_delivery
+              title: 🗺️ Navigate to Customer
+            - id: call_restaurant
+              title: 📞 Call Restaurant
+            - id: call_customer
+              title: 📞 Call Customer
+            - id: back_to_list
+              title: ⬅️ Back
+    transitions:
+      success: wait_for_action
+
+  wait_for_action:
+    type: input
+    inputConfig:
+      variable: order_action
+    transitions:
+      valid: process_action
+      default: process_action
+
+  process_action:
+    type: decision
+    conditions:
+      - expression: "context.order_action === 'accept_order'"
+        event: accept
+      - expression: "context.order_action === 'picked_up'"
+        event: picked
+      - expression: "context.order_action === 'delivered'"
+        event: deliver
+      - expression: "context.order_action === 'navigate_pickup'"
+        event: nav_pickup
+      - expression: "context.order_action === 'navigate_delivery'"
+        event: nav_delivery
+      - expression: "context.order_action === 'call_restaurant'"
+        event: call_rest
+      - expression: "context.order_action === 'call_customer'"
+        event: call_cust
+      - expression: "context.order_action === 'back_to_list'"
+        event: back
+      - expression: "context.order_action === 'refresh'"
+        event: refresh
+      - expression: "context.order_action === 'go_offline'"
+        event: offline
+    transitions:
+      accept: accept_order
+      picked: mark_picked_up
+      deliver: ask_delivery_otp
+      nav_pickup: navigate_to_pickup
+      nav_delivery: navigate_to_delivery
+      call_rest: call_restaurant
+      call_cust: call_customer
+      back: fetch_orders
+      refresh: fetch_orders
+      offline: set_offline
+      default: show_order_actions
+
+  # ============================================================
+  # ORDER ACTIONS
+  # ============================================================
+  accept_order:
+    type: action
+    actions:
+      - id: accept
+        executor: php_api
+        config:
+          action: dm_accept_order
+          token: "{{dm_token}}"
+          orderId: "{{selected_order_id}}"
+        output: accept_result
+    transitions:
+      success: order_accepted
+      error: action_error
+
+  order_accepted:
+    type: action
+    actions:
+      - id: success
+        executor: response
+        config:
+          message: |
+            ✅ *Order Accepted!*
+            
+            Head to the restaurant for pickup.
+            
+            🏪 *{{order_details.order.restaurant.name}}*
+            📍 {{order_details.order.restaurant.address}}
+          buttons:
+            - id: navigate_pickup
+              title: 🗺️ Navigate
+            - id: call_restaurant
+              title: 📞 Call Restaurant
+    transitions:
+      success: wait_for_action
+
+  mark_picked_up:
+    type: action
+    actions:
+      - id: update
+        executor: php_api
+        config:
+          action: dm_update_order_status
+          token: "{{dm_token}}"
+          orderId: "{{selected_order_id}}"
+          status: "picked_up"
+        output: update_result
+    transitions:
+      success: picked_up_success
+      error: action_error
+
+  picked_up_success:
+    type: action
+    actions:
+      - id: success
+        executor: response
+        config:
+          message: |
+            📦 *Order Picked Up!*
+            
+            Now head to the customer for delivery.
+            
+            🏠 *{{order_details.order.deliveryAddress.contactName || 'Customer'}}*
+            📍 {{order_details.order.deliveryAddress.address}}
+            📱 {{order_details.order.deliveryAddress.contactPhone}}
+          buttons:
+            - id: navigate_delivery
+              title: 🗺️ Navigate
+            - id: call_customer
+              title: 📞 Call Customer
+            - id: delivered
+              title: ✅ Mark Delivered
+    transitions:
+      success: wait_for_action
+
+  ask_delivery_otp:
+    type: action
+    actions:
+      - id: ask_otp
+        executor: response
+        config:
+          message: |
+            🔐 *Delivery Verification*
+            
+            Please enter the OTP given by the customer to confirm delivery:
+    transitions:
+      success: collect_otp
+
+  collect_otp:
+    type: input
+    inputConfig:
+      variable: delivery_otp
+      validation:
+        pattern: "^[0-9]{4,6}$"
+        errorMessage: "Please enter the 4-6 digit OTP"
+    transitions:
+      valid: mark_delivered
+      invalid: invalid_otp
+
+  invalid_otp:
+    type: action
+    actions:
+      - id: error
+        executor: response
+        config:
+          message: "❌ Invalid OTP. Please enter the correct 4-6 digit code:"
+    transitions:
+      success: collect_otp
+
+  mark_delivered:
+    type: action
+    actions:
+      - id: update
+        executor: php_api
+        config:
+          action: dm_update_order_status
+          token: "{{dm_token}}"
+          orderId: "{{selected_order_id}}"
+          status: "delivered"
+          otp: "{{delivery_otp}}"
+        output: delivery_result
+    transitions:
+      success: delivery_success
+      error: delivery_otp_error
+
+  delivery_success:
+    type: action
+    actions:
+      - id: success
+        executor: response
+        config:
+          message: |
+            🎉 *Order Delivered Successfully!*
+            
+            Great job! 💪
+            
+            💰 Earnings added to your account.
+          buttons:
+            - id: view_orders
+              title: 📦 Next Order
+            - id: earnings
+              title: 💰 My Earnings
+            - id: go_offline
+              title: 🔴 Go Offline
+    transitions:
+      success: wait_after_delivery
+
+  wait_after_delivery:
+    type: input
+    inputConfig:
+      variable: after_delivery
+    transitions:
+      valid: check_after_delivery
+
+  check_after_delivery:
+    type: decision
+    conditions:
+      - expression: "context.after_delivery === 'view_orders'"
+        event: orders
+      - expression: "context.after_delivery === 'earnings'"
+        event: earnings
+      - expression: "context.after_delivery === 'go_offline'"
+        event: offline
+    transitions:
+      orders: fetch_orders
+      earnings: show_earnings
+      offline: set_offline
+      default: fetch_orders
+
+  delivery_otp_error:
+    type: action
+    actions:
+      - id: error
+        executor: response
+        config:
+          message: |
+            ❌ *Invalid OTP*
+            
+            The OTP doesn't match. Please ask the customer for the correct code.
+          buttons:
+            - id: try_again
+              title: 🔄 Try Again
+            - id: call_customer
+              title: 📞 Call Customer
+    transitions:
+      success: wait_for_action
+
+  # ============================================================
+  # NAVIGATION
+  # ============================================================
+  navigate_to_pickup:
+    type: action
+    actions:
+      - id: nav
+        executor: response
+        config:
+          message: |
+            🗺️ *Navigate to Pickup*
+            
+            🏪 {{order_details.order.restaurant.name}}
+            📍 {{order_details.order.restaurant.address}}
+            
+            Opening Google Maps...
+          location:
+            latitude: "{{order_details.order.restaurant.location.latitude}}"
+            longitude: "{{order_details.order.restaurant.location.longitude}}"
+            name: "{{order_details.order.restaurant.name}}"
+    transitions:
+      success: show_order_actions
+
+  navigate_to_delivery:
+    type: action
+    actions:
+      - id: nav
+        executor: response
+        config:
+          message: |
+            🗺️ *Navigate to Customer*
+            
+            🏠 {{order_details.order.deliveryAddress.contactName}}
+            📍 {{order_details.order.deliveryAddress.address}}
+            
+            Opening Google Maps...
+          location:
+            latitude: "{{order_details.order.deliveryAddress.location.latitude}}"
+            longitude: "{{order_details.order.deliveryAddress.location.longitude}}"
+            name: "Delivery Location"
+    transitions:
+      success: show_order_actions
+
+  # ============================================================
+  # CALLS
+  # ============================================================
+  call_restaurant:
+    type: action
+    actions:
+      - id: call
+        executor: response
+        config:
+          message: |
+            📞 *Restaurant Contact*
+            
+            🏪 {{order_details.order.restaurant.name}}
+            📱 {{order_details.order.restaurant.phone}}
+    transitions:
+      success: show_order_actions
+
+  call_customer:
+    type: action
+    actions:
+      - id: call
+        executor: response
+        config:
+          message: |
+            📞 *Customer Contact*
+            
+            👤 {{order_details.order.deliveryAddress.contactName}}
+            📱 {{order_details.order.deliveryAddress.contactPhone}}
+    transitions:
+      success: show_order_actions
+
+  # ============================================================
+  # EARNINGS & HISTORY
+  # ============================================================
+  show_earnings:
+    type: action
+    actions:
+      - id: get_earnings
+        executor: php_api
+        config:
+          action: dm_get_earnings
+          token: "{{dm_token}}"
+        output: earnings_result
+      
+      - id: display
+        executor: response
+        config:
+          message: |
+            💰 *Your Earnings*
+            
+            📅 Today: ₹{{earnings_result.earnings.today || 0}}
+            📆 This Week: ₹{{earnings_result.earnings.thisWeek || 0}}
+            📊 This Month: ₹{{earnings_result.earnings.thisMonth || 0}}
+            💵 Total: ₹{{earnings_result.earnings.total || 0}}
+          buttons:
+            - id: back
+              title: ⬅️ Back
+    transitions:
+      success: wait_for_action
+
+  show_history:
+    type: action
+    actions:
+      - id: get_history
+        executor: php_api
+        config:
+          action: dm_get_order_history
+          token: "{{dm_token}}"
+          limit: 5
+        output: history_result
+      
+      - id: display
+        executor: response
+        config:
+          message: |
+            📜 *Recent Deliveries*
+            
+            {% for order in history_result.orders %}
+            • #{{order.orderId}} - ₹{{order.earnings || order.totalAmount}}
+              {{order.restaurantName}} → {{order.customerName}}
+            {% endfor %}
+          buttons:
+            - id: back
+              title: ⬅️ Back
+    transitions:
+      success: wait_for_action
+
+  # ============================================================
+  # OFFLINE
+  # ============================================================
+  set_offline:
+    type: action
+    actions:
+      - id: update
+        executor: php_api
+        config:
+          action: dm_update_active_status
+          token: "{{dm_token}}"
+          isActive: false
+      
+      - id: msg
+        executor: response
+        config:
+          saveToContext:
+            is_online: false
+          message: |
+            🔴 You are now *OFFLINE*
+            
+            You won't receive new orders. Have a great day! 👋
+    transitions:
+      success: delivery_done
+
+  # ============================================================
+  # ERROR STATES
+  # ============================================================
+  action_error:
+    type: action
+    actions:
+      - id: error
+        executor: response
+        config:
+          message: |
+            ❌ Action failed. Please try again.
+          buttons:
+            - id: retry
+              title: 🔄 Try Again
+            - id: back
+              title: ⬅️ Back
+    transitions:
+      success: show_order_actions
+
+  status_error:
+    type: action
+    actions:
+      - id: error
+        executor: response
+        config:
+          message: "❌ Failed to update status. Please try again."
+    transitions:
+      success: ask_go_online
+
+  # ============================================================
+  # FINAL STATES
+  # ============================================================
+  delivery_done:
+    type: final
+    actions:
+      - id: done
+        executor: response
+        config:
+          saveToContext:
+            flow_completed: true
+
+  delivery_error:
+    type: final
+    actions:
+      - id: error
+        executor: response
+        config:
+          saveToContext:
+            flow_completed: false

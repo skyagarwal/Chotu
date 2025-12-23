@@ -1,0 +1,104 @@
+version: '3.8'
+
+services:
+  # Development Backend - Hot Reload Enabled
+  mangwale-ai:
+    image: node:20-alpine
+    container_name: mangwale_ai_dev
+    restart: unless-stopped
+    working_dir: /app
+    command: sh -c "npm install && npx nodemon --watch src --ext ts --exec 'ts-node -r tsconfig-paths/register src/main.ts'"
+    volumes:
+      - ./src:/app/src
+      - ./libs:/app/libs
+      - ./prisma:/app/prisma
+      - ./package.json:/app/package.json
+      - ./tsconfig.json:/app/tsconfig.json
+      - ./tsconfig.build.json:/app/tsconfig.build.json
+      - ./nest-cli.json:/app/nest-cli.json
+      - /app/node_modules
+      - /app/dist
+    ports:
+      - "3200:3200"
+      - "9229:9229"  # Debug port
+    environment:
+      - NODE_ENV=development
+      - PORT=3200
+      - PRISMA_CLI_QUERY_ENGINE_TYPE=library
+      - PRISMA_QUERY_ENGINE_LIBRARY=/app/node_modules/.prisma/client/libquery_engine-linux-musl-openssl-3.0.x.so.node
+      - REDIS_HOST=172.17.0.3
+      - REDIS_PORT=6379
+      - POSTGRES_HOST=172.17.0.2
+      - POSTGRES_PORT=5432
+      - POSTGRES_USER=mangwale_config
+      - POSTGRES_PASSWORD=config_secure_pass_2024
+      - POSTGRES_DB=headless_mangwale
+      - DATABASE_URL=postgresql://mangwale_config:config_secure_pass_2024@172.17.0.2:5432/headless_mangwale?schema=public
+      - NLU_SERVICE_URL=http://172.18.0.2:7010
+      - NLU_ENDPOINT=http://172.18.0.2:7010
+      - INDICBERT_URL=http://172.18.0.2:7010
+      - VLLM_API_URL=http://172.18.0.3:8002
+      - VLLM_URL=http://172.18.0.3:8002
+      - OPENSEARCH_URL=http://172.25.0.2:9200
+      - OPENSEARCH_NODE=http://172.25.0.2:9200
+      - EMBEDDING_SERVICE_URL=http://172.25.0.1:3101
+      - OSRM_SERVICE_URL=http://mangwale_osrm:5000
+      - PHP_BACKEND_URL=https://testing.mangwale.com
+      - FRAPPE_BASE_URL=https://erp.sarvin.in
+      - FRAPPE_API_KEY=7ecd0d170da2d0c
+      - FRAPPE_API_SECRET=110aae031544028
+    networks:
+      - headless-network
+    depends_on:
+      - postgres
+      - redis
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:3200/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+
+  postgres:
+    image: postgres:15-alpine
+    container_name: mangwale_postgres
+    restart: unless-stopped
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=mangwale_config
+      - POSTGRES_PASSWORD=config_secure_pass_2024
+      - POSTGRES_DB=headless_mangwale
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    networks:
+      - headless-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U mangwale_config -d headless_mangwale"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    container_name: mangwale_redis
+    restart: unless-stopped
+    ports:
+      - "6381:6379"
+    volumes:
+      - redis-data:/data
+    networks:
+      - headless-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+
+volumes:
+  postgres-data:
+  redis-data:
+
+networks:
+  headless-network:
+    driver: bridge

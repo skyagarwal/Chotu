@@ -1,0 +1,39 @@
+version: '3.8'
+
+services:
+  # Development Frontend - Next.js Dev Mode with Fast Refresh
+  mangwale-dashboard:
+    image: node:20-alpine
+    container_name: mangwale_dashboard_dev
+    restart: unless-stopped
+    working_dir: /app
+    command: sh -c "npm install && npm run dev"
+    volumes:
+      - ./src:/app/src
+      - ./public:/app/public
+      - ./package.json:/app/package.json
+      - ./tsconfig.json:/app/tsconfig.json
+      - ./tailwind.config.ts:/app/tailwind.config.ts
+      - ./postcss.config.mjs:/app/postcss.config.mjs
+      - ./.env.local:/app/.env.local
+      - /app/node_modules
+      - /app/.next
+      - /app/next.config.mjs
+    ports:
+      - "3005:3005"
+    environment:
+      - NODE_ENV=development
+      - NEXT_TELEMETRY_DISABLED=1
+      - WATCHPACK_POLLING=true  # Better file watching in Docker
+    networks:
+      - frontend-network
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:3005"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+
+networks:
+  frontend-network:
+    driver: bridge

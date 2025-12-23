@@ -1,0 +1,86 @@
+[
+  {
+    "id": "sample_1763011477627_1xfk31ti8",
+    "text": "I want to order Thali",
+    "intent": "order_food",
+    "entities": {
+      "food_item": "Thali"
+    },
+    "tone": "neutral",
+    "sentiment": "neutral",
+    "urgency": 0.5,
+    "language": "en",
+    "vertical": "food",
+    "createdAt": "2025-11-13T05:24:37.627Z"
+  },
+  {
+    "id": "sample_1763011477627_57cq0jxlo",
+    "text": "KFC khula hai kya?",
+    "intent": "food_general",
+    "entities": {
+      "restaurant_name": "KFC"
+    },
+    "tone": "neutral",
+    "sentiment": "neutral",
+    "urgency": 0.5,
+    "language": "hinglish",
+    "vertical": "food",
+    "createdAt": "2025-11-13T05:24:37.627Z"
+  },
+  {
+    "id": "sample_1763011477627_mnjq75ba6",
+    "text": "Book a auto for delivery",
+    "intent": "book_parcel",
+    "entities": {
+      "vehicle": "auto"
+    },
+    "tone": "neutral",
+    "sentiment": "neutral",
+    "urgency": 0.5,
+    "language": "en",
+    "vertical": "parcel",
+    "createdAt": "2025-11-13T05:24:37.627Z"
+  },
+  {
+    "id": "sample_1763011477627_popdwm6oe",
+    "text": "auto book karo please",
+    "intent": "book_parcel",
+    "entities": {
+      "vehicle": "auto"
+    },
+    "tone": "neutral",
+    "sentiment": "neutral",
+    "urgency": 0.5,
+    "language": "hinglish",
+    "vertical": "parcel",
+    "createdAt": "2025-11-13T05:24:37.627Z"
+  },
+  {
+    "id": "sample_1763011477627_u0gc3f6x2",
+    "text": "Where can I buy Rice?",
+    "intent": "track_dukan",
+    "entities": {
+      "product": "Rice"
+    },
+    "tone": "neutral",
+    "sentiment": "neutral",
+    "urgency": 0.5,
+    "language": "en",
+    "vertical": "dukan",
+    "createdAt": "2025-11-13T05:24:37.627Z"
+  },
+  {
+    "id": "sample_1763011477627_4okkwa91u",
+    "text": "Rice kaha milega?",
+    "intent": "dukan_inquiry",
+    "entities": {
+      "product": "Rice"
+    },
+    "tone": "neutral",
+    "sentiment": "neutral",
+    "urgency": 0.5,
+    "language": "hinglish",
+    "vertical": "dukan",
+    "createdAt": "2025-11-13T05:24:37.627Z"
+  }
+]

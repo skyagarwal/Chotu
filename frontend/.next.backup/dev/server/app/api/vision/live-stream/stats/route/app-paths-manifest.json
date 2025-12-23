@@ -1,0 +1,3 @@
+{
+  "/api/vision/live-stream/stats/route": "app/api/vision/live-stream/stats/route.js"
+}

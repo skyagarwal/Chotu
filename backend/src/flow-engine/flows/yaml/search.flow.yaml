@@ -1,0 +1,423 @@
+# Search Flow - YAML Version
+# Handles restaurant and location search
+
+name: search
+version: "1.0"
+description: Restaurant and location search flow
+
+initial_state: start
+
+context:
+  query: null
+  location: null
+  cuisine: null
+  filters: {}
+  results: []
+  selectedResult: null
+
+states:
+  start:
+    type: input
+    on_entry:
+      - action: speak
+        params:
+          text: "What are you looking for? You can search for restaurants, cuisines, or specific dishes."
+          text_swahili: "Unatafuta nini? Unaweza kutafuta migahawa, vyakula, au sahani maalum."
+    transitions:
+      - event: input_received
+        target: parse_query
+      - event: location_search
+        target: get_location
+
+  parse_query:
+    type: action
+    on_entry:
+      - action: extract_search_intent
+        params:
+          input: "{{input}}"
+    transitions:
+      - event: restaurant_search
+        target: search_restaurants
+      - event: cuisine_search
+        target: search_by_cuisine
+      - event: dish_search
+        target: search_by_dish
+      - event: location_needed
+        target: get_location
+      - event: unclear
+        target: clarify_search
+
+  clarify_search:
+    type: input
+    on_entry:
+      - action: speak
+        params:
+          text: "I'm not sure what you're looking for. Are you searching for a specific restaurant, a type of cuisine, or a particular dish?"
+    transitions:
+      - event: input_received
+        target: parse_query
+
+  get_location:
+    type: decision
+    on_entry:
+      - action: check_user_location
+    transitions:
+      - event: location_available
+        target: confirm_location
+      - event: location_unavailable
+        target: request_location
+
+  request_location:
+    type: input
+    on_entry:
+      - action: speak
+        params:
+          text: "To find nearby restaurants, I need your location. Please share your location or tell me an area."
+    transitions:
+      - event: input_received
+        target: geocode_location
+      - event: share_location
+        target: process_shared_location
+
+  process_shared_location:
+    type: action
+    on_entry:
+      - action: process_gps_location
+        params:
+          lat: "{{location.lat}}"
+          lng: "{{location.lng}}"
+    transitions:
+      - event: success
+        target: confirm_location
+      - event: error
+        target: request_location
+
+  geocode_location:
+    type: action
+    on_entry:
+      - action: geocode_address
+        params:
+          address: "{{input}}"
+    transitions:
+      - event: success
+        target: confirm_location
+      - event: multiple_results
+        target: clarify_location
+      - event: not_found
+        target: location_not_found
+
+  clarify_location:
+    type: input
+    on_entry:
+      - action: speak
+        params:
+          text: "I found multiple locations matching '{{input}}'. Did you mean: {{location_options}}?"
+    transitions:
+      - event: input_received
+        target: geocode_location
+
+  location_not_found:
+    type: message
+    on_entry:
+      - action: speak
+        params:
+          text: "I couldn't find that location. Please try a different area name or share your GPS location."
+    transitions:
+      - event: next
+        target: request_location
+
+  confirm_location:
+    type: input
+    on_entry:
+      - action: speak
+        params:
+          text: "Searching near {{context.location.name}}. Is that correct?"
+    transitions:
+      - event: yes
+        target: apply_search
+      - event: no
+        target: request_location
+
+  search_restaurants:
+    type: action
+    on_entry:
+      - action: set_context
+        params:
+          searchType: "restaurant"
+      - action: search_by_name
+        params:
+          query: "{{context.query}}"
+          location: "{{context.location}}"
+    transitions:
+      - event: results_found
+        target: show_results
+      - event: no_results
+        target: no_results
+
+  search_by_cuisine:
+    type: action
+    on_entry:
+      - action: set_context
+        params:
+          searchType: "cuisine"
+      - action: search_restaurants_by_cuisine
+        params:
+          cuisine: "{{context.cuisine}}"
+          location: "{{context.location}}"
+    transitions:
+      - event: results_found
+        target: show_results
+      - event: no_results
+        target: suggest_alternatives
+
+  search_by_dish:
+    type: action
+    on_entry:
+      - action: set_context
+        params:
+          searchType: "dish"
+      - action: search_restaurants_by_dish
+        params:
+          dish: "{{context.query}}"
+          location: "{{context.location}}"
+    transitions:
+      - event: results_found
+        target: show_results
+      - event: no_results
+        target: suggest_alternatives
+
+  apply_search:
+    type: decision
+    transitions:
+      - event: restaurant
+        target: search_restaurants
+        condition: "context.searchType === 'restaurant'"
+      - event: cuisine
+        target: search_by_cuisine
+        condition: "context.searchType === 'cuisine'"
+      - event: dish
+        target: search_by_dish
+        condition: "context.searchType === 'dish'"
+      - event: default
+        target: search_restaurants
+
+  show_results:
+    type: message
+    on_entry:
+      - action: speak
+        params:
+          text: "I found {{context.results.length}} results. Here are the top options: {{results_summary}}"
+    transitions:
+      - event: select
+        target: select_result
+      - event: filter
+        target: apply_filters
+      - event: more
+        target: show_more_results
+      - event: order
+        target: start_order
+
+  show_more_results:
+    type: message
+    on_entry:
+      - action: get_next_results
+        params:
+          offset: "{{current_offset}}"
+      - action: speak
+        params:
+          text: "More results: {{more_results}}"
+    transitions:
+      - event: select
+        target: select_result
+      - event: more
+        target: show_more_results
+      - event: back
+        target: show_results
+
+  select_result:
+    type: action
+    on_entry:
+      - action: select_from_results
+        params:
+          selection: "{{input}}"
+    transitions:
+      - event: selected
+        target: show_details
+      - event: invalid
+        target: invalid_selection
+
+  invalid_selection:
+    type: message
+    on_entry:
+      - action: speak
+        params:
+          text: "I didn't understand that selection. Please say a number or the restaurant name."
+    transitions:
+      - event: next
+        target: show_results
+
+  show_details:
+    type: message
+    on_entry:
+      - action: get_restaurant_details
+        params:
+          id: "{{context.selectedResult.id}}"
+      - action: speak
+        params:
+          text: "{{context.selectedResult.name}}: {{details.description}}. Rating: {{details.rating}} stars. {{details.priceRange}}. {{details.distance}} away. Would you like to order from here?"
+    transitions:
+      - event: order
+        target: start_order
+      - event: menu
+        target: show_menu
+      - event: reviews
+        target: show_reviews
+      - event: back
+        target: show_results
+
+  show_menu:
+    type: message
+    on_entry:
+      - action: get_menu_preview
+        params:
+          restaurant_id: "{{context.selectedResult.id}}"
+      - action: speak
+        params:
+          text: "Popular items at {{context.selectedResult.name}}: {{menu_preview}}. Say 'order' to start ordering."
+    transitions:
+      - event: order
+        target: start_order
+      - event: back
+        target: show_details
+
+  show_reviews:
+    type: message
+    on_entry:
+      - action: get_reviews
+        params:
+          restaurant_id: "{{context.selectedResult.id}}"
+      - action: speak
+        params:
+          text: "Recent reviews for {{context.selectedResult.name}}: {{reviews_summary}}"
+    transitions:
+      - event: back
+        target: show_details
+      - event: order
+        target: start_order
+
+  apply_filters:
+    type: input
+    on_entry:
+      - action: speak
+        params:
+          text: "What would you like to filter by? Options: cuisine, price range, rating, delivery time, or distance."
+    transitions:
+      - event: input_received
+        target: process_filter
+
+  process_filter:
+    type: action
+    on_entry:
+      - action: apply_filter
+        params:
+          filter: "{{input}}"
+    transitions:
+      - event: applied
+        target: filter_results
+      - event: invalid
+        target: invalid_filter
+
+  invalid_filter:
+    type: message
+    on_entry:
+      - action: speak
+        params:
+          text: "I don't recognize that filter. Please choose from: cuisine, price, rating, delivery time, or distance."
+    transitions:
+      - event: next
+        target: apply_filters
+
+  filter_results:
+    type: action
+    on_entry:
+      - action: apply_all_filters
+        params:
+          filters: "{{context.filters}}"
+    transitions:
+      - event: results_found
+        target: show_results
+      - event: no_results
+        target: no_filtered_results
+
+  no_filtered_results:
+    type: input
+    on_entry:
+      - action: speak
+        params:
+          text: "No restaurants match those filters. Would you like to adjust the filters or see all results?"
+    transitions:
+      - event: adjust
+        target: apply_filters
+      - event: all
+        target: show_results
+
+  no_results:
+    type: message
+    on_entry:
+      - action: speak
+        params:
+          text: "I couldn't find any restaurants matching '{{context.query}}' near {{context.location.name}}."
+    transitions:
+      - event: next
+        target: suggest_alternatives
+
+  suggest_alternatives:
+    type: input
+    on_entry:
+      - action: get_alternatives
+        params:
+          query: "{{context.query}}"
+          location: "{{context.location}}"
+      - action: speak
+        params:
+          text: "Here are some alternatives: {{alternatives}}. Would you like to try one of these?"
+    transitions:
+      - event: yes
+        target: parse_query
+      - event: no
+        target: new_search
+      - event: input_received
+        target: parse_query
+
+  new_search:
+    type: input
+    on_entry:
+      - action: speak
+        params:
+          text: "What else would you like to search for?"
+    transitions:
+      - event: input_received
+        target: parse_query
+      - event: cancel
+        target: end_search
+
+  start_order:
+    type: action
+    on_entry:
+      - action: start_flow
+        params:
+          flow: order
+          context:
+            restaurant: "{{context.selectedResult}}"
+    transitions:
+      - event: order_complete
+        target: end_search
+      - event: order_cancelled
+        target: show_results
+
+  end_search:
+    type: end
+    on_entry:
+      - action: speak
+        params:
+          text: "Is there anything else you'd like to search for?"

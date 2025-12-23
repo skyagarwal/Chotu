@@ -1,0 +1,535 @@
+# Order Intent Training Data
+# Natural language patterns for food ordering
+# Used by NLU system for intent classification
+
+version: "1.0"
+language: "en"
+domain: "food_ordering"
+
+intents:
+  # =============================================
+  # URGENCY-BASED INTENTS
+  # =============================================
+  
+  urgent_hungry:
+    description: "User is very hungry and needs food immediately"
+    examples:
+      - "I'm very hungry"
+      - "I'm starving"
+      - "So hungry right now"
+      - "Famished, need food"
+      - "Dying of hunger here"
+      - "Very hungry what can come quick"
+      - "Starving, what's fast"
+      - "I'm really hungry"
+      - "Super hungry"
+      - "Extremely hungry"
+      - "I could eat a horse"
+      - "My stomach is growling"
+      - "Haven't eaten all day"
+      - "Bhook lagi hai bohot"  # Hindi
+      - "Bohot bhook lagi"
+    entities:
+      - urgency: high
+    action: suggest_quick_options
+
+  quick_delivery:
+    description: "User wants fast delivery"
+    examples:
+      - "What can come quick"
+      - "Need food fast"
+      - "Something quick"
+      - "Fast delivery please"
+      - "ASAP food"
+      - "In a hurry, need food"
+      - "Quick options"
+      - "What's the fastest"
+      - "Jaldi chahiye"  # Hindi
+      - "Fast fast"
+      - "No time, quick food"
+      - "Rushing, need something quick"
+      - "What's available now"
+      - "Immediate delivery"
+    entities:
+      - delivery_speed: fast
+    action: filter_by_delivery_time
+
+  # =============================================
+  # CRAVING-BASED INTENTS
+  # =============================================
+  
+  specific_craving:
+    description: "User is craving specific food"
+    examples:
+      - "I'm craving pizza"
+      - "Craving biryani"
+      - "Good pizza I am craving"
+      - "Really want some momos"
+      - "I feel like having pasta"
+      - "In the mood for burgers"
+      - "Want some chinese"
+      - "Craving something sweet"
+      - "I want pizza"
+      - "Get me some biryani"
+      - "Pizza kha na hai"  # Hindi
+      - "Biryani khane ka mann hai"
+      - "Craving for ice cream"
+      - "Want to eat sushi"
+      - "Mann kar raha hai {{food}}"  # Template
+    entities:
+      - food_item: extracted
+      - craving_intensity: high
+    action: search_food_item
+
+  cuisine_preference:
+    description: "User wants specific cuisine"
+    examples:
+      - "I want Chinese food"
+      - "Show me Indian restaurants"
+      - "Italian food please"
+      - "Mexican options"
+      - "Thai food nearby"
+      - "Japanese restaurant"
+      - "Korean food"
+      - "Continental cuisine"
+      - "Mughlai food"
+      - "South Indian"
+      - "North Indian khana"
+      - "Punjabi food"
+      - "Gujarati thali"
+      - "Maharashtrian food"
+      - "Street food"
+    entities:
+      - cuisine: extracted
+    action: search_by_cuisine
+
+  taste_preference:
+    description: "User wants specific taste/flavor"
+    examples:
+      - "Something spicy"
+      - "I want something sweet"
+      - "Craving sour"
+      - "Light food"
+      - "Heavy meal"
+      - "Creamy pasta"
+      - "Crispy snacks"
+      - "Tangy food"
+      - "Mild curry"
+      - "Extra spicy"
+      - "Not too spicy"
+      - "Kuch meetha"  # Hindi
+      - "Teekha chahiye"
+      - "Chatpata food"
+    entities:
+      - taste: extracted
+      - intensity: normal|mild|extra
+    action: search_by_taste
+
+  # =============================================
+  # CONTEXT-BASED INTENTS
+  # =============================================
+  
+  time_based:
+    description: "Time-appropriate meal request"
+    examples:
+      - "Breakfast options"
+      - "What's for lunch"
+      - "Dinner ideas"
+      - "Late night food"
+      - "Midnight snack"
+      - "Morning food"
+      - "Evening snacks"
+      - "Brunch places"
+      - "Nashta kya milega"  # Hindi
+      - "Lunch mein kya order karu"
+      - "Raat ka khana"
+    entities:
+      - meal_time: breakfast|lunch|dinner|snack|late_night
+    action: time_based_recommendations
+
+  weather_based:
+    description: "Weather-appropriate food request"
+    examples:
+      - "Hot soup please"
+      - "Something warm"
+      - "Cold drinks"
+      - "Ice cream, it's hot"
+      - "Rainy day food"
+      - "Cozy meal"
+      - "Garam chai"  # Hindi
+      - "Thanda kuch"
+      - "Monsoon snacks"
+      - "Winter food"
+      - "Summer refreshment"
+    entities:
+      - weather_context: hot|cold|rainy|humid
+      - temperature_preference: warm|cold
+    action: weather_based_search
+
+  occasion_based:
+    description: "Food for special occasion/group"
+    examples:
+      - "Party food for 10 people"
+      - "Birthday cake"
+      - "Celebration dinner"
+      - "Office lunch for 20"
+      - "Family gathering food"
+      - "Picnic food"
+      - "Movie night snacks"
+      - "Date night dinner"
+      - "Anniversary special"
+      - "Bulk order"
+      - "Catering options"
+    entities:
+      - occasion: party|birthday|celebration|office|family
+      - quantity: number
+    action: occasion_recommendations
+
+  health_based:
+    description: "Health-conscious food request"
+    examples:
+      - "Healthy food"
+      - "Low calorie options"
+      - "Protein rich meal"
+      - "Salad please"
+      - "Diet food"
+      - "Vegetarian options"
+      - "Vegan food"
+      - "Jain food"
+      - "Halal restaurants"
+      - "Gluten free"
+      - "Keto friendly"
+      - "Sugar free"
+      - "Light healthy lunch"
+      - "Gym diet food"
+    entities:
+      - dietary: veg|vegan|jain|halal|keto|gluten_free
+      - health_goal: weight_loss|muscle_gain|general
+    action: healthy_recommendations
+
+  # =============================================
+  # BUDGET-BASED INTENTS
+  # =============================================
+  
+  budget_conscious:
+    description: "User wants affordable options"
+    examples:
+      - "Something cheap"
+      - "Affordable food"
+      - "Budget meal"
+      - "Under 100 rupees"
+      - "Under 200 rs"
+      - "Economical options"
+      - "Sasta khana"  # Hindi
+      - "Pocket friendly"
+      - "Cheap and filling"
+      - "Low budget lunch"
+      - "Minimum 50 rs mein"
+    entities:
+      - max_budget: number
+      - priority: budget
+    action: budget_search
+
+  value_seeking:
+    description: "User looking for deals/value"
+    examples:
+      - "Best value meals"
+      - "Any offers today"
+      - "Discount options"
+      - "Deals nearby"
+      - "Combo meals"
+      - "Value for money"
+      - "What's on offer"
+      - "Koi offer hai kya"
+      - "Discount wala"
+      - "Best bang for buck"
+    entities:
+      - priority: value
+    action: deals_search
+
+  # =============================================
+  # DISCOVERY-BASED INTENTS
+  # =============================================
+  
+  popular_nearby:
+    description: "User wants popular options"
+    examples:
+      - "What's popular nearby"
+      - "Trending restaurants"
+      - "Famous places"
+      - "Best rated"
+      - "Top restaurants"
+      - "Most ordered"
+      - "Popular food"
+      - "Jo famous hai"  # Hindi
+      - "Sabse accha"
+      - "Number 1 restaurant"
+      - "Highly rated"
+    entities:
+      - sort_by: popularity|rating
+    action: popular_search
+
+  new_discovery:
+    description: "User wants to try something new"
+    examples:
+      - "New restaurants"
+      - "Try something new"
+      - "Never tried before"
+      - "Newly opened"
+      - "Something different"
+      - "Surprise me"
+      - "Kuch naya"  # Hindi
+      - "Change chahiye"
+      - "Bored of usual"
+      - "Explore options"
+    entities:
+      - preference: new|different
+    action: new_recommendations
+
+  recommendation:
+    description: "User asking for suggestions"
+    examples:
+      - "What do you recommend"
+      - "Suggest something"
+      - "What should I order"
+      - "Your recommendation"
+      - "Best option"
+      - "Kya order karu"  # Hindi
+      - "Suggest karo"
+      - "What's good today"
+      - "Help me decide"
+      - "You choose"
+      - "Dealer's choice"
+    entities:
+      - preference: recommendation
+    action: smart_recommendations
+
+  surprise_me:
+    description: "User wants random/surprise selection"
+    examples:
+      - "Surprise me"
+      - "Random pick"
+      - "You decide"
+      - "Anything good"
+      - "Just order something"
+      - "Kuch bhi accha"
+      - "Jo bhi best ho"
+      - "Chef's choice"
+    entities:
+      - preference: surprise
+    action: random_good_pick
+
+  # =============================================
+  # MEMORY-BASED INTENTS
+  # =============================================
+  
+  repeat_order:
+    description: "User wants to repeat previous order"
+    examples:
+      - "Order my usual"
+      - "Same as last time"
+      - "Repeat last order"
+      - "My regular"
+      - "What I always get"
+      - "Wahi jo hamesha"  # Hindi
+      - "Same order please"
+      - "Usual order"
+      - "Pichli baar wala"
+      - "Dobara wahi"
+    entities:
+      - action: repeat
+    action: get_last_order
+
+  previous_restaurant:
+    description: "User referring to past restaurant"
+    examples:
+      - "That restaurant from yesterday"
+      - "The place I ordered from"
+      - "Last restaurant"
+      - "Where I ordered biryani"
+      - "Wo restaurant"  # Hindi
+      - "Kal wala"
+      - "Previous one"
+      - "The one I liked"
+    entities:
+      - reference: previous
+    action: get_order_history
+
+  favorite:
+    description: "User wants their favorite"
+    examples:
+      - "My favorite restaurant"
+      - "My saved places"
+      - "Favorites list"
+      - "My go-to place"
+      - "Mera favorite"  # Hindi
+      - "Bookmarked restaurants"
+      - "Liked places"
+    entities:
+      - source: favorites
+    action: get_favorites
+
+  # =============================================
+  # SPECIFIC ORDER INTENTS
+  # =============================================
+  
+  specific_restaurant:
+    description: "User names a specific restaurant"
+    examples:
+      - "Order from Dominos"
+      - "I want from McDonalds"
+      - "Tushar Missal se order karna hai"
+      - "Barbeque Nation"
+      - "Order from {{restaurant_name}}"
+    entities:
+      - restaurant_name: extracted
+    action: search_restaurant
+
+  specific_item_order:
+    description: "User specifies exact item to order"
+    examples:
+      - "1 plate missal"
+      - "2 butter chicken"
+      - "Large pizza"
+      - "One biryani and one naan"
+      - "3 samosas"
+      - "Ek plate momos"  # Hindi
+      - "Do plate rice"
+    entities:
+      - items: extracted
+      - quantity: number
+    action: add_to_cart
+
+  complete_order_statement:
+    description: "Full order statement with restaurant and items"
+    examples:
+      - "I want to order 1 plate missal from tushar missal to home"
+      - "Order 2 pizzas from Dominos"
+      - "Get me biryani from Paradise"
+      - "1 thali from Shiv Sagar deliver home"
+      - "Order butter chicken from nearest punjabi restaurant"
+    entities:
+      - restaurant_name: extracted
+      - items: extracted
+      - quantity: number
+      - delivery_location: home|office|extracted
+    action: process_complete_order
+
+# =============================================
+# ENTITY DEFINITIONS
+# =============================================
+
+entities:
+  food_item:
+    type: extracted
+    examples:
+      - pizza
+      - biryani
+      - burger
+      - pasta
+      - momos
+      - samosa
+      - thali
+      - dosa
+      - idli
+      - paratha
+      - missal
+      - vada pav
+
+  cuisine:
+    type: categorical
+    values:
+      - chinese
+      - indian
+      - italian
+      - mexican
+      - thai
+      - japanese
+      - korean
+      - continental
+      - mughlai
+      - south indian
+      - north indian
+      - punjabi
+      - gujarati
+      - maharashtrian
+      - street food
+
+  taste:
+    type: categorical
+    values:
+      - spicy
+      - sweet
+      - sour
+      - tangy
+      - mild
+      - creamy
+      - crispy
+      - crunchy
+      - hot
+      - cold
+
+  dietary:
+    type: categorical
+    values:
+      - veg
+      - vegetarian
+      - vegan
+      - non-veg
+      - halal
+      - jain
+      - gluten-free
+      - keto
+
+  meal_time:
+    type: categorical
+    values:
+      - breakfast
+      - lunch
+      - dinner
+      - snack
+      - late_night
+      - brunch
+
+  quantity:
+    type: number
+    patterns:
+      - \d+
+      - one|two|three|four|five|six|seven|eight|nine|ten
+      - ek|do|teen|char|paanch  # Hindi numbers
+
+  budget:
+    type: number
+    patterns:
+      - under (\d+)
+      - below (\d+)
+      - (\d+) rs
+      - (\d+) rupees
+      - ₹(\d+)
+
+# =============================================
+# RESPONSE TEMPLATES
+# =============================================
+
+responses:
+  urgent_hungry:
+    - "I understand you're hungry! Here are the fastest options near you:"
+    - "Let me find you something quick! These restaurants deliver fastest:"
+    - "Hungry? No worries! These can reach you in minutes:"
+  
+  quick_delivery:
+    - "Looking for speed! Here's what can reach you quickest:"
+    - "Fast options coming up! These deliver in under 30 mins:"
+  
+  specific_craving:
+    - "{{food}} craving? I found these options for you:"
+    - "Let me satisfy that {{food}} craving:"
+  
+  recommendation:
+    - "Based on what you usually like, I recommend:"
+    - "Here are my top picks for you:"
+    - "You might enjoy these:"
+  
+  no_results:
+    - "I couldn't find exact matches, but here are similar options:"
+    - "Nothing matching exactly, but how about these alternatives:"

@@ -1,0 +1,60 @@
+version: '3.8'
+
+services:
+  dashboard:
+    image: node:20-alpine
+    container_name: mangwale-dashboard
+    working_dir: /app
+    command: sh -c "rm -rf .next && npm install && npm run dev"
+    volumes:
+      - .:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=development
+      - NEXT_TELEMETRY_DISABLED=1
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    networks:
+      - traefik-public
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.dashboard.rule=Host(`chat.mangwale.ai`)"
+      - "traefik.http.routers.dashboard.entrypoints=websecure"
+      - "traefik.http.routers.dashboard.tls=true"
+      - "traefik.http.routers.dashboard.tls.certresolver=letsencrypt"
+      - "traefik.http.services.dashboard.loadbalancer.server.port=3000"
+      
+      # HTTP to HTTPS redirect
+      - "traefik.http.routers.dashboard-http.rule=Host(`chat.mangwale.ai`)"
+      - "traefik.http.routers.dashboard-http.entrypoints=web"
+      - "traefik.http.routers.dashboard-http.middlewares=redirect-to-https"
+      - "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"
+
+  # Backend API Proxy (forwards /api, /socket.io to PM2 backend on host:3200)
+  backend-proxy:
+    image: nginx:alpine
+    container_name: mangwale-backend-proxy
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    networks:
+      - traefik-public
+    volumes:
+      - ./nginx-backend.conf:/etc/nginx/nginx.conf:ro
+    labels:
+      - "traefik.enable=true"
+      # API routes with higher priority
+      - "traefik.http.routers.backend-api.rule=Host(`chat.mangwale.ai`) && (PathPrefix(`/api`) || PathPrefix(`/socket.io`) || PathPrefix(`/health`) || PathPrefix(`/webhook`))"
+      - "traefik.http.routers.backend-api.entrypoints=websecure"
+      - "traefik.http.routers.backend-api.tls=true"
+      - "traefik.http.routers.backend-api.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.backend-api.priority=100"
+      - "traefik.http.services.backend-api.loadbalancer.server.port=80"
+      # HTTP redirect
+      - "traefik.http.routers.backend-api-http.rule=Host(`chat.mangwale.ai`) && (PathPrefix(`/api`) || PathPrefix(`/socket.io`) || PathPrefix(`/health`) || PathPrefix(`/webhook`))"
+      - "traefik.http.routers.backend-api-http.entrypoints=web"
+      - "traefik.http.routers.backend-api-http.middlewares=redirect-to-https"
+
+networks:
+  traefik-public:
+    external: true
+    name: traefik_default

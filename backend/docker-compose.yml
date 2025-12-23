@@ -1,0 +1,452 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database (for API Gateway configuration)
+  postgres:
+    image: postgres:15-alpine
+    container_name: mangwale_postgres
+    restart: unless-stopped
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=mangwale_config
+      - POSTGRES_PASSWORD=config_secure_pass_2024
+      - POSTGRES_DB=headless_mangwale
+      - POSTGRES_INITDB_ARGS=--encoding=UTF-8 --lc-collate=en_US.UTF-8 --lc-ctype=en_US.UTF-8
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    networks:
+      - headless-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U mangwale_config -d headless_mangwale"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # NestJS Mangwale AI Service
+  mangwale-ai:
+    build:
+      context: .
+      dockerfile: Dockerfile.prod
+    container_name: mangwale_ai_service
+    restart: unless-stopped
+    ports:
+      - "3200:3200"
+      - "3201:3200"
+    labels:
+      - traefik.enable=true
+      - traefik.docker.network=search_search-network
+      
+      # api.mangwale.ai - Main API domain (HTTP/REST)
+      - traefik.http.routers.ai-api.rule=Host(`api.mangwale.ai`)
+      - traefik.http.routers.ai-api.entrypoints=websecure
+      - traefik.http.routers.ai-api.tls=true
+      - traefik.http.routers.ai-api.tls.certresolver=letsencrypt
+      - traefik.http.routers.ai-api.service=mangwale-ai
+      
+      # api.mangwale.ai - WebSocket support (socket.io namespace)
+      - traefik.http.routers.ai-websocket.rule=Host(`api.mangwale.ai`) && PathPrefix(`/socket.io`)
+      - traefik.http.routers.ai-websocket.entrypoints=websecure
+      - traefik.http.routers.ai-websocket.tls=true
+      - traefik.http.routers.ai-websocket.tls.certresolver=letsencrypt
+      - traefik.http.routers.ai-websocket.service=mangwale-ai-ws
+      - traefik.http.routers.ai-websocket.priority=100
+      - traefik.http.routers.ai-websocket.middlewares=websocket-headers@file
+
+      # chat.mangwale.ai - WebSocket support (socket.io namespace)
+      - traefik.http.routers.chat-websocket.rule=Host(`chat.mangwale.ai`) && PathPrefix(`/socket.io`)
+      - traefik.http.routers.chat-websocket.entrypoints=websecure
+      - traefik.http.routers.chat-websocket.tls=true
+      - traefik.http.routers.chat-websocket.tls.certresolver=letsencrypt
+      - traefik.http.routers.chat-websocket.service=mangwale-ai-ws
+      - traefik.http.routers.chat-websocket.priority=100
+      - traefik.http.routers.chat-websocket.middlewares=websocket-headers@file
+
+      # WebSocket dedicated service with extended timeouts
+      - traefik.http.services.mangwale-ai-ws.loadbalancer.server.port=3200
+      - traefik.http.services.mangwale-ai-ws.loadbalancer.server.scheme=http
+      - traefik.http.services.mangwale-ai-ws.loadbalancer.responseforwarding.flushinterval=1ms
+      - traefik.http.services.mangwale-ai-ws.loadbalancer.serversTransport=websocket-transport@file
+      
+      # Service transport configuration for REST API
+      - traefik.http.services.mangwale-ai.loadbalancer.server.port=3200
+      - traefik.http.services.mangwale-ai.loadbalancer.server.scheme=http
+      - traefik.http.services.mangwale-ai.loadbalancer.responseforwarding.flushinterval=1ms
+      
+      # admin.mangwale.ai - API routes (Direct routing, bypassing Next.js)
+      - traefik.http.routers.ai-admin-api.rule=Host(`admin.mangwale.ai`) && PathPrefix(`/api`)
+      - traefik.http.routers.ai-admin-api.entrypoints=websecure
+      - traefik.http.routers.ai-admin-api.tls=true
+      - traefik.http.routers.ai-admin-api.tls.certresolver=letsencrypt
+      - traefik.http.routers.ai-admin-api.service=mangwale-ai
+      - traefik.http.routers.ai-admin-api.priority=10
+      # - traefik.http.middlewares.ai-admin-stripprefix.stripprefix.prefixes=/api
+      # - traefik.http.routers.ai-admin-api.middlewares=ai-admin-stripprefix
+
+      # admin.mangwale.ai - WebSocket support (Direct routing)
+      - traefik.http.routers.ai-admin-websocket.rule=Host(`admin.mangwale.ai`) && PathPrefix(`/socket.io`)
+      - traefik.http.routers.ai-admin-websocket.entrypoints=websecure
+      - traefik.http.routers.ai-admin-websocket.tls=true
+      - traefik.http.routers.ai-admin-websocket.tls.certresolver=letsencrypt
+      - traefik.http.routers.ai-admin-websocket.service=mangwale-ai-ws
+      - traefik.http.routers.ai-admin-websocket.priority=10
+      - traefik.http.routers.ai-admin-websocket.middlewares=websocket-headers@file
+      
+      # HTTP to HTTPS redirect for api.mangwale.ai
+      - traefik.http.routers.ai-api-http.rule=Host(`api.mangwale.ai`)
+      - traefik.http.routers.ai-api-http.entrypoints=web
+      - traefik.http.routers.ai-api-http.middlewares=redirect-to-https
+      - traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https
+      
+      # Service definition removed - using server.url instead of server.port above
+    environment:
+      - NODE_ENV=production
+      - PORT=3200
+      - TEST_MODE=true
+      - TZ=Asia/Kolkata
+      
+      # WhatsApp Config
+      - WHATSAPP_PHONE_NUMBER_ID=${WHATSAPP_PHONE_NUMBER_ID}
+      - WHATSAPP_ACCESS_TOKEN=${WHATSAPP_ACCESS_TOKEN}
+      - WHATSAPP_VERIFY_TOKEN=${WHATSAPP_VERIFY_TOKEN}
+      - WHATSAPP_API_VERSION=${WHATSAPP_API_VERSION:-v22.0}
+      
+      # PHP Backend
+      - PHP_API_BASE_URL=${PHP_API_BASE_URL}
+      - PHP_API_TIMEOUT=30000
+      
+      # PHP MySQL Database (for store schedule queries)
+      - PHP_DB_HOST=host.docker.internal
+      - PHP_DB_PORT=23306
+      - PHP_DB_USER=mangwale_user
+      - PHP_DB_PASSWORD=admin123
+      - PHP_DB_NAME=mangwale_db
+      
+      # Admin Backend (NLU/LLM)
+      - ADMIN_BACKEND_URL=http://host.docker.internal:3002
+      - ADMIN_BACKEND_API_KEY=${ADMIN_BACKEND_API_KEY:-}
+      - NLU_AI_ENABLED=true
+      
+      # NLU Configuration
+      - NLU_ENDPOINT=http://host.docker.internal:7010
+      - NLU_CONFIDENCE_THRESHOLD=0.85
+      - NLU_LLM_FALLBACK_ENABLED=true
+      - NLU_CAPTURE_TRAINING_DATA=true
+      - LABEL_STUDIO_URL=http://host.docker.internal:8080
+      - LABEL_STUDIO_API_KEY=${LABEL_STUDIO_API_KEY}
+      
+      # Cloud LLM Providers
+      - HUGGINGFACE_API_KEY=${HUGGINGFACE_API_KEY}
+      - GROQ_API_KEY=${GROQ_API_KEY}
+      - OPENROUTER_API_KEY=${OPENROUTER_API_KEY}
+      - LLM_MODE=hybrid
+      - DEFAULT_LLM_PROVIDER=vllm
+      - DEFAULT_CLOUD_PROVIDER=groq
+      - ENABLED_LLM_PROVIDERS=vllm,groq,openrouter,huggingface
+      - VLLM_URL=http://host.docker.internal:8002
+      - VLLM_MODEL=Qwen/Qwen2.5-7B-Instruct-AWQ
+      - GROQ_DEFAULT_MODEL=llama-3.3-70b-versatile
+      - OPENROUTER_DEFAULT_MODEL=meta-llama/llama-3.2-3b-instruct:free
+      
+      # Search API
+      - SEARCH_API_URL=http://search-api:3100
+      - OPENSEARCH_URL=http://search-opensearch:9200
+      - EMBEDDING_SERVICE_URL=http://search-embedding-service:3101
+      - OSRM_URL=http://mangwale_osrm:5000
+      
+      # Voice Services (ASR/TTS)
+      - ASR_SERVICE_URL=http://host.docker.internal:7000
+      - TTS_SERVICE_URL=http://host.docker.internal:8010
+      
+      # PostgreSQL Database (Prisma)
+      - DATABASE_URL=postgresql://mangwale_config:config_secure_pass_2024@mangwale_postgres:5432/headless_mangwale?schema=public
+      
+      # Redis
+      - REDIS_HOST=mangwale_redis
+      - REDIS_PORT=6379
+      - REDIS_PASSWORD=
+      - REDIS_DB=1
+      
+      # Session
+      - SESSION_TTL=86400
+      - OTP_TTL=600
+      - OTP_LENGTH=6
+      
+      # Module
+      - DEFAULT_PARCEL_MODULE_ID=3
+      
+      # Logging
+      - LOG_LEVEL=debug
+      - LOG_DIR=/app/logs
+      - NLU_LOG_DIR=/app/logs/nlu
+      - AI_METRICS_LOG_DIR=/app/logs/ai-metrics
+      - TRAINING_LOG_DIR=/app/logs/training
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    networks:
+      - headless-network
+      - traefik-public
+      - search_network
+    volumes:
+      - ./logs:/app/logs
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:3200/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+  # Redis for session storage
+  redis:
+    image: redis:7-alpine
+    container_name: mangwale_redis
+    restart: unless-stopped
+    ports:
+      - "6381:6379"
+    volumes:
+      - redis-data:/data
+    networks:
+      - headless-network
+    command: redis-server --appendonly yes --maxmemory 256mb --maxmemory-policy allkeys-lru
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # OSRM Backend (OpenStreetMap Routing)
+  osrm-backend:
+    build:
+      context: ./docker
+      dockerfile: osrm.Dockerfile
+    container_name: mangwale_osrm
+    restart: unless-stopped
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./osrm-data:/data
+    command: osrm-routed --algorithm mld /data/india-latest.osrm --max-table-size 10000
+    networks:
+      - headless-network
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:5000/nearest/v1/driving/77.5946,12.9716?number=1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 20s
+
+  # NLU Service (IndicBERT Intent Classification)
+  # Model: ai4bharat/IndicBERTv2-MLM-Back-TLM (278M params, 23 Indic languages)
+  # Trained model: indicbert_v5_enhanced (25 intents, 1009 samples)
+  nlu:
+    image: admin-nlu:latest
+    container_name: mangwale-ai-nlu
+    restart: unless-stopped
+    ports:
+      - "7010:7010"
+    volumes:
+      - ./models:/models
+      - ./training:/app/training
+      - ./training-data:/app/training-data
+    environment:
+      # Trained intent classifier (25 intents)
+      - INTENT_MODEL=/models/indicbert_v5_enhanced
+      # Base encoder for embeddings (uses trained model for consistency)
+      - BASE_ENCODER=/models/indicbert_v5_enhanced
+      # HuggingFace model for fallback/cache
+      - HF_MODEL_NAME=ai4bharat/IndicBERTv2-MLM-Back-TLM
+      - PORT=7010
+    networks:
+      - headless-network
+      - mangwale_ai_network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:7010/healthz"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+  # vLLM Inference Engine (LLM for agents)
+  # Qwen2.5-7B-Instruct-AWQ - Optimized for RTX 3060 12GB
+  vllm:
+    image: vllm/vllm-openai:v0.4.2
+    container_name: mangwale-ai-vllm
+    restart: unless-stopped
+    runtime: nvidia
+    ports:
+      - "8002:8002"
+    environment:
+      - HF_TOKEN=${HF_TOKEN:-}
+      - NVIDIA_VISIBLE_DEVICES=0
+      - CUDA_VISIBLE_DEVICES=0
+    volumes:
+      - ./models:/root/.cache/huggingface
+    networks:
+      - headless-network
+      - mangwale_ai_network
+    command: >
+      --model Qwen/Qwen2.5-7B-Instruct-AWQ
+      --port 8002
+      --host 0.0.0.0
+      --max-model-len 4096
+      --tensor-parallel-size 1
+      --gpu-memory-utilization 0.9
+      --dtype auto
+      --quantization awq
+    healthcheck:
+      test: ["CMD", "python3", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8002/health')"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 180s
+
+  # API Gateway (NestJS) - ENABLED for Chat App Auth
+  api-gateway:
+    build:
+      context: .
+      dockerfile: api-gateway/Dockerfile
+    container_name: mangwale_api_gateway
+    restart: unless-stopped
+    ports:
+      - "4001:4001"
+    environment:
+      - NODE_ENV=production
+      - PORT=4001
+      - TZ=Asia/Kolkata
+      - DATABASE_URL=postgresql://mangwale_config:config_secure_pass_2024@postgres:5432/headless_mangwale?schema=public
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - SESSION_SECRET=${SESSION_SECRET:-change-this-secret-in-production}
+      - JWT_SECRET=${JWT_SECRET:-change-this-jwt-secret}
+      - LOG_LEVEL=${LOG_LEVEL:-info}
+      # OSRM Configuration
+      - OSRM_BASE_URL=http://osrm-backend:5000
+      # Dispatcher API Configuration
+      - DISPATCHER_API_URL=https://track.mangwale.in/api/v1/third-party
+      - DISPATCHER_API_KEY=pk_test_xyz789abc012def345ghi678jkl901mno234pqr567stu890vwx123
+      # Parcel Configuration
+      - ALLOWED_PARCEL_CATEGORY_IDS=5,8,9
+    env_file:
+      - ./api-gateway/.env
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      osrm-backend:
+        condition: service_started
+    networks:
+      - headless-network
+      - mangwale_network
+      - mangwaleai_traefik_proxy
+    labels:
+      - traefik.enable=true
+      - traefik.docker.network=mangwaleai_traefik_proxy
+      # API Gateway HTTP routes
+      - "traefik.http.routers.api-gateway.rule=Host(`chat.mangwale.ai`) && PathPrefix(`/api-gateway`)"
+      - "traefik.http.routers.api-gateway.entrypoints=websecure"
+      - "traefik.http.routers.api-gateway.tls=true"
+      - "traefik.http.routers.api-gateway.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.api-gateway.priority=200"
+      - "traefik.http.services.api-gateway.loadbalancer.server.port=4001"
+      # Strip /api-gateway prefix before forwarding
+      - "traefik.http.middlewares.api-gateway-stripprefix.stripprefix.prefixes=/api-gateway"
+      - "traefik.http.routers.api-gateway.middlewares=api-gateway-stripprefix"
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('http').get('http://localhost:4001/api/health', (r) => {process.exit(r.statusCode === 200 ? 0 : 1)})"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # Label Studio (for ML annotation)
+  labelstudio:
+    image: heartexlabs/label-studio:1.21.0
+    container_name: mangwale_labelstudio
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    environment:
+      - LABEL_STUDIO_HOST=http://localhost:8080
+      - LABEL_STUDIO_LOCAL_FILES_SERVING_ENABLED=true
+      - LABEL_STUDIO_LOCAL_FILES_DOCUMENT_ROOT=/label-studio/data
+    volumes:
+      # Persist ALL Label Studio data (database, projects, annotations)
+      - ./data/labelstudio:/label-studio/data
+    networks:
+      - headless-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # Frontend (Next.js) - DISABLED: Using separate unified-dashboard repo
+  # The mangwale-unified-dashboard is running independently
+  # To re-enable: uncomment lines below
+  # frontend:
+  #   build:
+  #     context: ./frontend
+  #     dockerfile: Dockerfile
+  #     args:
+  #       NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-http://localhost:3200}
+  #   container_name: mangwale_frontend
+  #   restart: unless-stopped
+  #   ports:
+  #     - "3001:3001"
+  #   environment:
+  #     - NODE_ENV=production
+  #     - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL:-http://localhost:3200}
+  #     - PORT=3001
+  #   networks:
+  #     - headless-network
+  #     - mangwaleai_traefik_proxy
+  #   labels:
+  #     - traefik.enable=true
+  #     - traefik.docker.network=mangwaleai_traefik_proxy
+  #     - traefik.http.routers.frontend.rule=Host(`mangwale.ai`)
+  #     - traefik.http.routers.frontend.entrypoints=web,websecure
+  #     - traefik.http.routers.frontend.tls.certresolver=letsencrypt
+  #     - traefik.http.services.frontend.loadbalancer.server.port=3001
+  #   healthcheck:
+  #     test: ["CMD", "node", "-e", "require('http').get('http://localhost:3001', (r) => {process.exit(r.statusCode === 200 ? 0 : 1)})"]
+  #     interval: 30s
+  #     timeout: 10s
+  #     retries: 3
+  #     start_period: 40s
+
+networks:
+  headless-network:
+    driver: bridge
+  mangwale_ai_network:
+    driver: bridge
+  mangwale_network:
+    external: true
+    name: phpmangwalebackend_mangwale_network
+  mangwaleai_traefik_proxy:
+    external: true
+  shared_ai_network:
+    external: true
+  compose_mwai:
+    external: true
+  traefik-public:
+    external: true
+    name: traefik_default
+  search_network:
+    external: true
+    name: search_search-network
+
+volumes:
+  postgres-data:
+    driver: local
+  redis-data:
+    driver: local
+  labelstudio-data:
+    driver: local
+

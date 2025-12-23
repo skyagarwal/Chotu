@@ -1,0 +1,344 @@
+{
+	"info": {
+		"_postman_id": "mangwale-search-v2-updated",
+		"name": "Mangwale Search V2 (Updated)",
+		"description": "Updated Postman collection for Mangwale Search API V2. Includes Geo-Radius search and Semantic Search endpoints.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Items Search",
+			"item": [
+				{
+					"name": "Basic Search (Paneer)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/v2/search/items?q=Paneer",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"v2",
+								"search",
+								"items"
+							],
+							"query": [
+								{
+									"key": "q",
+									"value": "Paneer"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Module Filter (Food - Mod 4)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/v2/search/items?q=Paneer&module_id=4",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"v2",
+								"search",
+								"items"
+							],
+							"query": [
+								{
+									"key": "q",
+									"value": "Paneer"
+								},
+								{
+									"key": "module_id",
+									"value": "4"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Module Filter (E-com - Mod 5)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/v2/search/items?q=Paneer&module_id=5",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"v2",
+								"search",
+								"items"
+							],
+							"query": [
+								{
+									"key": "q",
+									"value": "Paneer"
+								},
+								{
+									"key": "module_id",
+									"value": "5"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Geo Search (Nearby with Radius)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/v2/search/items?q=Kofta&lat=19.9806241&lon=73.7812718&radius_km=5&module_id=4",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"v2",
+								"search",
+								"items"
+							],
+							"query": [
+								{
+									"key": "q",
+									"value": "Kofta"
+								},
+								{
+									"key": "lat",
+									"value": "19.9806241"
+								},
+								{
+									"key": "lon",
+									"value": "73.7812718"
+								},
+								{
+									"key": "radius_km",
+									"value": "5"
+								},
+								{
+									"key": "module_id",
+									"value": "4"
+								}
+							]
+						},
+						"description": "Search with explicit radius. Should return items within 5km."
+					},
+					"response": []
+				},
+				{
+					"name": "Geo Search (Remote/Fallback)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/v2/search/items?q=Kofta&lat=20.98&lon=73.78&radius_km=20&module_id=4",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"v2",
+								"search",
+								"items"
+							],
+							"query": [
+								{
+									"key": "q",
+									"value": "Kofta"
+								},
+								{
+									"key": "lat",
+									"value": "20.98"
+								},
+								{
+									"key": "lon",
+									"value": "73.78"
+								},
+								{
+									"key": "radius_km",
+									"value": "20"
+								},
+								{
+									"key": "module_id",
+									"value": "4"
+								}
+							]
+						},
+						"description": "Tests fallback logic when no items are found within radius (100km away)."
+					},
+					"response": []
+				},
+				{
+					"name": "Sort by Distance",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/v2/search/items?q=Kofta&lat=19.9806241&lon=73.7812718&sort=distance&module_id=4",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"v2",
+								"search",
+								"items"
+							],
+							"query": [
+								{
+									"key": "q",
+									"value": "Kofta"
+								},
+								{
+									"key": "lat",
+									"value": "19.9806241"
+								},
+								{
+									"key": "lon",
+									"value": "73.7812718"
+								},
+								{
+									"key": "sort",
+									"value": "distance"
+								},
+								{
+									"key": "module_id",
+									"value": "4"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Semantic Search",
+			"item": [
+				{
+					"name": "Semantic Search (Food)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/search/semantic/food?q=spicy chicken",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"search",
+								"semantic",
+								"food"
+							],
+							"query": [
+								{
+									"key": "q",
+									"value": "spicy chicken"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Semantic Search (Ecom)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/search/semantic/ecom?q=smartphone",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"search",
+								"semantic",
+								"ecom"
+							],
+							"query": [
+								{
+									"key": "q",
+									"value": "smartphone"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Stores Search",
+			"item": [
+				{
+					"name": "Basic Store Search",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/v2/search/stores?q=Hotel",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"v2",
+								"search",
+								"stores"
+							],
+							"query": [
+								{
+									"key": "q",
+									"value": "Hotel"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Stores Nearby",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/v2/search/stores?lat=19.9806241&lon=73.7812718",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"v2",
+								"search",
+								"stores"
+							],
+							"query": [
+								{
+									"key": "lat",
+									"value": "19.9806241"
+								},
+								{
+									"key": "lon",
+									"value": "73.7812718"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:3100",
+			"type": "string"
+		}
+	]
+}

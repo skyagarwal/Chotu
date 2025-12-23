@@ -1,0 +1,731 @@
+{
+	"info": {
+		"_postman_id": "mangwale-comprehensive-api-v1",
+		"name": "Mangwale Complete API Collection",
+		"description": "Comprehensive Postman collection covering all flows:\n- Customer Authentication & Registration\n- Guest & User Orders (Food/Ecommerce/Parcel)\n- Wallet Journey\n- Vendor Journey\n- Delivery Man Journey\n- Shopping Flow (Stores, Items, Cart)\n- Notifications\n- Reviews & Ratings\n- Subscriptions",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "1. Configuration & Setup",
+			"item": [
+				{
+					"name": "Get Configuration",
+					"request": {
+						"method": "GET",
+						"header": [
+							{"key": "zoneId", "value": "{{zoneId}}", "type": "text"},
+							{"key": "moduleId", "value": "{{moduleId}}", "type": "text"}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/v1/config",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "config"]
+						},
+						"description": "Get system configuration including payment methods, modules, etc."
+					}
+				},
+				{
+					"name": "Get Zones",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/zone/list",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "zone", "list"]
+						}
+					}
+				},
+				{
+					"name": "Get Modules",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/module",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "module"]
+						}
+					}
+				},
+				{
+					"name": "Get Payment Methods",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/config/get-PaymentMethods",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "config", "get-PaymentMethods"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "2. Customer Authentication",
+			"item": [
+				{
+					"name": "Customer Sign Up",
+					"request": {
+						"method": "POST",
+						"header": [
+							{"key": "Content-Type", "value": "application/json", "type": "text"}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"John Doe\",\n  \"email\": \"john@example.com\",\n  \"phone\": \"+1234567890\",\n  \"password\": \"password123\",\n  \"ref_code\": \"\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/auth/sign-up",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "auth", "sign-up"]
+						},
+						"description": "Register a new customer account. Returns token on success."
+					}
+				},
+				{
+					"name": "Customer Login",
+					"request": {
+						"method": "POST",
+						"header": [
+							{"key": "Content-Type", "value": "application/json", "type": "text"}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"phone\": \"+1234567890\",\n  \"password\": \"password123\",\n  \"guest_id\": \"{{guest_id}}\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/auth/login",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "auth", "login"]
+						},
+						"description": "Login with phone and password. Use returned token in Authorization header for subsequent requests."
+					}
+				},
+				{
+					"name": "Guest Request",
+					"request": {
+						"method": "POST",
+						"header": [
+							{"key": "Content-Type", "value": "application/json", "type": "text"}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"fcm_token\": \"firebase_token_here\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/auth/guest/request",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "auth", "guest", "request"]
+						},
+						"description": "Create guest session for guest orders. Returns guest_id."
+					}
+				},
+				{
+					"name": "Forgot Password",
+					"request": {
+						"method": "POST",
+						"header": [
+							{"key": "Content-Type", "value": "application/json", "type": "text"}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"phone\": \"+1234567890\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/auth/forgot-password",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "auth", "forgot-password"]
+						}
+					}
+				},
+				{
+					"name": "Reset Password",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{"key": "Content-Type", "value": "application/json", "type": "text"}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"phone\": \"+1234567890\",\n  \"otp\": \"1234\",\n  \"password\": \"newpassword123\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/auth/reset-password",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "auth", "reset-password"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "3. Customer Profile & Management",
+			"item": [
+				{
+					"name": "Get Customer Info",
+					"request": {
+						"method": "GET",
+						"header": [
+							{"key": "Authorization", "value": "Bearer {{customer_token}}", "type": "text"},
+							{"key": "zoneId", "value": "{{zoneId}}", "type": "text"},
+							{"key": "moduleId", "value": "{{moduleId}}", "type": "text"}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/v1/customer/info",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "customer", "info"]
+						}
+					}
+				},
+				{
+					"name": "Update Profile",
+					"request": {
+						"method": "POST",
+						"header": [
+							{"key": "Authorization", "value": "Bearer {{customer_token}}", "type": "text"},
+							{"key": "Content-Type", "value": "application/json", "type": "text"},
+							{"key": "zoneId", "value": "{{zoneId}}", "type": "text"},
+							{"key": "moduleId", "value": "{{moduleId}}", "type": "text"}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"f_name\": \"John\",\n  \"l_name\": \"Doe\",\n  \"email\": \"john@example.com\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/customer/update-profile",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "customer", "update-profile"]
+						}
+					}
+				},
+				{
+					"name": "Get Notifications",
+					"request": {
+						"method": "GET",
+						"header": [
+							{"key": "Authorization", "value": "Bearer {{customer_token}}", "type": "text"},
+							{"key": "zoneId", "value": "{{zoneId}}", "type": "text"},
+							{"key": "moduleId", "value": "{{moduleId}}", "type": "text"}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/v1/customer/notifications",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "customer", "notifications"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "4. Customer Address Management",
+			"item": [
+				{
+					"name": "Get Address List",
+					"request": {
+						"method": "GET",
+						"header": [
+							{"key": "Authorization", "value": "Bearer {{customer_token}}", "type": "text"},
+							{"key": "zoneId", "value": "{{zoneId}}", "type": "text"},
+							{"key": "moduleId", "value": "{{moduleId}}", "type": "text"}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/v1/customer/address/list",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "customer", "address", "list"]
+						}
+					}
+				},
+				{
+					"name": "Add Address",
+					"request": {
+						"method": "POST",
+						"header": [
+							{"key": "Authorization", "value": "Bearer {{customer_token}}", "type": "text"},
+							{"key": "Content-Type", "value": "application/json", "type": "text"},
+							{"key": "zoneId", "value": "{{zoneId}}", "type": "text"},
+							{"key": "moduleId", "value": "{{moduleId}}", "type": "text"}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"contact_person_name\": \"John Doe\",\n  \"contact_person_number\": \"+1234567890\",\n  \"address_type\": \"home\",\n  \"address\": \"123 Main St\",\n  \"longitude\": \"0.0\",\n  \"latitude\": \"0.0\",\n  \"zone_id\": \"1\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/customer/address/add",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "customer", "address", "add"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "5. Stores & Items Browsing",
+			"item": [
+				{
+					"name": "Get Stores",
+					"request": {
+						"method": "GET",
+						"header": [
+							{"key": "zoneId", "value": "{{zoneId}}", "type": "text"},
+							{"key": "moduleId", "value": "{{moduleId}}", "type": "text"}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/v1/stores/get-stores/all",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "stores", "get-stores", "all"]
+						}
+					}
+				},
+				{
+					"name": "Get Store Details",
+					"request": {
+						"method": "GET",
+						"header": [
+							{"key": "zoneId", "value": "{{zoneId}}", "type": "text"},
+							{"key": "moduleId", "value": "{{moduleId}}", "type": "text"}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/v1/stores/details/{{store_id}}",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "stores", "details", "{{store_id}}"]
+						}
+					}
+				},
+				{
+					"name": "Get Items Latest",
+					"request": {
+						"method": "GET",
+						"header": [
+							{"key": "zoneId", "value": "{{zoneId}}", "type": "text"},
+							{"key": "moduleId", "value": "{{moduleId}}", "type": "text"}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/v1/items/latest",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "items", "latest"]
+						}
+					}
+				},
+				{
+					"name": "Get Item Details",
+					"request": {
+						"method": "GET",
+						"header": [
+							{"key": "zoneId", "value": "{{zoneId}}", "type": "text"},
+							{"key": "moduleId", "value": "{{moduleId}}", "type": "text"}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/v1/items/details/1",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "items", "details", "1"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "6. Cart Management",
+			"item": [
+				{
+					"name": "Get Cart",
+					"request": {
+						"method": "GET",
+						"header": [
+							{"key": "Authorization", "value": "Bearer {{customer_token}}", "type": "text"},
+							{"key": "zoneId", "value": "{{zoneId}}", "type": "text"},
+							{"key": "moduleId", "value": "{{moduleId}}", "type": "text"}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/v1/customer/cart/list",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "customer", "cart", "list"]
+						}
+					}
+				},
+				{
+					"name": "Add to Cart",
+					"request": {
+						"method": "POST",
+						"header": [
+							{"key": "Authorization", "value": "Bearer {{customer_token}}", "type": "text"},
+							{"key": "Content-Type", "value": "application/json", "type": "text"},
+							{"key": "zoneId", "value": "{{zoneId}}", "type": "text"},
+							{"key": "moduleId", "value": "{{moduleId}}", "type": "text"}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"item_id\": \"1\",\n  \"quantity\": 2,\n  \"addon_ids\": [],\n  \"addon_quantities\": []\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/customer/cart/add",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "customer", "cart", "add"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "7. Orders - Customer Flow",
+			"item": [
+				{
+					"name": "Place Order (Food/Ecommerce)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{"key": "Authorization", "value": "Bearer {{customer_token}}", "type": "text"},
+							{"key": "Content-Type", "value": "application/json", "type": "text"},
+							{"key": "zoneId", "value": "{{zoneId}}", "type": "text"},
+							{"key": "moduleId", "value": "{{moduleId}}", "type": "text"}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"cart\": [{\"item_id\": \"1\", \"quantity\": 2}],\n  \"payment_method\": \"cash_on_delivery\",\n  \"order_type\": \"delivery\",\n  \"store_id\": \"{{store_id}}\",\n  \"distance\": 5.5,\n  \"address\": \"123 Main St\",\n  \"longitude\": \"0.0\",\n  \"latitude\": \"0.0\",\n  \"coupon_code\": \"\",\n  \"order_note\": \"\",\n  \"dm_tips\": 0\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/customer/order/place",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "customer", "order", "place"]
+						},
+						"description": "Place order for food or ecommerce. Order types: delivery, take_away. Payment methods: cash_on_delivery, digital_payment, wallet, offline_payment"
+					}
+				},
+				{
+					"name": "Place Parcel Order",
+					"request": {
+						"method": "POST",
+						"header": [
+							{"key": "Authorization", "value": "Bearer {{customer_token}}", "type": "text"},
+							{"key": "Content-Type", "value": "application/json", "type": "text"},
+							{"key": "zoneId", "value": "{{zoneId}}", "type": "text"},
+							{"key": "moduleId", "value": "{{moduleId}}", "type": "text"}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"payment_method\": \"cash_on_delivery\",\n  \"order_type\": \"parcel\",\n  \"parcel_category_id\": \"1\",\n  \"receiver_details\": {\n    \"name\": \"Jane Doe\",\n    \"phone\": \"+1234567890\",\n    \"address\": \"456 Oak St\",\n    \"longitude\": \"0.0\",\n    \"latitude\": \"0.0\"\n  },\n  \"charge_payer\": \"sender\",\n  \"distance\": 10.5,\n  \"address\": \"123 Main St\",\n  \"longitude\": \"0.0\",\n  \"latitude\": \"0.0\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/customer/order/place",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "customer", "order", "place"]
+						},
+						"description": "Place parcel order. Charge payer: sender or receiver"
+					}
+				},
+				{
+					"name": "Get Order List",
+					"request": {
+						"method": "GET",
+						"header": [
+							{"key": "Authorization", "value": "Bearer {{customer_token}}", "type": "text"},
+							{"key": "zoneId", "value": "{{zoneId}}", "type": "text"},
+							{"key": "moduleId", "value": "{{moduleId}}", "type": "text"}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/v1/customer/order/list",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "customer", "order", "list"]
+						}
+					}
+				},
+				{
+					"name": "Get Order Details",
+					"request": {
+						"method": "GET",
+						"header": [
+							{"key": "Authorization", "value": "Bearer {{customer_token}}", "type": "text"},
+							{"key": "order_id", "value": "{{order_id}}", "type": "text"},
+							{"key": "zoneId", "value": "{{zoneId}}", "type": "text"},
+							{"key": "moduleId", "value": "{{moduleId}}", "type": "text"}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/v1/customer/order/details?order_id={{order_id}}",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "customer", "order", "details"],
+							"query": [
+								{"key": "order_id", "value": "{{order_id}}"}
+							]
+						}
+					}
+				},
+				{
+					"name": "Track Order",
+					"request": {
+						"method": "GET",
+						"header": [
+							{"key": "order_id", "value": "{{order_id}}", "type": "text"},
+							{"key": "zoneId", "value": "{{zoneId}}", "type": "text"},
+							{"key": "moduleId", "value": "{{moduleId}}", "type": "text"}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/v1/customer/order/track?order_id={{order_id}}",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "customer", "order", "track"],
+							"query": [
+								{"key": "order_id", "value": "{{order_id}}"}
+							]
+						},
+						"description": "Track order (no authentication required)"
+					}
+				},
+				{
+					"name": "Cancel Order",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{"key": "Authorization", "value": "Bearer {{customer_token}}", "type": "text"},
+							{"key": "Content-Type", "value": "application/json", "type": "text"},
+							{"key": "zoneId", "value": "{{zoneId}}", "type": "text"},
+							{"key": "moduleId", "value": "{{moduleId}}", "type": "text"}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"order_id\": \"{{order_id}}\",\n  \"reason\": \"Changed my mind\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/customer/order/cancel",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "customer", "order", "cancel"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "8. Wallet Journey",
+			"item": [
+				{
+					"name": "Get Wallet Transactions",
+					"request": {
+						"method": "GET",
+						"header": [
+							{"key": "Authorization", "value": "Bearer {{customer_token}}", "type": "text"},
+							{"key": "zoneId", "value": "{{zoneId}}", "type": "text"},
+							{"key": "moduleId", "value": "{{moduleId}}", "type": "text"}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/v1/customer/wallet/transactions",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "customer", "wallet", "transactions"]
+						}
+					}
+				},
+				{
+					"name": "Add Fund to Wallet",
+					"request": {
+						"method": "POST",
+						"header": [
+							{"key": "Authorization", "value": "Bearer {{customer_token}}", "type": "text"},
+							{"key": "Content-Type", "value": "application/json", "type": "text"},
+							{"key": "zoneId", "value": "{{zoneId}}", "type": "text"},
+							{"key": "moduleId", "value": "{{moduleId}}", "type": "text"}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"amount\": 100,\n  \"payment_method\": \"stripe\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/customer/wallet/add-fund",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "customer", "wallet", "add-fund"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "9. Vendor Authentication",
+			"item": [
+				{
+					"name": "Vendor Login",
+					"request": {
+						"method": "POST",
+						"header": [
+							{"key": "Content-Type", "value": "application/json", "type": "text"},
+							{"key": "actch", "value": "vendor_app", "type": "text"}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"vendor@example.com\",\n  \"password\": \"password123\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/auth/vendor/login",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "auth", "vendor", "login"]
+						},
+						"description": "Vendor login. Requires actch:vendor_app header. Returns vendor_token."
+					}
+				}
+			]
+		},
+		{
+			"name": "10. Vendor Orders Management",
+			"item": [
+				{
+					"name": "Get Current Orders",
+					"request": {
+						"method": "GET",
+						"header": [
+							{"key": "Authorization", "value": "Bearer {{vendor_token}}", "type": "text"},
+							{"key": "zoneId", "value": "{{zoneId}}", "type": "text"},
+							{"key": "moduleId", "value": "{{moduleId}}", "type": "text"}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/v1/vendor/current-orders",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "vendor", "current-orders"]
+						}
+					}
+				},
+				{
+					"name": "Update Order Status",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{"key": "Authorization", "value": "Bearer {{vendor_token}}", "type": "text"},
+							{"key": "Content-Type", "value": "application/json", "type": "text"},
+							{"key": "zoneId", "value": "{{zoneId}}", "type": "text"},
+							{"key": "moduleId", "value": "{{moduleId}}", "type": "text"}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"order_id\": \"{{order_id}}\",\n  \"status\": \"processing\",\n  \"reason\": \"\",\n  \"processing_time\": \"30\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/vendor/update-order-status",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "vendor", "update-order-status"]
+						},
+						"description": "Update order status. Status values: pending, confirmed, processing, handover, picked_up, delivered, canceled"
+					}
+				}
+			]
+		},
+		{
+			"name": "11. Delivery Man Authentication",
+			"item": [
+				{
+					"name": "DM Login",
+					"request": {
+						"method": "POST",
+						"header": [
+							{"key": "Content-Type", "value": "application/json", "type": "text"},
+							{"key": "actch", "value": "deliveryman_app", "type": "text"}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"phone\": \"+1234567890\",\n  \"password\": \"password123\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/auth/delivery-man/login",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "auth", "delivery-man", "login"]
+						},
+						"description": "Delivery man login. Requires actch:deliveryman_app header. Returns dm_token."
+					}
+				}
+			]
+		},
+		{
+			"name": "12. Delivery Man Orders",
+			"item": [
+				{
+					"name": "Get Current Orders",
+					"request": {
+						"method": "GET",
+						"header": [
+							{"key": "Authorization", "value": "Bearer {{dm_token}}", "type": "text"},
+							{"key": "zoneId", "value": "{{zoneId}}", "type": "text"},
+							{"key": "moduleId", "value": "{{moduleId}}", "type": "text"}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/v1/delivery-man/current-orders",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "delivery-man", "current-orders"]
+						}
+					}
+				},
+				{
+					"name": "Accept Order",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{"key": "Authorization", "value": "Bearer {{dm_token}}", "type": "text"},
+							{"key": "Content-Type", "value": "application/json", "type": "text"},
+							{"key": "zoneId", "value": "{{zoneId}}", "type": "text"},
+							{"key": "moduleId", "value": "{{moduleId}}", "type": "text"}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"order_id\": \"{{order_id}}\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/delivery-man/accept-order",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "delivery-man", "accept-order"]
+						},
+						"description": "Accept an available order. Changes status to 'accepted' and assigns deliveryman."
+					}
+				},
+				{
+					"name": "Update Order Status",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{"key": "Authorization", "value": "Bearer {{dm_token}}", "type": "text"},
+							{"key": "Content-Type", "value": "application/json", "type": "text"},
+							{"key": "zoneId", "value": "{{zoneId}}", "type": "text"},
+							{"key": "moduleId", "value": "{{moduleId}}", "type": "text"}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"order_id\": \"{{order_id}}\",\n  \"status\": \"picked_up\",\n  \"otp\": \"1234\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/delivery-man/update-order-status",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "delivery-man", "update-order-status"]
+						},
+						"description": "Update order status. Status values: confirmed, picked_up, delivered, canceled, handover"
+					}
+				},
+				{
+					"name": "Record Location",
+					"request": {
+						"method": "POST",
+						"header": [
+							{"key": "Authorization", "value": "Bearer {{dm_token}}", "type": "text"},
+							{"key": "Content-Type", "value": "application/json", "type": "text"},
+							{"key": "zoneId", "value": "{{zoneId}}", "type": "text"},
+							{"key": "moduleId", "value": "{{moduleId}}", "type": "text"}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"latitude\": \"0.0\",\n  \"longitude\": \"0.0\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/delivery-man/record-location-data",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "delivery-man", "record-location-data"]
+						}
+					}
+				}
+			]
+		}
+	],
+	"variable": [
+		{"key": "base_url", "value": "https://new.mangwale.com", "type": "string"},
+		{"key": "customer_token", "value": "", "type": "string"},
+		{"key": "vendor_token", "value": "", "type": "string"},
+		{"key": "dm_token", "value": "", "type": "string"},
+		{"key": "zoneId", "value": "1", "type": "string"},
+		{"key": "moduleId", "value": "1", "type": "string"},
+		{"key": "guest_id", "value": "", "type": "string"},
+		{"key": "store_id", "value": "", "type": "string"},
+		{"key": "order_id", "value": "", "type": "string"}
+	]
+}
+

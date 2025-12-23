@@ -1,0 +1,523 @@
+# Order Flow - YAML Version
+# Handles food ordering conversation
+
+name: order
+version: "1.0"
+description: Food ordering flow with restaurant selection and checkout
+
+initial_state: start
+
+context:
+  restaurant: null
+  items: []
+  totalAmount: 0
+  deliveryAddress: null
+  paymentMethod: null
+  orderId: null
+
+states:
+  start:
+    type: decision
+    on_entry:
+      - action: check_auth
+    transitions:
+      - event: authenticated
+        target: ask_restaurant
+      - event: not_authenticated
+        target: require_auth
+
+  require_auth:
+    type: action
+    on_entry:
+      - action: speak
+        params:
+          text: "Before we can place an order, I need to verify your phone number."
+      - action: start_flow
+        params:
+          flow: auth
+    transitions:
+      - event: auth_success
+        target: ask_restaurant
+      - event: auth_failed
+        target: end_no_auth
+
+  ask_restaurant:
+    type: input
+    on_entry:
+      - action: speak
+        params:
+          text: "What restaurant would you like to order from? You can say the name or ask me to search."
+    transitions:
+      - event: input_received
+        target: search_restaurant
+      - event: browse
+        target: show_popular
+
+  show_popular:
+    type: message
+    on_entry:
+      - action: get_popular_restaurants
+      - action: speak
+        params:
+          text: "Here are some popular restaurants near you: {{popular_list}}. Which one would you like?"
+    transitions:
+      - event: input_received
+        target: search_restaurant
+      - event: more
+        target: show_more_restaurants
+
+  show_more_restaurants:
+    type: message
+    on_entry:
+      - action: get_more_restaurants
+        params:
+          offset: 5
+      - action: speak
+        params:
+          text: "Here are more options: {{restaurant_list}}"
+    transitions:
+      - event: input_received
+        target: search_restaurant
+      - event: back
+        target: show_popular
+
+  search_restaurant:
+    type: action
+    on_entry:
+      - action: search_restaurants
+        params:
+          query: "{{input}}"
+    transitions:
+      - event: found
+        target: confirm_restaurant
+      - event: multiple_results
+        target: clarify_restaurant
+      - event: not_found
+        target: restaurant_not_found
+
+  clarify_restaurant:
+    type: input
+    on_entry:
+      - action: speak
+        params:
+          text: "I found multiple restaurants matching '{{input}}'. Did you mean: {{options}}?"
+    transitions:
+      - event: input_received
+        target: search_restaurant
+
+  restaurant_not_found:
+    type: message
+    on_entry:
+      - action: speak
+        params:
+          text: "I couldn't find a restaurant matching '{{input}}'. Would you like to try another name or see popular options?"
+    transitions:
+      - event: try_again
+        target: ask_restaurant
+      - event: browse
+        target: show_popular
+
+  confirm_restaurant:
+    type: input
+    on_entry:
+      - action: speak
+        params:
+          text: "Great choice! {{context.restaurant.name}} is {{context.restaurant.rating}} stars. Ready to order?"
+    transitions:
+      - event: yes
+        target: show_menu
+      - event: no
+        target: ask_restaurant
+      - event: info
+        target: show_restaurant_info
+
+  show_restaurant_info:
+    type: message
+    on_entry:
+      - action: speak
+        params:
+          text: "{{context.restaurant.name}} is located at {{context.restaurant.address}}. They're known for {{context.restaurant.cuisine}}. Opening hours: {{context.restaurant.hours}}."
+    transitions:
+      - event: order
+        target: show_menu
+      - event: change
+        target: ask_restaurant
+
+  show_menu:
+    type: message
+    on_entry:
+      - action: get_menu
+        params:
+          restaurant_id: "{{context.restaurant.id}}"
+      - action: speak
+        params:
+          text: "Here's the menu for {{context.restaurant.name}}. Popular items include: {{popular_items}}. What would you like to order?"
+    transitions:
+      - event: input_received
+        target: add_item
+      - event: categories
+        target: show_categories
+
+  show_categories:
+    type: message
+    on_entry:
+      - action: speak
+        params:
+          text: "Categories: {{categories}}. Which category would you like to see?"
+    transitions:
+      - event: input_received
+        target: show_category_items
+
+  show_category_items:
+    type: message
+    on_entry:
+      - action: get_category_items
+        params:
+          category: "{{input}}"
+      - action: speak
+        params:
+          text: "{{category}} items: {{items}}. What would you like to add?"
+    transitions:
+      - event: input_received
+        target: add_item
+      - event: back
+        target: show_categories
+
+  add_item:
+    type: action
+    on_entry:
+      - action: parse_order_item
+        params:
+          input: "{{input}}"
+      - action: add_to_cart
+    transitions:
+      - event: added
+        target: confirm_item
+      - event: not_found
+        target: item_not_found
+      - event: customization_needed
+        target: customize_item
+
+  customize_item:
+    type: input
+    on_entry:
+      - action: speak
+        params:
+          text: "How would you like your {{item.name}}? Options: {{item.customizations}}"
+    transitions:
+      - event: input_received
+        target: add_item
+
+  item_not_found:
+    type: message
+    on_entry:
+      - action: speak
+        params:
+          text: "I couldn't find '{{input}}' on the menu. Could you try again or say 'menu' to see options?"
+    transitions:
+      - event: input_received
+        target: add_item
+      - event: menu
+        target: show_menu
+
+  confirm_item:
+    type: input
+    on_entry:
+      - action: speak
+        params:
+          text: "Added {{item.name}} ({{item.price}}). Your cart has {{context.items.length}} items totaling {{context.totalAmount}}. Anything else?"
+    transitions:
+      - event: input_received
+        target: add_item
+      - event: done
+        target: review_order
+      - event: checkout
+        target: review_order
+      - event: remove
+        target: remove_item
+
+  remove_item:
+    type: action
+    on_entry:
+      - action: remove_from_cart
+        params:
+          item: "{{input}}"
+    transitions:
+      - event: removed
+        target: confirm_removal
+      - event: cart_empty
+        target: empty_cart
+
+  confirm_removal:
+    type: message
+    on_entry:
+      - action: speak
+        params:
+          text: "Removed {{removed_item}}. Your new total is {{context.totalAmount}}. Anything else?"
+    transitions:
+      - event: input_received
+        target: add_item
+      - event: checkout
+        target: review_order
+
+  empty_cart:
+    type: message
+    on_entry:
+      - action: speak
+        params:
+          text: "Your cart is now empty. Would you like to add something?"
+    transitions:
+      - event: yes
+        target: show_menu
+      - event: no
+        target: cancel_order
+
+  review_order:
+    type: input
+    on_entry:
+      - action: speak
+        params:
+          text: "Your order from {{context.restaurant.name}}: {{order_summary}}. Total: {{context.totalAmount}}. Ready to checkout?"
+    transitions:
+      - event: yes
+        target: get_delivery_address
+      - event: no
+        target: modify_order
+      - event: add_more
+        target: show_menu
+
+  modify_order:
+    type: input
+    on_entry:
+      - action: speak
+        params:
+          text: "What would you like to change? You can add items, remove items, or start over."
+    transitions:
+      - event: add
+        target: show_menu
+      - event: remove
+        target: remove_item
+      - event: start_over
+        target: ask_restaurant
+
+  get_delivery_address:
+    type: decision
+    on_entry:
+      - action: check_saved_addresses
+    transitions:
+      - event: has_saved
+        target: select_address
+      - event: no_saved
+        target: enter_address
+
+  select_address:
+    type: input
+    on_entry:
+      - action: speak
+        params:
+          text: "Deliver to {{saved_address}}? Or say 'new' for a different address."
+    transitions:
+      - event: yes
+        target: confirm_address
+      - event: new
+        target: enter_address
+
+  enter_address:
+    type: input
+    on_entry:
+      - action: speak
+        params:
+          text: "Please provide your delivery address."
+    transitions:
+      - event: input_received
+        target: validate_address
+
+  validate_address:
+    type: action
+    on_entry:
+      - action: geocode_address
+        params:
+          address: "{{input}}"
+    transitions:
+      - event: valid
+        target: confirm_address
+      - event: invalid
+        target: invalid_address
+      - event: out_of_range
+        target: address_out_of_range
+
+  invalid_address:
+    type: message
+    on_entry:
+      - action: speak
+        params:
+          text: "I couldn't find that address. Please provide a more specific location."
+    transitions:
+      - event: next
+        target: enter_address
+
+  address_out_of_range:
+    type: message
+    on_entry:
+      - action: speak
+        params:
+          text: "Sorry, {{context.restaurant.name}} doesn't deliver to that location. The maximum delivery distance is {{max_distance}}km."
+    transitions:
+      - event: try_again
+        target: enter_address
+      - event: change_restaurant
+        target: ask_restaurant
+
+  confirm_address:
+    type: message
+    on_entry:
+      - action: set_context
+        params:
+          deliveryAddress: "{{validated_address}}"
+      - action: calculate_delivery_fee
+      - action: speak
+        params:
+          text: "Delivering to {{context.deliveryAddress}}. Delivery fee: {{delivery_fee}}. Estimated time: {{estimated_time}}."
+    transitions:
+      - event: next
+        target: select_payment
+
+  select_payment:
+    type: input
+    on_entry:
+      - action: speak
+        params:
+          text: "How would you like to pay? M-Pesa, card, or cash on delivery?"
+    transitions:
+      - event: mpesa
+        target: process_mpesa
+      - event: card
+        target: process_card
+      - event: cash
+        target: confirm_cash
+
+  process_mpesa:
+    type: action
+    on_entry:
+      - action: initiate_mpesa_payment
+        params:
+          amount: "{{context.totalAmount}}"
+          phone: "{{context.phoneNumber}}"
+      - action: speak
+        params:
+          text: "I've sent an M-Pesa payment request to your phone. Please enter your PIN to complete the payment."
+    transitions:
+      - event: payment_success
+        target: place_order
+      - event: payment_failed
+        target: payment_failed
+      - event: timeout
+        target: payment_timeout
+
+  process_card:
+    type: action
+    on_entry:
+      - action: speak
+        params:
+          text: "Please complete the card payment on the secure page I'm opening."
+      - action: open_card_payment
+    transitions:
+      - event: payment_success
+        target: place_order
+      - event: payment_failed
+        target: payment_failed
+
+  confirm_cash:
+    type: message
+    on_entry:
+      - action: set_context
+        params:
+          paymentMethod: "cash"
+      - action: speak
+        params:
+          text: "Cash on delivery selected. Please have {{context.totalAmount}} ready."
+    transitions:
+      - event: next
+        target: place_order
+
+  payment_failed:
+    type: input
+    on_entry:
+      - action: speak
+        params:
+          text: "Payment failed. Would you like to try again or use a different payment method?"
+    transitions:
+      - event: retry
+        target: select_payment
+      - event: cancel
+        target: cancel_order
+
+  payment_timeout:
+    type: input
+    on_entry:
+      - action: speak
+        params:
+          text: "I didn't receive the payment confirmation. Would you like to try again?"
+    transitions:
+      - event: yes
+        target: process_mpesa
+      - event: no
+        target: select_payment
+
+  place_order:
+    type: action
+    on_entry:
+      - action: create_order
+        params:
+          restaurant: "{{context.restaurant}}"
+          items: "{{context.items}}"
+          address: "{{context.deliveryAddress}}"
+          payment: "{{context.paymentMethod}}"
+    transitions:
+      - event: success
+        target: order_confirmed
+      - event: error
+        target: order_error
+
+  order_confirmed:
+    type: end
+    on_entry:
+      - action: speak
+        params:
+          text: "Your order has been placed! Order number: {{context.orderId}}. Estimated delivery: {{estimated_time}}. You can track it by saying 'track my order'."
+          text_swahili: "Oda yako imewekwa! Nambari ya oda: {{context.orderId}}. Muda wa uwasilishaji: {{estimated_time}}."
+      - action: send_confirmation_sms
+      - action: emit
+        params:
+          event: order_placed
+          data:
+            orderId: "{{context.orderId}}"
+            restaurant: "{{context.restaurant.name}}"
+            total: "{{context.totalAmount}}"
+
+  order_error:
+    type: message
+    on_entry:
+      - action: speak
+        params:
+          text: "Sorry, there was an error placing your order. Please try again or contact support."
+    transitions:
+      - event: retry
+        target: place_order
+      - event: cancel
+        target: cancel_order
+
+  cancel_order:
+    type: end
+    on_entry:
+      - action: speak
+        params:
+          text: "Your order has been cancelled. Let me know if you'd like to order something else."
+      - action: clear_cart
+
+  end_no_auth:
+    type: end
+    on_entry:
+      - action: speak
+        params:
+          text: "No problem. Come back when you're ready to verify your phone number."

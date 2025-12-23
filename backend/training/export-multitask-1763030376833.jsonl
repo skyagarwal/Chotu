@@ -1,0 +1,14 @@
+{"text":"aare ? mera order process karo","intent":"order_pizza","module_id":1,"language":"hinglish","entities":[{"start":12,"end":17,"label":"ITEM","text":"order"}],"tone":"neutral"}
+{"text":"parcel","intent":"create_parcel_order","module_id":1,"language":"en","entities":[{"start":0,"end":6,"label":"ITEM","text":"parcel"}],"tone":"neutral"}
+{"text":"hi","intent":"greeting","module_id":1,"language":"en","entities":[],"tone":"neutral"}
+{"text":"hello","intent":"greeting","module_id":1,"language":"en","entities":[],"tone":"neutral"}
+{"text":"Hello","intent":"greeting","module_id":1,"language":"en","entities":[],"tone":"neutral"}
+{"text":"Hello test","intent":"greeting","module_id":1,"language":"en","entities":[],"tone":"neutral"}
+{"text":"I want to send a parcel","intent":"create_parcel_order","module_id":1,"language":"en","entities":[{"start":17,"end":23,"label":"ITEM","text":"parcel"}],"tone":"neutral"}
+{"text":"18.5362, 73.8965","intent":"order_food","module_id":1,"language":"en","entities":[],"tone":"neutral"}
+{"text":"Lane 5, Koregaon Park, Pune, Maharashtra 411001","intent":"order_food","module_id":1,"language":"en","entities":[{"start":23,"end":27,"label":"LOC","text":"Pune"}],"tone":"neutral"}
+{"text":"Koregaon Park, Pune","intent":"order_food","module_id":1,"language":"en","entities":[{"start":15,"end":19,"label":"LOC","text":"Pune"}],"tone":"neutral"}
+{"text":"I want to send a parcel","intent":"order_food","module_id":1,"language":"en","entities":[{"start":17,"end":23,"label":"ITEM","text":"parcel"}],"tone":"neutral"}
+{"text":"I want to send a parcel","intent":"create_parcel_order","module_id":1,"language":"en","entities":[{"start":17,"end":23,"label":"ITEM","text":"parcel"}],"tone":"neutral"}
+{"text":"I want to send a parcel","intent":"create_parcel_order","module_id":1,"language":"en","entities":[{"start":17,"end":23,"label":"ITEM","text":"parcel"}],"tone":"neutral"}
+{"text":"I want to send a parcel from Koregaon Park to Viman Nagar","intent":"create_parcel_order","module_id":1,"language":"en","entities":[{"start":17,"end":23,"label":"ITEM","text":"parcel"}],"tone":"neutral"}

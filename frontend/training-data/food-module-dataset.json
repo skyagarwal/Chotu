@@ -1,0 +1,218 @@
+{
+  "name": "Food Module Training Dataset",
+  "module": "food",
+  "description": "Comprehensive training dataset for food ordering, restaurant search, and menu browsing",
+  "version": "1.0.0",
+  "intents": [
+    {
+      "intent": "search_restaurant",
+      "description": "User wants to search for restaurants or food items",
+      "examples": [
+        { "text": "Show me pizza places nearby", "entities": { "food_type": "pizza", "location": "nearby" } },
+        { "text": "I want biryani", "entities": { "food_type": "biryani" } },
+        { "text": "Find restaurants near Koramangala", "entities": { "location": "Koramangala" } },
+        { "text": "Any good Chinese restaurants?", "entities": { "food_type": "Chinese", "cuisine": "Chinese" } },
+        { "text": "Where can I get burgers?", "entities": { "food_type": "burgers" } },
+        { "text": "Show me vegetarian restaurants", "entities": { "dietary": "vegetarian" } },
+        { "text": "I'm craving Thai food", "entities": { "cuisine": "Thai" } },
+        { "text": "Find me South Indian restaurants", "entities": { "cuisine": "South Indian" } },
+        { "text": "Any pizza delivery near me?", "entities": { "food_type": "pizza", "location": "nearby", "service": "delivery" } },
+        { "text": "Looking for breakfast places", "entities": { "meal_type": "breakfast" } }
+      ]
+    },
+    {
+      "intent": "view_menu",
+      "description": "User wants to see menu items from a restaurant",
+      "examples": [
+        { "text": "Show me the menu", "entities": {} },
+        { "text": "What's on the menu?", "entities": {} },
+        { "text": "Menu please", "entities": {} },
+        { "text": "What do they have?", "entities": {} },
+        { "text": "Show me pizza options", "entities": { "food_type": "pizza" } },
+        { "text": "What desserts do you have?", "entities": { "category": "desserts" } },
+        { "text": "Any vegetarian options?", "entities": { "dietary": "vegetarian" } },
+        { "text": "Show me the starters", "entities": { "category": "starters" } },
+        { "text": "What's available?", "entities": {} },
+        { "text": "Menu card", "entities": {} }
+      ]
+    },
+    {
+      "intent": "place_order",
+      "description": "User wants to place a food order",
+      "examples": [
+        { "text": "I want to order 2 pizzas", "entities": { "quantity": 2, "item": "pizzas" } },
+        { "text": "Add one biryani to cart", "entities": { "quantity": 1, "item": "biryani" } },
+        { "text": "Order Margherita pizza", "entities": { "item": "Margherita pizza" } },
+        { "text": "I'll take 3 burgers", "entities": { "quantity": 3, "item": "burgers" } },
+        { "text": "Add this to my order", "entities": {} },
+        { "text": "I want the combo meal", "entities": { "item": "combo meal" } },
+        { "text": "Place order", "entities": {} },
+        { "text": "Order now", "entities": {} },
+        { "text": "Checkout", "entities": {} },
+        { "text": "Proceed to payment", "entities": {} }
+      ]
+    },
+    {
+      "intent": "track_order",
+      "description": "User wants to track their food order status",
+      "examples": [
+        { "text": "Where is my order?", "entities": {} },
+        { "text": "Track my order", "entities": {} },
+        { "text": "Order status", "entities": {} },
+        { "text": "When will my food arrive?", "entities": {} },
+        { "text": "How long will it take?", "entities": {} },
+        { "text": "Is my order ready?", "entities": {} },
+        { "text": "Show order status", "entities": {} },
+        { "text": "Track order #12345", "entities": { "order_id": "12345" } },
+        { "text": "Where's my pizza?", "entities": {} },
+        { "text": "Delivery status", "entities": {} }
+      ]
+    },
+    {
+      "intent": "modify_order",
+      "description": "User wants to modify or cancel an order",
+      "examples": [
+        { "text": "Cancel my order", "entities": { "action": "cancel" } },
+        { "text": "Can I add more items?", "entities": { "action": "add" } },
+        { "text": "Remove one pizza", "entities": { "action": "remove", "quantity": 1, "item": "pizza" } },
+        { "text": "Change delivery address", "entities": { "action": "change_address" } },
+        { "text": "I want to cancel", "entities": { "action": "cancel" } },
+        { "text": "Modify my order", "entities": { "action": "modify" } },
+        { "text": "Can I change the quantity?", "entities": { "action": "change_quantity" } },
+        { "text": "Update order", "entities": { "action": "update" } },
+        { "text": "Cancel order", "entities": { "action": "cancel" } },
+        { "text": "Add extra cheese", "entities": { "action": "add", "item": "extra cheese" } }
+      ]
+    },
+    {
+      "intent": "filter_options",
+      "description": "User wants to filter restaurants or food items",
+      "examples": [
+        { "text": "Show only vegetarian", "entities": { "dietary": "vegetarian" } },
+        { "text": "Filter by rating above 4", "entities": { "rating": 4 } },
+        { "text": "Price under 300", "entities": { "price_max": 300 } },
+        { "text": "Sort by delivery time", "entities": { "sort": "delivery_time" } },
+        { "text": "Show me 5 star restaurants", "entities": { "rating": 5 } },
+        { "text": "Only fast delivery", "entities": { "delivery_speed": "fast" } },
+        { "text": "Budget friendly options", "entities": { "price_range": "budget" } },
+        { "text": "Show vegan options", "entities": { "dietary": "vegan" } },
+        { "text": "Filter by cuisine", "entities": {} },
+        { "text": "Sort by popularity", "entities": { "sort": "popularity" } }
+      ]
+    },
+    {
+      "intent": "ask_recommendations",
+      "description": "User wants food recommendations",
+      "examples": [
+        { "text": "What do you recommend?", "entities": {} },
+        { "text": "What's popular?", "entities": {} },
+        { "text": "Best sellers", "entities": {} },
+        { "text": "What's good here?", "entities": {} },
+        { "text": "Any recommendations?", "entities": {} },
+        { "text": "What should I try?", "entities": {} },
+        { "text": "Most ordered items", "entities": {} },
+        { "text": "Top rated dishes", "entities": {} },
+        { "text": "Chef's special", "entities": {} },
+        { "text": "What's trending?", "entities": {} }
+      ]
+    },
+    {
+      "intent": "check_offers",
+      "description": "User wants to know about offers and discounts",
+      "examples": [
+        { "text": "Any offers?", "entities": {} },
+        { "text": "Show me deals", "entities": {} },
+        { "text": "Do you have discounts?", "entities": {} },
+        { "text": "What's on sale?", "entities": {} },
+        { "text": "Promo codes", "entities": {} },
+        { "text": "Current offers", "entities": {} },
+        { "text": "Any coupons?", "entities": {} },
+        { "text": "Best deals", "entities": {} },
+        { "text": "Discount codes", "entities": {} },
+        { "text": "Special offers today", "entities": {} }
+      ]
+    },
+    {
+      "intent": "get_delivery_info",
+      "description": "User wants information about delivery",
+      "examples": [
+        { "text": "Do you deliver to my area?", "entities": {} },
+        { "text": "What's the delivery fee?", "entities": {} },
+        { "text": "Delivery charges", "entities": {} },
+        { "text": "How long for delivery?", "entities": {} },
+        { "text": "Delivery time", "entities": {} },
+        { "text": "Can you deliver to Whitefield?", "entities": { "location": "Whitefield" } },
+        { "text": "Minimum order value", "entities": {} },
+        { "text": "Free delivery?", "entities": {} },
+        { "text": "Delivery areas", "entities": {} },
+        { "text": "Estimated delivery time", "entities": {} }
+      ]
+    },
+    {
+      "intent": "get_restaurant_info",
+      "description": "User wants information about a restaurant",
+      "examples": [
+        { "text": "Tell me about this restaurant", "entities": {} },
+        { "text": "Restaurant details", "entities": {} },
+        { "text": "What's their rating?", "entities": {} },
+        { "text": "Restaurant reviews", "entities": {} },
+        { "text": "Opening hours", "entities": {} },
+        { "text": "Restaurant address", "entities": {} },
+        { "text": "Contact number", "entities": {} },
+        { "text": "Restaurant info", "entities": {} },
+        { "text": "How far is it?", "entities": {} },
+        { "text": "Is it open now?", "entities": {} }
+      ]
+    },
+    {
+      "intent": "customize_item",
+      "description": "User wants to customize a food item",
+      "examples": [
+        { "text": "No onions please", "entities": { "customization": "no onions" } },
+        { "text": "Extra cheese", "entities": { "customization": "extra cheese" } },
+        { "text": "Make it spicy", "entities": { "spice_level": "spicy" } },
+        { "text": "Less oil", "entities": { "customization": "less oil" } },
+        { "text": "Can I customize?", "entities": {} },
+        { "text": "Add extra toppings", "entities": { "customization": "extra toppings" } },
+        { "text": "No garlic", "entities": { "customization": "no garlic" } },
+        { "text": "Medium spicy", "entities": { "spice_level": "medium" } },
+        { "text": "Extra sauce", "entities": { "customization": "extra sauce" } },
+        { "text": "Well done", "entities": { "cooking_preference": "well done" } }
+      ]
+    },
+    {
+      "intent": "report_issue",
+      "description": "User wants to report an issue with order or food",
+      "examples": [
+        { "text": "Food is cold", "entities": { "issue": "cold food" } },
+        { "text": "Wrong order delivered", "entities": { "issue": "wrong order" } },
+        { "text": "Missing items", "entities": { "issue": "missing items" } },
+        { "text": "Quality is bad", "entities": { "issue": "quality" } },
+        { "text": "I want a refund", "entities": { "request": "refund" } },
+        { "text": "Order not delivered", "entities": { "issue": "not delivered" } },
+        { "text": "Food is not fresh", "entities": { "issue": "not fresh" } },
+        { "text": "Package was damaged", "entities": { "issue": "damaged package" } },
+        { "text": "Complaint", "entities": {} },
+        { "text": "I have an issue", "entities": {} }
+      ]
+    }
+  ],
+  "entities": [
+    { "name": "food_type", "description": "Type of food (pizza, biryani, burger, etc.)" },
+    { "name": "cuisine", "description": "Cuisine type (Chinese, Italian, Indian, etc.)" },
+    { "name": "dietary", "description": "Dietary preferences (vegetarian, vegan, etc.)" },
+    { "name": "location", "description": "Location or area name" },
+    { "name": "quantity", "description": "Number of items" },
+    { "name": "item", "description": "Specific food item name" },
+    { "name": "order_id", "description": "Order identifier" },
+    { "name": "rating", "description": "Rating filter (1-5)" },
+    { "name": "price_max", "description": "Maximum price filter" },
+    { "name": "sort", "description": "Sorting criteria" },
+    { "name": "meal_type", "description": "Meal type (breakfast, lunch, dinner)" },
+    { "name": "category", "description": "Menu category (starters, desserts, etc.)" },
+    { "name": "action", "description": "Action to perform (cancel, add, remove, etc.)" },
+    { "name": "customization", "description": "Food customization request" },
+    { "name": "spice_level", "description": "Spice level preference" },
+    { "name": "issue", "description": "Type of issue or complaint" }
+  ]
+}

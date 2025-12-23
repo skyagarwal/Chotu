@@ -1,0 +1,428 @@
+# ============================================================
+# VENDOR ORDERS MANAGEMENT FLOW v1.0
+# ============================================================
+# Order management flow for vendors:
+#   - View current orders
+#   - Accept/Reject orders
+#   - Update order status (confirmed, preparing, ready)
+#   - Order notifications
+# ============================================================
+
+id: vendor_orders_v1
+name: Vendor Orders Management
+description: Order management for restaurant/store vendors
+version: "1.0.0"
+module: vendor
+trigger: vendor_orders
+enabled: true
+requiresAuth: vendor
+
+contextSchema:
+  # From Auth
+  vendor_token: { type: string }
+  vendor_id: { type: number }
+  store_name: { type: string }
+  
+  # Orders
+  current_orders: { type: array, default: [] }
+  selected_order_id: { type: number }
+  selected_order: { type: object }
+  
+  # Action
+  order_action: { type: string }  # confirm, preparing, ready, cancel
+
+initialState: fetch_orders
+finalStates: [orders_done, orders_error]
+
+states:
+  # ============================================================
+  # FETCH ORDERS
+  # ============================================================
+  fetch_orders:
+    type: action
+    description: Fetch current orders from PHP backend
+    actions:
+      - id: get_orders
+        executor: php_api
+        config:
+          action: vendor_get_current_orders
+          token: "{{vendor_token}}"
+        output: orders_result
+    transitions:
+      success: check_orders
+      error: fetch_error
+
+  check_orders:
+    type: decision
+    conditions:
+      - expression: "context.orders_result?.success && context.orders_result?.orders?.length > 0"
+        event: has_orders
+      - expression: "context.orders_result?.success"
+        event: no_orders
+    transitions:
+      has_orders: display_orders
+      no_orders: no_orders_message
+      default: fetch_error
+
+  no_orders_message:
+    type: action
+    actions:
+      - id: no_orders
+        executor: response
+        config:
+          message: |
+            📭 *No current orders*
+            
+            You don't have any pending orders right now.
+            
+            We'll notify you when a new order comes in! 🔔
+          buttons:
+            - id: refresh
+              title: 🔄 Refresh
+            - id: go_offline
+              title: 🔴 Go Offline
+            - id: menu_settings
+              title: ⚙️ Menu Settings
+    transitions:
+      success: wait_for_action
+
+  fetch_error:
+    type: action
+    actions:
+      - id: error
+        executor: response
+        config:
+          message: |
+            ❌ Failed to fetch orders. Please try again.
+          buttons:
+            - id: retry
+              title: 🔄 Try Again
+    transitions:
+      success: orders_error
+
+  # ============================================================
+  # DISPLAY ORDERS
+  # ============================================================
+  display_orders:
+    type: action
+    actions:
+      - id: save_orders
+        executor: response
+        config:
+          saveToContext:
+            current_orders: "{{orders_result.orders}}"
+      
+      - id: show_orders
+        executor: response
+        config:
+          message: |
+            📦 *Current Orders ({{orders_result.orders.length}})*
+            
+            {% for order in orders_result.orders %}
+            ━━━━━━━━━━━━━━━━━━━━
+            🆔 *Order {{order.orderId}}*
+            📍 Status: *{{order.status | upper}}*
+            💰 Amount: ₹{{order.totalAmount}}
+            👤 {{order.customerName}}
+            📱 {{order.customerPhone}}
+            
+            🛒 Items:
+            {% for item in order.items %}
+            • {{item.name}} x{{item.quantity}}
+            {% endfor %}
+            {% endfor %}
+            ━━━━━━━━━━━━━━━━━━━━
+            
+            Select an order to manage:
+          buttons:
+            - id: order_{{orders_result.orders[0].id}}
+              title: "Order #{{orders_result.orders[0].id}}"
+            - id: refresh
+              title: 🔄 Refresh
+    transitions:
+      success: wait_for_selection
+
+  # ============================================================
+  # ORDER SELECTION
+  # ============================================================
+  wait_for_selection:
+    type: input
+    description: Wait for order selection or action
+    inputConfig:
+      variable: user_selection
+      prompt: "Select an order or action:"
+    transitions:
+      valid: process_selection
+      default: process_selection
+
+  process_selection:
+    type: decision
+    conditions:
+      - expression: "context.user_selection?.startsWith('order_')"
+        event: order_selected
+      - expression: "context.user_selection === 'refresh'"
+        event: refresh
+      - expression: "context.user_selection === 'go_offline'"
+        event: go_offline
+    transitions:
+      order_selected: extract_order_id
+      refresh: fetch_orders
+      go_offline: toggle_offline
+      default: fetch_orders
+
+  extract_order_id:
+    type: action
+    actions:
+      - id: extract
+        executor: response
+        config:
+          saveToContext:
+            selected_order_id: "{{user_selection | replace('order_', '') | int}}"
+    transitions:
+      success: show_order_actions
+
+  # ============================================================
+  # ORDER ACTIONS
+  # ============================================================
+  show_order_actions:
+    type: action
+    actions:
+      - id: find_order
+        executor: response
+        config:
+          message: |
+            📋 *Order #{{selected_order_id}} Actions*
+            
+            What would you like to do with this order?
+          buttons:
+            - id: confirm_order
+              title: ✅ Confirm Order
+            - id: preparing_order
+              title: 👨‍🍳 Mark Preparing
+            - id: ready_order
+              title: 📦 Mark Ready
+            - id: cancel_order
+              title: ❌ Cancel Order
+            - id: back_to_list
+              title: ⬅️ Back to List
+    transitions:
+      success: wait_for_action
+
+  wait_for_action:
+    type: input
+    description: Wait for action selection
+    inputConfig:
+      variable: order_action
+      prompt: "Select an action:"
+    transitions:
+      valid: process_action
+      default: process_action
+
+  process_action:
+    type: decision
+    conditions:
+      - expression: "context.order_action === 'confirm_order'"
+        event: confirm
+      - expression: "context.order_action === 'preparing_order'"
+        event: preparing
+      - expression: "context.order_action === 'ready_order'"
+        event: ready
+      - expression: "context.order_action === 'cancel_order'"
+        event: cancel
+      - expression: "context.order_action === 'back_to_list'"
+        event: back
+      - expression: "context.order_action === 'refresh'"
+        event: refresh
+    transitions:
+      confirm: update_status_confirmed
+      preparing: update_status_preparing
+      ready: update_status_ready
+      cancel: confirm_cancel
+      back: fetch_orders
+      refresh: fetch_orders
+      default: fetch_orders
+
+  # ============================================================
+  # STATUS UPDATES
+  # ============================================================
+  update_status_confirmed:
+    type: action
+    actions:
+      - id: update
+        executor: php_api
+        config:
+          action: vendor_update_order_status
+          token: "{{vendor_token}}"
+          orderId: "{{selected_order_id}}"
+          status: "confirmed"
+        output: update_result
+    transitions:
+      success: status_updated
+      error: update_error
+
+  update_status_preparing:
+    type: action
+    actions:
+      - id: update
+        executor: php_api
+        config:
+          action: vendor_update_order_status
+          token: "{{vendor_token}}"
+          orderId: "{{selected_order_id}}"
+          status: "processing"
+        output: update_result
+    transitions:
+      success: status_updated
+      error: update_error
+
+  update_status_ready:
+    type: action
+    actions:
+      - id: update
+        executor: php_api
+        config:
+          action: vendor_update_order_status
+          token: "{{vendor_token}}"
+          orderId: "{{selected_order_id}}"
+          status: "handover"
+        output: update_result
+    transitions:
+      success: status_updated
+      error: update_error
+
+  confirm_cancel:
+    type: action
+    actions:
+      - id: confirm
+        executor: response
+        config:
+          message: |
+            ⚠️ *Cancel Order #{{selected_order_id}}?*
+            
+            This action cannot be undone. The customer will be notified.
+          buttons:
+            - id: yes_cancel
+              title: ❌ Yes, Cancel
+            - id: no_cancel
+              title: ⬅️ No, Go Back
+    transitions:
+      success: wait_cancel_confirm
+
+  wait_cancel_confirm:
+    type: input
+    inputConfig:
+      variable: cancel_confirm
+    transitions:
+      valid: check_cancel_confirm
+
+  check_cancel_confirm:
+    type: decision
+    conditions:
+      - expression: "context.cancel_confirm === 'yes_cancel'"
+        event: do_cancel
+    transitions:
+      do_cancel: update_status_cancelled
+      default: show_order_actions
+
+  update_status_cancelled:
+    type: action
+    actions:
+      - id: update
+        executor: php_api
+        config:
+          action: vendor_update_order_status
+          token: "{{vendor_token}}"
+          orderId: "{{selected_order_id}}"
+          status: "canceled"
+          reason: "Cancelled by vendor"
+        output: update_result
+    transitions:
+      success: status_updated
+      error: update_error
+
+  status_updated:
+    type: action
+    actions:
+      - id: success
+        executor: response
+        config:
+          message: |
+            ✅ Order #{{selected_order_id}} status updated successfully!
+          buttons:
+            - id: view_orders
+              title: 📦 View Orders
+            - id: done
+              title: ✅ Done
+    transitions:
+      success: wait_after_update
+
+  wait_after_update:
+    type: input
+    inputConfig:
+      variable: after_update_action
+    transitions:
+      valid: check_after_update
+
+  check_after_update:
+    type: decision
+    conditions:
+      - expression: "context.after_update_action === 'view_orders'"
+        event: view
+    transitions:
+      view: fetch_orders
+      default: orders_done
+
+  update_error:
+    type: action
+    actions:
+      - id: error
+        executor: response
+        config:
+          message: |
+            ❌ Failed to update order status.
+            
+            {{update_result.message || 'Please try again.'}}
+          buttons:
+            - id: retry
+              title: 🔄 Try Again
+            - id: back
+              title: ⬅️ Back
+    transitions:
+      success: show_order_actions
+
+  # ============================================================
+  # OFFLINE TOGGLE
+  # ============================================================
+  toggle_offline:
+    type: action
+    actions:
+      - id: offline_msg
+        executor: response
+        config:
+          message: |
+            🔴 You are now *OFFLINE*
+            
+            You won't receive new orders until you go online again.
+    transitions:
+      success: orders_done
+
+  # ============================================================
+  # FINAL STATES
+  # ============================================================
+  orders_done:
+    type: final
+    actions:
+      - id: done
+        executor: response
+        config:
+          saveToContext:
+            flow_completed: true
+
+  orders_error:
+    type: final
+    actions:
+      - id: error
+        executor: response
+        config:
+          saveToContext:
+            flow_completed: false

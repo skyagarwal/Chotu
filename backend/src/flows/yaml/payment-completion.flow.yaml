@@ -1,0 +1,463 @@
+# Payment Completion Flow (v1)
+# Handles the post-payment experience - confirmation, notifications, and tracking
+
+name: payment_completion_v1
+version: '1.0'
+description: Post-payment order confirmation and notification flow
+
+# Triggered after successful payment callback
+triggers:
+  - type: event
+    event: payment_success
+  - type: webhook
+    path: /payment/callback
+
+variables:
+  order_id: ''
+  payment_id: ''
+  payment_method: ''
+  amount_paid: 0
+  order_details: null
+  vendor_name: ''
+  estimated_time: 0
+
+nodes:
+  # Entry - Verify payment and get order details
+  - id: verify_payment
+    type: action
+    action: php_api
+    params:
+      action: verify_payment
+      payment_id: '{{payment_id}}'
+      order_id: '{{order_id}}'
+    outputs:
+      payment_verified: verified
+      order: order_details
+      vendor: vendor_info
+    next: check_payment_status
+
+  - id: check_payment_status
+    type: condition
+    conditions:
+      - condition: '{{payment_verified}} == true'
+        next: payment_success
+      - condition: '{{payment_verified}} == false'
+        next: payment_failed
+    default: payment_pending
+
+  # Payment Success Flow
+  - id: payment_success
+    type: action
+    action: set_session_context
+    params:
+      current_order_id: '{{order_id}}'
+      order_status: 'confirmed'
+    next: send_customer_confirmation
+
+  # Send order confirmation to customer
+  - id: send_customer_confirmation
+    type: message
+    message:
+      en: |
+        ✅ *Payment Successful!*
+        
+        *Order #{{order_details.order_id}}*
+        
+        💰 *Amount Paid:* ₹{{amount_paid}}
+        💳 *Payment Method:* {{payment_method}}
+        
+        *Items:*
+        {{#each order_details.items}}
+        • {{this.quantity}}x {{this.name}} - ₹{{this.total}}
+        {{/each}}
+        
+        *Total:* ₹{{order_details.total}}
+        
+        ---
+        
+        📍 *Delivery to:*
+        {{order_details.delivery_address}}
+        
+        🏪 *From:* {{vendor_info.store_name}}
+        
+        ⏱️ *Estimated Time:* {{estimated_time}} minutes
+        
+        ---
+        
+        Your order has been sent to the restaurant. We'll notify you when they confirm it!
+        
+        Reply *TRACK* to track your order anytime.
+      hi: |
+        ✅ *भुगतान सफल!*
+        
+        *ऑर्डर #{{order_details.order_id}}*
+        
+        💰 *भुगतान राशि:* ₹{{amount_paid}}
+        💳 *भुगतान विधि:* {{payment_method}}
+        
+        *आइटम:*
+        {{#each order_details.items}}
+        • {{this.quantity}}x {{this.name}} - ₹{{this.total}}
+        {{/each}}
+        
+        *कुल:* ₹{{order_details.total}}
+        
+        ---
+        
+        📍 *डिलीवरी पता:*
+        {{order_details.delivery_address}}
+        
+        🏪 *से:* {{vendor_info.store_name}}
+        
+        ⏱️ *अनुमानित समय:* {{estimated_time}} मिनट
+        
+        ---
+        
+        आपका ऑर्डर रेस्तरां को भेज दिया गया है। जब वे पुष्टि करेंगे तो हम आपको सूचित करेंगे!
+        
+        कभी भी अपना ऑर्डर ट्रैक करने के लिए *TRACK* भेजें।
+      mr: |
+        ✅ *पेमेंट यशस्वी!*
+        
+        *ऑर्डर #{{order_details.order_id}}*
+        
+        💰 *भरलेली रक्कम:* ₹{{amount_paid}}
+        💳 *पेमेंट पद्धत:* {{payment_method}}
+        
+        *आयटम:*
+        {{#each order_details.items}}
+        • {{this.quantity}}x {{this.name}} - ₹{{this.total}}
+        {{/each}}
+        
+        *एकूण:* ₹{{order_details.total}}
+        
+        ---
+        
+        📍 *डिलिव्हरी पत्ता:*
+        {{order_details.delivery_address}}
+        
+        🏪 *पासून:* {{vendor_info.store_name}}
+        
+        ⏱️ *अंदाजित वेळ:* {{estimated_time}} मिनिटे
+        
+        ---
+        
+        तुमचा ऑर्डर रेस्टॉरंटला पाठवला आहे. ते पुष्टी केल्यावर आम्ही तुम्हाला कळवू!
+        
+        तुमचा ऑर्डर ट्रॅक करण्यासाठी कधीही *TRACK* पाठवा.
+    next: trigger_vendor_notification
+
+  # Trigger vendor notification (multi-channel)
+  - id: trigger_vendor_notification
+    type: action
+    action: notify_vendor_new_order
+    params:
+      vendor_id: '{{vendor_info.id}}'
+      vendor_phone: '{{vendor_info.phone}}'
+      vendor_fcm_topic: '{{vendor_info.zone_wise_topic}}'
+      order_id: '{{order_id}}'
+      order_amount: '{{order_details.total}}'
+      customer_name: '{{session.customer_name}}'
+      items_count: '{{length(order_details.items)}}'
+      items_summary: '{{order_details.items_summary}}'
+      payment_method: '{{payment_method}}'
+    outputs:
+      notification_sent: notification_sent
+    next: log_order_created
+
+  # Log order creation for analytics
+  - id: log_order_created
+    type: action
+    action: log_event
+    params:
+      event_type: order_created
+      order_id: '{{order_id}}'
+      amount: '{{amount_paid}}'
+      vendor_id: '{{vendor_info.id}}'
+      payment_method: '{{payment_method}}'
+      channel: 'whatsapp'
+    next: wait_for_customer_response
+
+  # Wait for customer response
+  - id: wait_for_customer_response
+    type: input
+    input_type: text
+    timeout: 300  # 5 minutes timeout
+    next: process_response
+
+  - id: process_response
+    type: condition
+    conditions:
+      - condition: 'match({{input}}, "^(track|ट्रैक|ट्रॅक)$", "i")'
+        next: transfer_to_tracking
+    default: acknowledge_response
+
+  - id: acknowledge_response
+    type: message
+    message:
+      en: "Got it! 👍 We'll keep you updated on your order status."
+      hi: "समझ गया! 👍 हम आपको आपके ऑर्डर की स्थिति से अपडेट रखेंगे।"
+      mr: "समजले! 👍 आम्ही तुम्हाला तुमच्या ऑर्डरच्या स्थितीबद्दल अपडेट ठेवू."
+    next: end_flow
+
+  - id: transfer_to_tracking
+    type: flow_transfer
+    target_flow: customer_order_status_v1
+
+  # Payment Failed Flow
+  - id: payment_failed
+    type: message
+    message:
+      en: |
+        ❌ *Payment Failed*
+        
+        We couldn't process your payment for Order #{{order_id}}.
+        
+        *Reason:* {{payment_error}}
+        
+        Don't worry, no amount has been deducted from your account.
+        
+        Would you like to:
+        1. 🔄 Try again
+        2. 💳 Use a different payment method
+        3. ❌ Cancel order
+      hi: |
+        ❌ *भुगतान विफल*
+        
+        हम ऑर्डर #{{order_id}} के लिए आपका भुगतान प्रोसेस नहीं कर सके।
+        
+        *कारण:* {{payment_error}}
+        
+        चिंता न करें, आपके खाते से कोई राशि नहीं काटी गई है।
+        
+        क्या आप चाहेंगे:
+        1. 🔄 फिर से प्रयास करें
+        2. 💳 दूसरी भुगतान विधि का उपयोग करें
+        3. ❌ ऑर्डर रद्द करें
+      mr: |
+        ❌ *पेमेंट अयशस्वी*
+        
+        ऑर्डर #{{order_id}} साठी तुमचे पेमेंट प्रक्रिया करता आले नाही.
+        
+        *कारण:* {{payment_error}}
+        
+        काळजी करू नका, तुमच्या खात्यातून कोणतीही रक्कम कापली गेली नाही.
+        
+        तुम्हाला:
+        1. 🔄 पुन्हा प्रयत्न करायचा आहे का
+        2. 💳 वेगळी पेमेंट पद्धत वापरायची आहे का
+        3. ❌ ऑर्डर रद्द करायचा आहे का
+    next: wait_payment_retry
+
+  - id: wait_payment_retry
+    type: input
+    input_type: text
+    next: process_retry_choice
+
+  - id: process_retry_choice
+    type: condition
+    conditions:
+      - condition: '{{input}} == "1"'
+        next: retry_payment
+      - condition: '{{input}} == "2"'
+        next: change_payment_method
+      - condition: '{{input}} == "3"'
+        next: cancel_pending_order
+    default: retry_payment
+
+  - id: retry_payment
+    type: action
+    action: generate_payment_link
+    params:
+      order_id: '{{order_id}}'
+      amount: '{{order_details.total}}'
+    outputs:
+      payment_link: payment_link
+    next: send_retry_link
+
+  - id: send_retry_link
+    type: message
+    message:
+      en: "🔗 Here's your payment link:\n\n{{payment_link}}\n\nThis link is valid for 15 minutes."
+      hi: "🔗 यहां आपका भुगतान लिंक है:\n\n{{payment_link}}\n\nयह लिंक 15 मिनट के लिए वैध है।"
+      mr: "🔗 हे तुमचे पेमेंट लिंक आहे:\n\n{{payment_link}}\n\nही लिंक 15 मिनिटांसाठी वैध आहे."
+    next: end_flow
+
+  - id: change_payment_method
+    type: flow_transfer
+    target_flow: payment_method_selection
+    params:
+      order_id: '{{order_id}}'
+
+  - id: cancel_pending_order
+    type: action
+    action: php_api
+    params:
+      action: cancel_pending_order
+      order_id: '{{order_id}}'
+    next: order_cancelled_message
+
+  - id: order_cancelled_message
+    type: message
+    message:
+      en: "Your order has been cancelled. Feel free to order again anytime! 🙏"
+      hi: "आपका ऑर्डर रद्द कर दिया गया है। कभी भी फिर से ऑर्डर करें! 🙏"
+      mr: "तुमचा ऑर्डर रद्द केला आहे. कधीही पुन्हा ऑर्डर करा! 🙏"
+    next: end_flow
+
+  # Payment Pending Flow
+  - id: payment_pending
+    type: message
+    message:
+      en: "⏳ Your payment is being processed. Please wait a moment...\n\nWe'll notify you once it's confirmed."
+      hi: "⏳ आपका भुगतान प्रोसेस हो रहा है। कृपया कुछ क्षण प्रतीक्षा करें...\n\nपुष्टि होते ही हम आपको सूचित करेंगे।"
+      mr: "⏳ तुमचे पेमेंट प्रक्रिया होत आहे. कृपया थोडी वाट पहा...\n\nपुष्टी होताच आम्ही तुम्हाला कळवू."
+    next: end_flow
+
+  - id: end_flow
+    type: end
+
+# Proactive notifications (triggered by webhook)
+proactive_notifications:
+  # Order confirmed by vendor
+  - trigger: order_confirmed
+    message:
+      en: |
+        🎉 *Great news!*
+        
+        {{vendor_name}} has confirmed your order #{{order_id}}!
+        
+        ⏱️ *Preparation Time:* {{processing_time}} minutes
+        
+        We'll update you when it's ready for delivery.
+      hi: |
+        🎉 *अच्छी खबर!*
+        
+        {{vendor_name}} ने आपका ऑर्डर #{{order_id}} कन्फर्म कर दिया है!
+        
+        ⏱️ *तैयारी का समय:* {{processing_time}} मिनट
+        
+        डिलीवरी के लिए तैयार होने पर हम आपको अपडेट करेंगे।
+      mr: |
+        🎉 *चांगली बातमी!*
+        
+        {{vendor_name}} ने तुमचा ऑर्डर #{{order_id}} पुष्टी केला आहे!
+        
+        ⏱️ *तयारीचा वेळ:* {{processing_time}} मिनिटे
+        
+        डिलिव्हरीसाठी तयार झाल्यावर आम्ही तुम्हाला अपडेट करू.
+
+  # Order ready for delivery
+  - trigger: order_ready
+    message:
+      en: |
+        🍳 *Your order is ready!*
+        
+        Order #{{order_id}} from {{vendor_name}} is packed and ready.
+        
+        🚴 Finding a delivery partner...
+      hi: |
+        🍳 *आपका ऑर्डर तैयार है!*
+        
+        {{vendor_name}} से ऑर्डर #{{order_id}} पैक हो गया है और तैयार है।
+        
+        🚴 डिलीवरी पार्टनर ढूंढ रहे हैं...
+      mr: |
+        🍳 *तुमचा ऑर्डर तयार आहे!*
+        
+        {{vendor_name}} कडून ऑर्डर #{{order_id}} पॅक झाला आहे आणि तयार आहे.
+        
+        🚴 डिलिव्हरी पार्टनर शोधत आहोत...
+
+  # Delivery partner assigned
+  - trigger: delivery_assigned
+    message:
+      en: |
+        🚴 *Delivery Partner Assigned!*
+        
+        *{{delivery_man_name}}* is on the way to pick up your order.
+        
+        📞 Contact: {{delivery_man_phone}}
+        
+        📍 Track live: {{tracking_link}}
+      hi: |
+        🚴 *डिलीवरी पार्टनर असाइन!*
+        
+        *{{delivery_man_name}}* आपका ऑर्डर लेने जा रहे हैं।
+        
+        📞 संपर्क: {{delivery_man_phone}}
+        
+        📍 लाइव ट्रैक करें: {{tracking_link}}
+      mr: |
+        🚴 *डिलिव्हरी पार्टनर नियुक्त!*
+        
+        *{{delivery_man_name}}* तुमचा ऑर्डर घेण्यासाठी मार्गावर आहे.
+        
+        📞 संपर्क: {{delivery_man_phone}}
+        
+        📍 लाइव्ह ट्रॅक करा: {{tracking_link}}
+
+  # Order picked up
+  - trigger: order_picked_up
+    message:
+      en: |
+        🚴 *On the way!*
+        
+        {{delivery_man_name}} has picked up your order and is heading to you.
+        
+        ⏱️ *ETA:* {{eta_minutes}} minutes
+        
+        📍 Track live: {{tracking_link}}
+      hi: |
+        🚴 *रास्ते में!*
+        
+        {{delivery_man_name}} ने आपका ऑर्डर उठा लिया है और आपकी ओर आ रहे हैं।
+        
+        ⏱️ *अनुमानित समय:* {{eta_minutes}} मिनट
+        
+        📍 लाइव ट्रैक करें: {{tracking_link}}
+      mr: |
+        🚴 *मार्गावर!*
+        
+        {{delivery_man_name}} ने तुमचा ऑर्डर उचलला आहे आणि तुमच्याकडे येत आहे.
+        
+        ⏱️ *अंदाजित वेळ:* {{eta_minutes}} मिनिटे
+        
+        📍 लाइव्ह ट्रॅक करा: {{tracking_link}}
+
+  # Order delivered
+  - trigger: order_delivered
+    message:
+      en: |
+        ✅ *Order Delivered!*
+        
+        Your order #{{order_id}} has been delivered.
+        
+        Enjoy your meal! 🍽️
+        
+        ⭐ Please rate your experience:
+        {{feedback_link}}
+        
+        Thank you for ordering with Mangwale! 🙏
+      hi: |
+        ✅ *ऑर्डर डिलीवर हो गया!*
+        
+        आपका ऑर्डर #{{order_id}} डिलीवर हो गया है।
+        
+        अपने भोजन का आनंद लें! 🍽️
+        
+        ⭐ कृपया अपना अनुभव रेट करें:
+        {{feedback_link}}
+        
+        Mangwale के साथ ऑर्डर करने के लिए धन्यवाद! 🙏
+      mr: |
+        ✅ *ऑर्डर डिलिव्हर झाला!*
+        
+        तुमचा ऑर्डर #{{order_id}} डिलिव्हर झाला आहे.
+        
+        तुमच्या जेवणाचा आनंद घ्या! 🍽️
+        
+        ⭐ कृपया तुमचा अनुभव रेट करा:
+        {{feedback_link}}
+        
+        Mangwale सोबत ऑर्डर केल्याबद्दल धन्यवाद! 🙏

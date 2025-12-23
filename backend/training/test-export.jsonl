@@ -1,0 +1,50 @@
+{"text":"Find Vada Pav near me","intent":"intent.item.search","module_id":4,"module_type":"food","entities":null,"language":"en","expected_service":"opensearch","metadata":{"quality_score":"1"}}
+{"text":"Pizza kaha milega?","intent":"intent.item.search","module_id":4,"module_type":"food","entities":null,"language":"mr","expected_service":"opensearch","metadata":{"quality_score":"1"}}
+{"text":"Palak Paneer delivery available?","intent":"intent.item.search","module_id":4,"module_type":"food","entities":null,"language":"en","expected_service":"opensearch","metadata":{"quality_score":"1"}}
+{"text":"I want Biryani","intent":"intent.item.search","module_id":4,"module_type":"food","entities":null,"language":"en","expected_service":"opensearch","metadata":{"quality_score":"1"}}
+{"text":"Vada Pav kaha milega?","intent":"intent.item.search","module_id":4,"module_type":"food","entities":null,"language":"en","expected_service":"opensearch","metadata":{"quality_score":"1"}}
+{"text":"Burger kaha milega?","intent":"intent.item.search","module_id":4,"module_type":"food","entities":null,"language":"hinglish","expected_service":"opensearch","metadata":{"quality_score":"1"}}
+{"text":"Pasta kaha milega?","intent":"intent.item.search","module_id":4,"module_type":"food","entities":null,"language":"hinglish","expected_service":"opensearch","metadata":{"quality_score":"1"}}
+{"text":"Find Palak Paneer near me","intent":"intent.item.search","module_id":4,"module_type":"food","entities":null,"language":"en","expected_service":"opensearch","metadata":{"quality_score":"1"}}
+{"text":"I want Palak Paneer","intent":"intent.item.search","module_id":4,"module_type":"food","entities":null,"language":"en","expected_service":"opensearch","metadata":{"quality_score":"1"}}
+{"text":"Find Idli near me","intent":"intent.item.search","module_id":4,"module_type":"food","entities":null,"language":"hinglish","expected_service":"opensearch","metadata":{"quality_score":"1"}}
+{"text":"I want Chole Bhature","intent":"intent.item.search","module_id":4,"module_type":"food","entities":null,"language":"en","expected_service":"opensearch","metadata":{"quality_score":"1"}}
+{"text":"Mujhe Butter Chicken chahiye","intent":"intent.item.search","module_id":4,"module_type":"food","entities":null,"language":"hinglish","expected_service":"opensearch","metadata":{"quality_score":"1"}}
+{"text":"Mujhe Samosa chahiye","intent":"intent.item.search","module_id":4,"module_type":"food","entities":null,"language":"en","expected_service":"opensearch","metadata":{"quality_score":"1"}}
+{"text":"Best Vada Pav in Camp","intent":"intent.item.search","module_id":4,"module_type":"food","entities":null,"language":"mr","expected_service":"opensearch","metadata":{"quality_score":"1"}}
+{"text":"Dal Makhani kaha milega?","intent":"intent.item.search","module_id":4,"module_type":"food","entities":null,"language":"hinglish","expected_service":"opensearch","metadata":{"quality_score":"1"}}
+{"text":"Best Idli in Deccan","intent":"intent.item.search","module_id":4,"module_type":"food","entities":null,"language":"hinglish","expected_service":"opensearch","metadata":{"quality_score":"1"}}
+{"text":"Dosa delivery available?","intent":"intent.item.search","module_id":4,"module_type":"food","entities":null,"language":"hinglish","expected_service":"opensearch","metadata":{"quality_score":"1"}}
+{"text":"Pasta kaha milega?","intent":"intent.item.search","module_id":4,"module_type":"food","entities":null,"language":"en","expected_service":"opensearch","metadata":{"quality_score":"1"}}
+{"text":"Pizza delivery available?","intent":"intent.item.search","module_id":4,"module_type":"food","entities":null,"language":"en","expected_service":"opensearch","metadata":{"quality_score":"1"}}
+{"text":"Find Samosa near me","intent":"intent.item.search","module_id":4,"module_type":"food","entities":null,"language":"en","expected_service":"opensearch","metadata":{"quality_score":"1"}}
+{"text":"Chole Bhature kaha milega?","intent":"intent.item.search","module_id":4,"module_type":"food","entities":null,"language":"en","expected_service":"opensearch","metadata":{"quality_score":"1"}}
+{"text":"I want Idli","intent":"intent.item.search","module_id":4,"module_type":"food","entities":null,"language":"hinglish","expected_service":"opensearch","metadata":{"quality_score":"1"}}
+{"text":"Butter Chicken delivery available?","intent":"intent.item.search","module_id":4,"module_type":"food","entities":null,"language":"hinglish","expected_service":"opensearch","metadata":{"quality_score":"1"}}
+{"text":"I want Chole Bhature","intent":"intent.item.search","module_id":4,"module_type":"food","entities":null,"language":"en","expected_service":"opensearch","metadata":{"quality_score":"1"}}
+{"text":"Best Biryani in Deccan","intent":"intent.item.search","module_id":4,"module_type":"food","entities":null,"language":"hinglish","expected_service":"opensearch","metadata":{"quality_score":"1"}}
+{"text":"I want Kachori","intent":"intent.item.search","module_id":4,"module_type":"food","entities":null,"language":"en","expected_service":"opensearch","metadata":{"quality_score":"1"}}
+{"text":"I want Burger","intent":"intent.item.search","module_id":4,"module_type":"food","entities":null,"language":"hinglish","expected_service":"opensearch","metadata":{"quality_score":"1"}}
+{"text":"I want Idli","intent":"intent.item.search","module_id":4,"module_type":"food","entities":null,"language":"en","expected_service":"opensearch","metadata":{"quality_score":"1"}}
+{"text":"Thali delivery available?","intent":"intent.item.search","module_id":4,"module_type":"food","entities":null,"language":"en","expected_service":"opensearch","metadata":{"quality_score":"1"}}
+{"text":"Pasta delivery available?","intent":"intent.item.search","module_id":4,"module_type":"food","entities":null,"language":"hinglish","expected_service":"opensearch","metadata":{"quality_score":"1"}}
+{"text":"Best Burger in Wakad","intent":"intent.item.search","module_id":4,"module_type":"food","entities":null,"language":"en","expected_service":"opensearch","metadata":{"quality_score":"1"}}
+{"text":"I want Dal Makhani","intent":"intent.item.search","module_id":4,"module_type":"food","entities":null,"language":"hinglish","expected_service":"opensearch","metadata":{"quality_score":"1"}}
+{"text":"Biryani delivery available?","intent":"intent.item.search","module_id":4,"module_type":"food","entities":null,"language":"en","expected_service":"opensearch","metadata":{"quality_score":"1"}}
+{"text":"Best Paneer Tikka in Deccan","intent":"intent.item.search","module_id":4,"module_type":"food","entities":null,"language":"hinglish","expected_service":"opensearch","metadata":{"quality_score":"1"}}
+{"text":"Chole Bhature delivery available?","intent":"intent.item.search","module_id":4,"module_type":"food","entities":null,"language":"hinglish","expected_service":"opensearch","metadata":{"quality_score":"1"}}
+{"text":"Thali kaha milega?","intent":"intent.item.search","module_id":4,"module_type":"food","entities":null,"language":"en","expected_service":"opensearch","metadata":{"quality_score":"1"}}
+{"text":"Best Chole Bhature in Deccan","intent":"intent.item.search","module_id":4,"module_type":"food","entities":null,"language":"en","expected_service":"opensearch","metadata":{"quality_score":"1"}}
+{"text":"Pav Bhaji kaha milega?","intent":"intent.item.search","module_id":4,"module_type":"food","entities":null,"language":"en","expected_service":"opensearch","metadata":{"quality_score":"1"}}
+{"text":"Chole Bhature delivery available?","intent":"intent.item.search","module_id":4,"module_type":"food","entities":null,"language":"en","expected_service":"opensearch","metadata":{"quality_score":"1"}}
+{"text":"Best Pav Bhaji in Shivajinagar","intent":"intent.item.search","module_id":4,"module_type":"food","entities":null,"language":"hinglish","expected_service":"opensearch","metadata":{"quality_score":"1"}}
+{"text":"Mujhe Pizza chahiye","intent":"intent.item.search","module_id":4,"module_type":"food","entities":null,"language":"en","expected_service":"opensearch","metadata":{"quality_score":"1"}}
+{"text":"I want Dal Makhani","intent":"intent.item.search","module_id":4,"module_type":"food","entities":null,"language":"hinglish","expected_service":"opensearch","metadata":{"quality_score":"1"}}
+{"text":"Mujhe Thali chahiye","intent":"intent.item.search","module_id":4,"module_type":"food","entities":null,"language":"hinglish","expected_service":"opensearch","metadata":{"quality_score":"1"}}
+{"text":"Biryani delivery available?","intent":"intent.item.search","module_id":4,"module_type":"food","entities":null,"language":"en","expected_service":"opensearch","metadata":{"quality_score":"1"}}
+{"text":"I want Dosa","intent":"intent.item.search","module_id":4,"module_type":"food","entities":null,"language":"en","expected_service":"opensearch","metadata":{"quality_score":"1"}}
+{"text":"I want Burger","intent":"intent.item.search","module_id":4,"module_type":"food","entities":null,"language":"en","expected_service":"opensearch","metadata":{"quality_score":"1"}}
+{"text":"Mujhe Thali chahiye","intent":"intent.item.search","module_id":4,"module_type":"food","entities":null,"language":"en","expected_service":"opensearch","metadata":{"quality_score":"1"}}
+{"text":"I want Pasta","intent":"intent.item.search","module_id":4,"module_type":"food","entities":null,"language":"hinglish","expected_service":"opensearch","metadata":{"quality_score":"1"}}
+{"text":"Best Momos in Shivajinagar","intent":"intent.item.search","module_id":4,"module_type":"food","entities":null,"language":"en","expected_service":"opensearch","metadata":{"quality_score":"1"}}
+{"text":"Find Dal Makhani near me","intent":"intent.item.search","module_id":4,"module_type":"food","entities":null,"language":"en","expected_service":"opensearch","metadata":{"quality_score":"1"}}

@@ -1,0 +1,15 @@
+node_modules
+dist
+.git
+*.log
+.env
+.env.*
+coverage
+*.spec.ts
+**/*.spec.ts
+test
+tests
+e2e
+*.md
+.github
+.vscode

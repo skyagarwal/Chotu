@@ -1,0 +1,200 @@
+{
+  "name": "Rooms Module Training Dataset",
+  "module": "rooms",
+  "description": "Training dataset for hotel booking, room reservations, and accommodation services",
+  "version": "1.0.0",
+  "intents": [
+    {
+      "intent": "search_hotels",
+      "examples": [
+        { "text": "Find hotels", "entities": {} },
+        { "text": "Hotels in Bangalore", "entities": { "location": "Bangalore" } },
+        { "text": "Show me hotels near airport", "entities": { "location": "airport" } },
+        { "text": "Budget hotels", "entities": { "price_range": "budget" } },
+        { "text": "Luxury hotels", "entities": { "price_range": "luxury" } },
+        { "text": "Hotels in Koramangala", "entities": { "location": "Koramangala" } },
+        { "text": "5 star hotels", "entities": { "rating": 5 } },
+        { "text": "Find accommodation", "entities": {} },
+        { "text": "Hotels near MG Road", "entities": { "location": "MG Road" } },
+        { "text": "Show hotels", "entities": {} }
+      ]
+    },
+    {
+      "intent": "book_room",
+      "examples": [
+        { "text": "Book a room", "entities": {} },
+        { "text": "I want to book", "entities": {} },
+        { "text": "Reserve this room", "entities": {} },
+        { "text": "Book for 2 nights", "entities": { "nights": 2 } },
+        { "text": "Make reservation", "entities": {} },
+        { "text": "Book double room", "entities": { "room_type": "double" } },
+        { "text": "Reserve suite", "entities": { "room_type": "suite" } },
+        { "text": "Book this hotel", "entities": {} },
+        { "text": "I'll take it", "entities": {} },
+        { "text": "Confirm booking", "entities": {} }
+      ]
+    },
+    {
+      "intent": "check_availability",
+      "examples": [
+        { "text": "Is room available?", "entities": {} },
+        { "text": "Check availability", "entities": {} },
+        { "text": "Available rooms", "entities": {} },
+        { "text": "Do you have rooms?", "entities": {} },
+        { "text": "Rooms for tonight?", "entities": { "date": "tonight" } },
+        { "text": "Available on Dec 25?", "entities": { "date": "Dec 25" } },
+        { "text": "Check for tomorrow", "entities": { "date": "tomorrow" } },
+        { "text": "Vacancy", "entities": {} },
+        { "text": "Any rooms available?", "entities": {} },
+        { "text": "Check dates", "entities": {} }
+      ]
+    },
+    {
+      "intent": "set_checkin_date",
+      "examples": [
+        { "text": "Check in tomorrow", "entities": { "date": "tomorrow" } },
+        { "text": "Arriving on Dec 20", "entities": { "date": "Dec 20" } },
+        { "text": "Check in next Monday", "entities": { "date": "next Monday" } },
+        { "text": "Arriving tonight", "entities": { "date": "tonight" } },
+        { "text": "Check in date is 25th", "entities": { "date": "25th" } },
+        { "text": "I'll arrive on Friday", "entities": { "date": "Friday" } },
+        { "text": "Coming next week", "entities": { "date": "next week" } },
+        { "text": "Check in today", "entities": { "date": "today" } },
+        { "text": "Arrival date", "entities": {} },
+        { "text": "Check in on Christmas", "entities": { "date": "Christmas" } }
+      ]
+    },
+    {
+      "intent": "set_checkout_date",
+      "examples": [
+        { "text": "Check out on Dec 25", "entities": { "date": "Dec 25" } },
+        { "text": "Leaving next day", "entities": { "date": "next day" } },
+        { "text": "Check out tomorrow", "entities": { "date": "tomorrow" } },
+        { "text": "Departure on Sunday", "entities": { "date": "Sunday" } },
+        { "text": "Checkout date is 30th", "entities": { "date": "30th" } },
+        { "text": "Leaving on 5th", "entities": { "date": "5th" } },
+        { "text": "Check out next week", "entities": { "date": "next week" } },
+        { "text": "Staying for 3 nights", "entities": { "nights": 3 } },
+        { "text": "Departure date", "entities": {} },
+        { "text": "Check out day", "entities": {} }
+      ]
+    },
+    {
+      "intent": "specify_guests",
+      "examples": [
+        { "text": "2 adults", "entities": { "adults": 2 } },
+        { "text": "3 people", "entities": { "guests": 3 } },
+        { "text": "2 adults and 1 child", "entities": { "adults": 2, "children": 1 } },
+        { "text": "Family of 4", "entities": { "guests": 4 } },
+        { "text": "Solo traveler", "entities": { "adults": 1 } },
+        { "text": "Room for couple", "entities": { "adults": 2 } },
+        { "text": "4 adults 2 kids", "entities": { "adults": 4, "children": 2 } },
+        { "text": "Just me", "entities": { "adults": 1 } },
+        { "text": "Group of 6", "entities": { "guests": 6 } },
+        { "text": "2 guests", "entities": { "guests": 2 } }
+      ]
+    },
+    {
+      "intent": "filter_amenities",
+      "examples": [
+        { "text": "With parking", "entities": { "amenity": "parking" } },
+        { "text": "Need WiFi", "entities": { "amenity": "WiFi" } },
+        { "text": "Swimming pool", "entities": { "amenity": "swimming pool" } },
+        { "text": "Hotels with gym", "entities": { "amenity": "gym" } },
+        { "text": "Pet friendly", "entities": { "amenity": "pet friendly" } },
+        { "text": "Free breakfast", "entities": { "amenity": "free breakfast" } },
+        { "text": "Airport shuttle", "entities": { "amenity": "airport shuttle" } },
+        { "text": "AC rooms", "entities": { "amenity": "AC" } },
+        { "text": "24 hour check in", "entities": { "amenity": "24 hour check in" } },
+        { "text": "Room service", "entities": { "amenity": "room service" } }
+      ]
+    },
+    {
+      "intent": "get_hotel_details",
+      "examples": [
+        { "text": "Tell me about this hotel", "entities": {} },
+        { "text": "Hotel details", "entities": {} },
+        { "text": "More information", "entities": {} },
+        { "text": "What amenities?", "entities": {} },
+        { "text": "Hotel facilities", "entities": {} },
+        { "text": "Show hotel info", "entities": {} },
+        { "text": "Hotel reviews", "entities": {} },
+        { "text": "Hotel rating", "entities": {} },
+        { "text": "About this hotel", "entities": {} },
+        { "text": "Hotel description", "entities": {} }
+      ]
+    },
+    {
+      "intent": "view_rooms",
+      "examples": [
+        { "text": "Show rooms", "entities": {} },
+        { "text": "Room types", "entities": {} },
+        { "text": "What rooms available?", "entities": {} },
+        { "text": "Room options", "entities": {} },
+        { "text": "Show available rooms", "entities": {} },
+        { "text": "Types of rooms", "entities": {} },
+        { "text": "Room categories", "entities": {} },
+        { "text": "View room details", "entities": {} },
+        { "text": "What kind of rooms?", "entities": {} },
+        { "text": "Room list", "entities": {} }
+      ]
+    },
+    {
+      "intent": "modify_booking",
+      "examples": [
+        { "text": "Change booking", "entities": {} },
+        { "text": "Modify reservation", "entities": {} },
+        { "text": "Update dates", "entities": {} },
+        { "text": "Change room type", "entities": {} },
+        { "text": "Add extra night", "entities": {} },
+        { "text": "Modify booking", "entities": {} },
+        { "text": "Update reservation", "entities": {} },
+        { "text": "Change check in date", "entities": {} },
+        { "text": "Edit booking", "entities": {} },
+        { "text": "Reschedule", "entities": {} }
+      ]
+    },
+    {
+      "intent": "cancel_booking",
+      "examples": [
+        { "text": "Cancel booking", "entities": {} },
+        { "text": "I want to cancel", "entities": {} },
+        { "text": "Cancel reservation", "entities": {} },
+        { "text": "Cancel my room", "entities": {} },
+        { "text": "Don't need room", "entities": {} },
+        { "text": "Cancellation", "entities": {} },
+        { "text": "Cancel hotel booking", "entities": {} },
+        { "text": "Drop reservation", "entities": {} },
+        { "text": "Refund booking", "entities": {} },
+        { "text": "I want refund", "entities": {} }
+      ]
+    },
+    {
+      "intent": "get_pricing",
+      "examples": [
+        { "text": "How much is it?", "entities": {} },
+        { "text": "Room price", "entities": {} },
+        { "text": "Price per night", "entities": {} },
+        { "text": "Total cost", "entities": {} },
+        { "text": "What's the price?", "entities": {} },
+        { "text": "Room rates", "entities": {} },
+        { "text": "How much for 3 nights?", "entities": { "nights": 3 } },
+        { "text": "Price details", "entities": {} },
+        { "text": "Cost breakdown", "entities": {} },
+        { "text": "Tariff", "entities": {} }
+      ]
+    }
+  ],
+  "entities": [
+    { "name": "location", "description": "Hotel location or area" },
+    { "name": "price_range", "description": "Budget range" },
+    { "name": "rating", "description": "Hotel star rating" },
+    { "name": "room_type", "description": "Type of room" },
+    { "name": "nights", "description": "Number of nights" },
+    { "name": "date", "description": "Check-in or check-out date" },
+    { "name": "adults", "description": "Number of adults" },
+    { "name": "children", "description": "Number of children" },
+    { "name": "guests", "description": "Total number of guests" },
+    { "name": "amenity", "description": "Hotel amenity or facility" }
+  ]
+}

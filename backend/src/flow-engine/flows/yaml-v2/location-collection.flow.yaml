@@ -1,0 +1,543 @@
+# ============================================================
+# LOCATION COLLECTION FLOW v1.0
+# ============================================================
+# Collects user location through multiple methods:
+#   - GPS share (WhatsApp/Telegram native)
+#   - Saved addresses selection
+#   - Manual area/landmark input
+#   - Pin on map (Web only)
+# ============================================================
+
+id: location_collection_v1
+name: Location Collection Flow
+description: Smart location collection for all channels (WhatsApp, Voice, Web)
+version: "1.0.0"
+trigger: "where am i|my location|set location|update location|change location"
+module: location
+enabled: true
+
+contextSchema:
+  # Location Data
+  location:
+    type: object
+    description: User's location coordinates
+  location_address:
+    type: string
+    description: Human readable address
+  location_method:
+    type: string
+    enum: [gps, saved, manual, map]
+    description: How location was obtained
+  
+  # Channel Info
+  channel:
+    type: string
+    enum: [whatsapp, web, voice, telegram, sms]
+  
+  # Saved Addresses
+  saved_addresses:
+    type: array
+    description: User's saved addresses from profile
+  
+  # Return Context
+  return_flow:
+    type: string
+    description: Flow to return to after location collection
+  return_context:
+    type: object
+    description: Context to pass back
+
+initialState: check_existing_location
+finalStates:
+  - location_collected
+  - cancelled
+
+states:
+  # ============================================================
+  # CHECK EXISTING LOCATION
+  # ============================================================
+  check_existing_location:
+    type: action
+    description: Check if user already has a recent location
+    actions:
+      - id: check_session
+        executor: response
+        config:
+          silentOutput: true
+          saveToContext:
+            has_location: "{{_session.location && _session.lastLocationUpdate && (Date.now() - _session.lastLocationUpdate) < 3600000}}"
+            current_location: "{{_session.location}}"
+            current_address: "{{_session.location_address}}"
+    transitions:
+      success: route_location_status
+
+  route_location_status:
+    type: decision
+    conditions:
+      - expression: "context.has_location && context.current_address"
+        event: has_location
+      - expression: "context._session?.authenticated"
+        event: authenticated_no_location
+    transitions:
+      has_location: confirm_current_location
+      authenticated_no_location: fetch_saved_addresses
+      default: ask_location_method
+
+  # ============================================================
+  # CONFIRM CURRENT LOCATION (if exists)
+  # ============================================================
+  confirm_current_location:
+    type: action
+    actions:
+      - id: confirm
+        executor: response
+        config:
+          message: |
+            📍 I have your location as:
+            *{{current_address}}*
+            
+            Is this correct, or would you like to update it?
+          buttons:
+            - { id: correct, label: "✅ Yes, correct", value: "correct" }
+            - { id: update, label: "📍 Update Location", value: "update" }
+    transitions:
+      user_message: process_confirm_location
+
+  process_confirm_location:
+    type: action
+    actions:
+      - id: classify
+        executor: llm
+        config:
+          prompt: |
+            User response: "{{_user_message}}"
+            
+            Is user confirming current location or wanting to update?
+            Reply: CONFIRM or UPDATE
+          temperature: 0.1
+          maxTokens: 10
+          silentOutput: true
+        output: confirm_choice
+    transitions:
+      success: route_confirm
+
+  route_confirm:
+    type: decision
+    conditions:
+      - expression: "context.confirm_choice?.includes('CONFIRM') || context._user_message?.toLowerCase().includes('yes') || context._user_message?.toLowerCase().includes('correct')"
+        event: confirmed
+    transitions:
+      confirmed: location_collected
+      default: ask_location_method
+
+  # ============================================================
+  # FETCH SAVED ADDRESSES
+  # ============================================================
+  fetch_saved_addresses:
+    type: action
+    description: Get user's saved addresses
+    actions:
+      - id: get_addresses
+        executor: php_api
+        config:
+          action: get_saved_addresses
+          userId: "{{_session.user_id}}"
+        output: saved_addresses
+    transitions:
+      success: route_saved_addresses
+      error: ask_location_method
+
+  route_saved_addresses:
+    type: decision
+    conditions:
+      - expression: "context.saved_addresses?.length > 0"
+        event: has_addresses
+    transitions:
+      has_addresses: show_saved_addresses
+      default: ask_location_method
+
+  # ============================================================
+  # SHOW SAVED ADDRESSES
+  # ============================================================
+  show_saved_addresses:
+    type: action
+    actions:
+      - id: show
+        executor: response
+        config:
+          message: |
+            📍 Where should I help you today?
+            
+            *Your Saved Addresses:*
+            {{#each saved_addresses}}
+            {{add @index 1}}. {{label}} - {{formatted}}
+            {{/each}}
+            
+            Or share your current location for nearby options.
+          buttons:
+            - { id: current, label: "📍 Current Location", value: "current location" }
+            - { id: new, label: "➕ New Location", value: "new location" }
+          dynamicButtons:
+            path: saved_addresses
+            labelTemplate: "{{label}}"
+            valueTemplate: "saved:{{id}}"
+    transitions:
+      user_message: process_address_selection
+
+  process_address_selection:
+    type: action
+    actions:
+      - id: check_saved
+        executor: response
+        config:
+          silentOutput: true
+          saveToContext:
+            is_saved_selection: "{{_user_message.startsWith('saved:')}}"
+            selected_address_id: "{{_user_message.replace('saved:', '')}}"
+    transitions:
+      success: route_address_selection
+
+  route_address_selection:
+    type: decision
+    conditions:
+      - expression: "context.is_saved_selection"
+        event: saved_selected
+      - expression: "context._user_message?.toLowerCase().includes('current')"
+        event: current_location
+      - expression: "context._user_message?.toLowerCase().includes('new')"
+        event: new_location
+    transitions:
+      saved_selected: use_saved_address
+      current_location: request_gps_location
+      new_location: ask_location_manual
+      default: process_manual_input
+
+  use_saved_address:
+    type: action
+    actions:
+      - id: find_address
+        executor: llm
+        config:
+          prompt: |
+            Find address with id "{{selected_address_id}}" from:
+            {{json saved_addresses}}
+            
+            Return JSON: {"lat": number, "lng": number, "address": "string", "label": "string"}
+          parseJson: true
+          silentOutput: true
+        output: selected_location
+      
+      - id: save_to_session
+        executor: response
+        config:
+          saveToContext:
+            location:
+              lat: "{{selected_location.lat}}"
+              lng: "{{selected_location.lng}}"
+            location_address: "{{selected_location.address}}"
+            location_method: saved
+          message: |
+            ✅ Got it! Using *{{selected_location.label}}*
+            📍 {{selected_location.address}}
+    transitions:
+      success: location_collected
+
+  # ============================================================
+  # REQUEST GPS LOCATION
+  # ============================================================
+  request_gps_location:
+    type: action
+    description: Request GPS location share based on channel
+    actions:
+      - id: request
+        executor: response
+        config:
+          message: |
+            📍 Please share your current location:
+            
+            {{#if (eq _channel 'whatsapp')}}
+            Tap the 📎 attachment icon → Location → Share Live Location or Send Current Location
+            {{/if}}
+            {{#if (eq _channel 'telegram')}}
+            Tap the 📎 paperclip → Location → Send My Current Location
+            {{/if}}
+            {{#if (eq _channel 'web')}}
+            Click the 📍 button above to share your location, or type your area/landmark.
+            {{/if}}
+            {{#if (eq _channel 'voice')}}
+            Please tell me your area or a nearby landmark, like "College Road" or "near City Center Mall"
+            {{/if}}
+            
+            Or type your area name if you can't share location.
+          requestLocation: true
+    transitions:
+      location_shared: process_gps_location
+      user_message: process_manual_input
+
+  process_gps_location:
+    type: action
+    description: Process received GPS coordinates
+    actions:
+      - id: reverse_geocode
+        executor: address
+        config:
+          action: reverse_geocode
+          lat: "{{_location.lat}}"
+          lng: "{{_location.lng}}"
+        output: geocoded_address
+      
+      - id: save_location
+        executor: response
+        config:
+          saveToContext:
+            location:
+              lat: "{{_location.lat}}"
+              lng: "{{_location.lng}}"
+            location_address: "{{geocoded_address.formatted}}"
+            location_method: gps
+          message: |
+            📍 Got your location!
+            *{{geocoded_address.formatted}}*
+            
+            {{#if geocoded_address.area}}
+            Area: {{geocoded_address.area}}
+            {{/if}}
+    transitions:
+      success: location_collected
+
+  # ============================================================
+  # MANUAL LOCATION INPUT
+  # ============================================================
+  ask_location_manual:
+    type: action
+    actions:
+      - id: ask
+        executor: response
+        config:
+          message: |
+            📍 Where are you located?
+            
+            You can tell me:
+            • Area name (e.g., "College Road", "Gangapur Road")
+            • Landmark (e.g., "near Big Bazaar")
+            • Full address
+            
+            Or share your GPS location if possible.
+          requestLocation: true
+    transitions:
+      location_shared: process_gps_location
+      user_message: process_manual_input
+
+  process_manual_input:
+    type: action
+    description: Geocode manually entered location
+    actions:
+      - id: geocode
+        executor: address
+        config:
+          action: geocode
+          address: "{{_user_message}}"
+          city: "Nashik"  # Default city context
+        output: geocoded_result
+    transitions:
+      success: route_geocode_result
+      error: location_not_found
+
+  route_geocode_result:
+    type: decision
+    conditions:
+      - expression: "context.geocoded_result?.location?.lat"
+        event: single_result
+      - expression: "context.geocoded_result?.multiple?.length > 0"
+        event: multiple_results
+    transitions:
+      single_result: confirm_geocoded_location
+      multiple_results: clarify_location
+      default: location_not_found
+
+  confirm_geocoded_location:
+    type: action
+    actions:
+      - id: confirm
+        executor: response
+        config:
+          message: |
+            📍 Found: *{{geocoded_result.formatted}}*
+            
+            Is this correct?
+          buttons:
+            - { id: yes, label: "✅ Yes", value: "yes" }
+            - { id: no, label: "❌ No, try again", value: "no" }
+    transitions:
+      user_message: process_geocode_confirm
+
+  process_geocode_confirm:
+    type: action
+    actions:
+      - id: check
+        executor: llm
+        config:
+          prompt: "User said '{{_user_message}}'. Is this YES or NO?"
+          temperature: 0.1
+          maxTokens: 5
+          silentOutput: true
+        output: geocode_confirm
+    transitions:
+      success: route_geocode_confirm
+
+  route_geocode_confirm:
+    type: decision
+    conditions:
+      - expression: "context.geocode_confirm?.includes('YES') || context._user_message?.toLowerCase().includes('yes')"
+        event: confirmed
+    transitions:
+      confirmed: save_geocoded_location
+      default: ask_location_manual
+
+  save_geocoded_location:
+    type: action
+    actions:
+      - id: save
+        executor: response
+        config:
+          saveToContext:
+            location:
+              lat: "{{geocoded_result.location.lat}}"
+              lng: "{{geocoded_result.location.lng}}"
+            location_address: "{{geocoded_result.formatted}}"
+            location_method: manual
+          message: "✅ Location saved!"
+    transitions:
+      success: location_collected
+
+  clarify_location:
+    type: action
+    actions:
+      - id: ask
+        executor: response
+        config:
+          message: |
+            🤔 I found multiple locations matching "{{_user_message}}":
+            
+            {{#each geocoded_result.multiple}}
+            {{add @index 1}}. {{formatted}}
+            {{/each}}
+            
+            Which one did you mean?
+          buttons:
+            dynamicPath: geocoded_result.multiple
+            labelTemplate: "{{formatted}}"
+            valueTemplate: "select:{{@index}}"
+    transitions:
+      user_message: process_clarification
+
+  process_clarification:
+    type: action
+    actions:
+      - id: extract
+        executor: llm
+        config:
+          prompt: |
+            User said: "{{_user_message}}"
+            Options were: {{json geocoded_result.multiple}}
+            
+            Which option index (0-based) did they select? Return just the number.
+          temperature: 0.1
+          maxTokens: 5
+          silentOutput: true
+        output: selected_index
+      
+      - id: save
+        executor: response
+        config:
+          saveToContext:
+            geocoded_result: "{{geocoded_result.multiple.[selected_index]}}"
+    transitions:
+      success: save_geocoded_location
+
+  location_not_found:
+    type: action
+    actions:
+      - id: retry
+        executor: response
+        config:
+          message: |
+            😅 I couldn't find that location.
+            
+            Try being more specific, like:
+            • "College Road, Nashik"
+            • "Near Big Bazaar, Gangapur Road"
+            • "Panchavati area"
+            
+            Or share your GPS location.
+          requestLocation: true
+    transitions:
+      location_shared: process_gps_location
+      user_message: process_manual_input
+
+  # ============================================================
+  # ASK LOCATION METHOD (No saved addresses)
+  # ============================================================
+  ask_location_method:
+    type: action
+    actions:
+      - id: ask
+        executor: response
+        config:
+          message: |
+            📍 To help you better, I need to know where you are.
+            
+            {{#if (eq _channel 'whatsapp')}}
+            📱 You can:
+            1. Share your live location (📎 → Location)
+            2. Tell me your area (e.g., "College Road")
+            {{/if}}
+            {{#if (eq _channel 'voice')}}
+            🎤 Please tell me your area or a nearby landmark.
+            {{/if}}
+            {{#if (eq _channel 'web')}}
+            🌐 Click the location button or type your area name.
+            {{/if}}
+            
+            Where are you located?
+          requestLocation: true
+          buttons:
+            - { id: type, label: "⌨️ Type Area Name", value: "type area" }
+    transitions:
+      location_shared: process_gps_location
+      user_message: process_manual_input
+
+  # ============================================================
+  # END STATES
+  # ============================================================
+  location_collected:
+    type: end
+    description: Location successfully collected
+    actions:
+      - id: update_session
+        executor: session
+        config:
+          action: update
+          data:
+            location: "{{location}}"
+            location_address: "{{location_address}}"
+            lastLocationUpdate: "{{Date.now()}}"
+    metadata:
+      returnData:
+        - location
+        - location_address
+        - location_method
+
+  cancelled:
+    type: end
+    description: User cancelled location collection
+
+metadata:
+  author: Mangwale AI Team
+  createdAt: "2025-12-18"
+  tags:
+    - location
+    - gps
+    - address
+    - onboarding
+  priority: 90

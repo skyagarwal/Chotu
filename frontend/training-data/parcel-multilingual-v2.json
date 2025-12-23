@@ -1,0 +1,164 @@
+{
+  "name": "Parcel Service Multilingual Dataset v2",
+  "description": "Enhanced parcel booking training data with English, Hindi, and Marathi support",
+  "language": ["en", "hi", "mr"],
+  "module": "parcel",
+  "version": "2.0",
+  "intents": [
+    {
+      "intent": "book_parcel",
+      "description": "User wants to book parcel delivery",
+      "examples": [
+        {"text": "Send a package from Nashik to Mumbai", "language": "en", "entities": {"pickup_location": "Nashik", "drop_location": "Mumbai"}},
+        {"text": "I want to send a parcel", "language": "en", "entities": {}},
+        {"text": "Book parcel delivery", "language": "en", "entities": {}},
+        {"text": "Ship 5kg package to Pune", "language": "en", "entities": {"weight": "5", "unit": "kg", "drop_location": "Pune"}},
+        {"text": "Nashik se Mumbai parcel bhejo", "language": "hi", "entities": {"pickup_location": "Nashik", "drop_location": "Mumbai"}},
+        {"text": "mujhe parcel bhejna hai", "language": "hi", "entities": {}},
+        {"text": "parcel delivery book karo", "language": "hi", "entities": {}},
+        {"text": "5 kilo ka package Pune bhejo", "language": "hi", "entities": {"weight": "5", "unit": "kilo", "drop_location": "Pune"}},
+        {"text": "Nashik pasun Mumbai parcel pathva", "language": "mr", "entities": {"pickup_location": "Nashik", "drop_location": "Mumbai"}},
+        {"text": "mala parcel pathvaycha aahe", "language": "mr", "entities": {}},
+        {"text": "parcel delivery book kara", "language": "mr", "entities": {}},
+        {"text": "5 kilo che package Pune pathva", "language": "mr", "entities": {"weight": "5", "unit": "kilo", "drop_location": "Pune"}}
+      ]
+    },
+    {
+      "intent": "track_parcel",
+      "description": "User wants to track parcel status",
+      "examples": [
+        {"text": "Track my parcel", "language": "en", "entities": {}},
+        {"text": "Where is my package", "language": "en", "entities": {}},
+        {"text": "Track parcel ABC123", "language": "en", "entities": {"tracking_id": "ABC123"}},
+        {"text": "Parcel status check", "language": "en", "entities": {}},
+        {"text": "mera parcel kaha hai", "language": "hi", "entities": {}},
+        {"text": "package kaha pahuncha", "language": "hi", "entities": {}},
+        {"text": "parcel ABC123 track karo", "language": "hi", "entities": {"tracking_id": "ABC123"}},
+        {"text": "parcel ka status check karo", "language": "hi", "entities": {}},
+        {"text": "majha parcel kuthe aahe", "language": "mr", "entities": {}},
+        {"text": "package kuthe pohochla", "language": "mr", "entities": {}},
+        {"text": "parcel ABC123 track kara", "language": "mr", "entities": {"tracking_id": "ABC123"}},
+        {"text": "parcel cha status check kara", "language": "mr", "entities": {}}
+      ]
+    },
+    {
+      "intent": "modify_booking",
+      "description": "User wants to modify parcel booking",
+      "examples": [
+        {"text": "Change pickup time", "language": "en", "entities": {}},
+        {"text": "Modify my booking", "language": "en", "entities": {}},
+        {"text": "Update delivery address", "language": "en", "entities": {}},
+        {"text": "Cancel my parcel", "language": "en", "entities": {}},
+        {"text": "pickup time change karo", "language": "hi", "entities": {}},
+        {"text": "booking modify karna hai", "language": "hi", "entities": {}},
+        {"text": "delivery address update karo", "language": "hi", "entities": {}},
+        {"text": "parcel cancel karo", "language": "hi", "entities": {}},
+        {"text": "pickup time badla", "language": "mr", "entities": {}},
+        {"text": "booking modify karaycha aahe", "language": "mr", "entities": {}},
+        {"text": "delivery address update kara", "language": "mr", "entities": {}},
+        {"text": "parcel cancel kara", "language": "mr", "entities": {}}
+      ]
+    },
+    {
+      "intent": "get_pricing",
+      "description": "User wants to know parcel delivery pricing",
+      "examples": [
+        {"text": "How much to send 5kg to Mumbai", "language": "en", "entities": {"weight": "5", "unit": "kg", "drop_location": "Mumbai"}},
+        {"text": "Parcel charges", "language": "en", "entities": {}},
+        {"text": "What's the price for Pune delivery", "language": "en", "entities": {"drop_location": "Pune"}},
+        {"text": "Calculate shipping cost", "language": "en", "entities": {}},
+        {"text": "5 kilo Mumbai bhejne ka kitna lagega", "language": "hi", "entities": {"weight": "5", "unit": "kilo", "drop_location": "Mumbai"}},
+        {"text": "parcel ke charges", "language": "hi", "entities": {}},
+        {"text": "Pune delivery ka price kya hai", "language": "hi", "entities": {"drop_location": "Pune"}},
+        {"text": "shipping cost calculate karo", "language": "hi", "entities": {}},
+        {"text": "5 kilo Mumbai pathavayala kiti lagel", "language": "mr", "entities": {"weight": "5", "unit": "kilo", "drop_location": "Mumbai"}},
+        {"text": "parcel che charges", "language": "mr", "entities": {}},
+        {"text": "Pune delivery chi kimat kay aahe", "language": "mr", "entities": {"drop_location": "Pune"}},
+        {"text": "shipping cost calculate kara", "language": "mr", "entities": {}}
+      ]
+    },
+    {
+      "intent": "check_serviceability",
+      "description": "User wants to check if delivery is available to location",
+      "examples": [
+        {"text": "Do you deliver to Pune", "language": "en", "entities": {"location": "Pune"}},
+        {"text": "Is service available in my area", "language": "en", "entities": {}},
+        {"text": "Can I send parcel to Delhi", "language": "en", "entities": {"location": "Delhi"}},
+        {"text": "Check delivery area", "language": "en", "entities": {}},
+        {"text": "Pune mein delivery hoti hai kya", "language": "hi", "entities": {"location": "Pune"}},
+        {"text": "mere area mein service hai", "language": "hi", "entities": {}},
+        {"text": "Delhi parcel bhej sakte hai", "language": "hi", "entities": {"location": "Delhi"}},
+        {"text": "delivery area check karo", "language": "hi", "entities": {}},
+        {"text": "Pune madhe delivery hote ka", "language": "mr", "entities": {"location": "Pune"}},
+        {"text": "majhya area madhe service aahe", "language": "mr", "entities": {}},
+        {"text": "Delhi la parcel pathavu shakto ka", "language": "mr", "entities": {"location": "Delhi"}},
+        {"text": "delivery area check kara", "language": "mr", "entities": {}}
+      ]
+    },
+    {
+      "intent": "schedule_pickup",
+      "description": "User wants to schedule pickup time",
+      "examples": [
+        {"text": "Schedule pickup for tomorrow", "language": "en", "entities": {"date": "tomorrow"}},
+        {"text": "Pick up at 3 PM", "language": "en", "entities": {"time": "3 PM"}},
+        {"text": "Book pickup for Monday", "language": "en", "entities": {"date": "Monday"}},
+        {"text": "When can you pickup", "language": "en", "entities": {}},
+        {"text": "kal pickup schedule karo", "language": "hi", "entities": {"date": "kal"}},
+        {"text": "3 baje pickup karo", "language": "hi", "entities": {"time": "3 baje"}},
+        {"text": "somwar ko pickup book karo", "language": "hi", "entities": {"date": "somwar"}},
+        {"text": "kab pickup ho sakta hai", "language": "hi", "entities": {}},
+        {"text": "udya pickup schedule kara", "language": "mr", "entities": {"date": "udya"}},
+        {"text": "3 vajta pickup kara", "language": "mr", "entities": {"time": "3 vajta"}},
+        {"text": "somwar la pickup book kara", "language": "mr", "entities": {"date": "somwar"}},
+        {"text": "kevha pickup hou shakto", "language": "mr", "entities": {}}
+      ]
+    },
+    {
+      "intent": "get_delivery_time",
+      "description": "User wants to know estimated delivery time",
+      "examples": [
+        {"text": "How long will it take", "language": "en", "entities": {}},
+        {"text": "Delivery time to Mumbai", "language": "en", "entities": {"location": "Mumbai"}},
+        {"text": "When will it reach", "language": "en", "entities": {}},
+        {"text": "Expected delivery date", "language": "en", "entities": {}},
+        {"text": "kitna time lagega", "language": "hi", "entities": {}},
+        {"text": "Mumbai ka delivery time", "language": "hi", "entities": {"location": "Mumbai"}},
+        {"text": "kab pahunchega", "language": "hi", "entities": {}},
+        {"text": "delivery date kya hai", "language": "hi", "entities": {}},
+        {"text": "kiti vel lagel", "language": "mr", "entities": {}},
+        {"text": "Mumbai cha delivery time", "language": "mr", "entities": {"location": "Mumbai"}},
+        {"text": "kevha pohochel", "language": "mr", "entities": {}},
+        {"text": "delivery date kay aahe", "language": "mr", "entities": {}}
+      ]
+    },
+    {
+      "intent": "report_issue",
+      "description": "User wants to report problem with parcel",
+      "examples": [
+        {"text": "My parcel is damaged", "language": "en", "entities": {"issue": "damaged"}},
+        {"text": "Package not delivered", "language": "en", "entities": {"issue": "not delivered"}},
+        {"text": "Wrong address delivery", "language": "en", "entities": {"issue": "wrong address"}},
+        {"text": "Complaint about service", "language": "en", "entities": {}},
+        {"text": "mera parcel damaged hai", "language": "hi", "entities": {"issue": "damaged"}},
+        {"text": "package deliver nahi hua", "language": "hi", "entities": {"issue": "not delivered"}},
+        {"text": "galat address pe delivery", "language": "hi", "entities": {"issue": "wrong address"}},
+        {"text": "service ki complaint karni hai", "language": "hi", "entities": {}},
+        {"text": "majha parcel damaged aahe", "language": "mr", "entities": {"issue": "damaged"}},
+        {"text": "package deliver jhala nahi", "language": "mr", "entities": {"issue": "not delivered"}},
+        {"text": "chukichya address var delivery", "language": "mr", "entities": {"issue": "wrong address"}},
+        {"text": "service chi complaint karaychi aahe", "language": "mr", "entities": {}}
+      ]
+    }
+  ],
+  "entities": [
+    {"name": "pickup_location", "type": "string", "description": "Pickup location (Nashik, Mumbai, Pune, etc.)"},
+    {"name": "drop_location", "type": "string", "description": "Delivery destination"},
+    {"name": "weight", "type": "number", "description": "Package weight"},
+    {"name": "unit", "type": "string", "description": "Weight unit (kg/kilo)"},
+    {"name": "tracking_id", "type": "string", "description": "Parcel tracking ID"},
+    {"name": "date", "type": "string", "description": "Pickup/delivery date"},
+    {"name": "time", "type": "string", "description": "Pickup/delivery time"},
+    {"name": "location", "type": "string", "description": "General location reference"},
+    {"name": "issue", "type": "string", "description": "Problem type (damaged, not delivered, wrong address, etc.)"}
+  ]
+}

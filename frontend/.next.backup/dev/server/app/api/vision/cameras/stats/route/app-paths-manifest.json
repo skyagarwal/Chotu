@@ -1,0 +1,3 @@
+{
+  "/api/vision/cameras/stats/route": "app/api/vision/cameras/stats/route.js"
+}

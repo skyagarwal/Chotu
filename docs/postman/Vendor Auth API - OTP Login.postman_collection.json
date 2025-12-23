@@ -1,0 +1,335 @@
+{
+	"info": {
+		"_postman_id": "7b87a128-9ac5-4e61-b7ed-24ac88fd29b1",
+		"name": "Vendor Auth API - OTP Login",
+		"description": "Postman collection for Vendor Authentication API with OTP support",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "43040121",
+		"_collection_link": "https://gold-shadow-790474.postman.co/workspace/My-Workspace~cd106445-c08f-498a-8f2f-ea9cb89a8fee/collection/43040121-7b87a128-9ac5-4e61-b7ed-24ac88fd29b1?action=share&source=collection_link&creator=43040121"
+	},
+	"item": [
+		{
+			"name": "Send OTP - Email (Owner)",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "X-localization",
+						"value": "en"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"email_or_phone\": \"mangwale.backend@gmail.com\",\n  \"vendor_type\": \"owner\"\n}"
+				},
+				"url": {
+					"raw": "{{base_url}}/api/v1/auth/vendor/send-otp",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"auth",
+						"vendor",
+						"send-otp"
+					]
+				},
+				"description": "Send OTP to vendor email (owner type)"
+			},
+			"response": []
+		},
+		{
+			"name": "Send OTP - Phone (Owner)",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "X-localization",
+						"value": "en"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"email_or_phone\": \"9370407508\",\n  \"vendor_type\": \"owner\"\n}"
+				},
+				"url": {
+					"raw": "{{base_url}}/api/v1/auth/vendor/send-otp",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"auth",
+						"vendor",
+						"send-otp"
+					]
+				},
+				"description": "Send OTP to vendor phone (owner type)"
+			},
+			"response": []
+		},
+		{
+			"name": "Send OTP - Email (Employee)",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "X-localization",
+						"value": "en"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"email_or_phone\": \"employee@example.com\",\n  \"vendor_type\": \"employee\"\n}"
+				},
+				"url": {
+					"raw": "{{base_url}}/api/v1/auth/vendor/send-otp",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"auth",
+						"vendor",
+						"send-otp"
+					]
+				},
+				"description": "Send OTP to vendor employee email"
+			},
+			"response": []
+		},
+		{
+			"name": "Verify OTP & Login - Email (Owner)",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "X-localization",
+						"value": "en"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"email_or_phone\": \"mangwale.backend@gmail.com\",\n  \"otp\": \"1234\",\n  \"vendor_type\": \"owner\"\n}"
+				},
+				"url": {
+					"raw": "{{base_url}}/api/v1/auth/vendor/verify-otp",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"auth",
+						"vendor",
+						"verify-otp"
+					]
+				},
+				"description": "Verify OTP and login for vendor (owner) using email"
+			},
+			"response": []
+		},
+		{
+			"name": "Verify OTP & Login - Phone (Owner)",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "X-localization",
+						"value": "en"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"email_or_phone\": \"9370407508\",\n  \"otp\": \"1234\",\n  \"vendor_type\": \"owner\"\n}"
+				},
+				"url": {
+					"raw": "{{base_url}}/api/v1/auth/vendor/verify-otp",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"auth",
+						"vendor",
+						"verify-otp"
+					]
+				},
+				"description": "Verify OTP and login for vendor (owner) using phone"
+			},
+			"response": []
+		},
+		{
+			"name": "Login - Email & Password (Owner)",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "X-localization",
+						"value": "en"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"email\": \"mangwale.backend@gmail.com\",\n  \"password\": \"Mangwale@123\",\n  \"vendor_type\": \"owner\"\n}"
+				},
+				"url": {
+					"raw": "{{base_url}}/api/v1/auth/vendor/login",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"auth",
+						"vendor",
+						"login"
+					]
+				},
+				"description": "Login with email and password (owner type)"
+			},
+			"response": []
+		},
+		{
+			"name": "Login - Phone & Password (Owner)",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "X-localization",
+						"value": "en"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"email\": \"9370407508\",\n  \"password\": \"Mangwale@123\",\n  \"vendor_type\": \"owner\"\n}"
+				},
+				"url": {
+					"raw": "{{base_url}}/api/v1/auth/vendor/login",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"auth",
+						"vendor",
+						"login"
+					]
+				},
+				"description": "Login with phone and password (owner type) - Updated endpoint"
+			},
+			"response": []
+		},
+		{
+			"name": "Login - Email & Password (Employee)",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "X-localization",
+						"value": "en"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"email\": \"employee@example.com\",\n  \"password\": \"password123\",\n  \"vendor_type\": \"employee\"\n}"
+				},
+				"url": {
+					"raw": "{{base_url}}/api/v1/auth/vendor/login",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"auth",
+						"vendor",
+						"login"
+					]
+				},
+				"description": "Login with email and password (employee type)"
+			},
+			"response": []
+		},
+		{
+			"name": "Login - Phone & Password (Employee)",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "X-localization",
+						"value": "en"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"email\": \"9876543210\",\n  \"password\": \"password123\",\n  \"vendor_type\": \"employee\"\n}"
+				},
+				"url": {
+					"raw": "{{base_url}}/api/v1/auth/vendor/login",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"auth",
+						"vendor",
+						"login"
+					]
+				},
+				"description": "Login with phone and password (employee type)"
+			},
+			"response": []
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:3000",
+			"type": "string",
+			"description": "Base URL for the MangwaleHelper service. Update this to match your server URL (e.g., http://103.86.176.59:3001)"
+		}
+	]
+}

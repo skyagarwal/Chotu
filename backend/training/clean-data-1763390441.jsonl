@@ -1,0 +1,175 @@
+{"text" : "please send my package to Chennai", "intent" : "create_parcel_order", "language" : "auto", "entities" : {"destination": "Chennai"}, "tone" : "polite"}
+{"text" : "book a parcel", "intent" : "create_parcel_order", "language" : "auto", "entities" : {}, "tone" : "neutral"}
+{"text" : "I need to ship something", "intent" : "create_parcel_order", "language" : "auto", "entities" : {}, "tone" : "neutral"}
+{"text" : "send courier", "intent" : "create_parcel_order", "language" : "auto", "entities" : {}, "tone" : "neutral"}
+{"text" : "parcel delivery needed", "intent" : "create_parcel_order", "language" : "auto", "entities" : {}, "tone" : "neutral"}
+{"text" : "ih", "intent" : "greeting", "language" : "auto", "entities" : {}, "tone" : "neutral"}
+{"text" : "ih", "intent" : "greeting", "language" : "auto", "entities" : {}, "tone" : "neutral"}
+{"text" : "Hello", "intent" : "greeting", "language" : "auto", "entities" : {}, "tone" : "polite"}
+{"text" : "hi", "intent" : "greeting", "language" : "auto", "entities" : {}, "tone" : "polite"}
+{"text" : "Hello", "intent" : "greeting", "language" : "auto", "entities" : {}, "tone" : "polite"}
+{"text" : "game", "intent" : "play_game", "language" : "auto", "entities" : {}, "tone" : "neutral"}
+{"text" : "hi", "intent" : "greeting", "language" : "auto", "entities" : {}, "tone" : "polite"}
+{"text" : "hello", "intent" : "greeting", "language" : "auto", "entities" : {}, "tone" : "neutral"}
+{"text" : "hi", "intent" : "greeting", "language" : "auto", "entities" : {}, "tone" : "polite"}
+{"text" : "food", "intent" : "order_food", "language" : "auto", "entities" : {}, "tone" : "neutral"}
+{"text" : "some think quick", "intent" : "greeting", "language" : "auto", "entities" : {}, "tone" : "neutral"}
+{"text" : "some think quick", "intent" : "greeting", "language" : "auto", "entities" : {}, "tone" : "neutral"}
+{"text" : "ganesh sweets", "intent" : "order_food", "language" : "auto", "entities" : {"product": "ganesh sweets"}, "tone" : "neutral"}
+{"text" : "ganesh sweets", "intent" : "search_product", "language" : "auto", "entities" : {}, "tone" : "neutral"}
+{"text" : "game", "intent" : "play_game", "language" : "auto", "entities" : {}, "tone" : "neutral"}
+{"text" : "game", "intent" : "play_game", "language" : "auto", "entities" : {}, "tone" : "neutral"}
+{"text" : "hello", "intent" : "greeting", "language" : "auto", "entities" : {}, "tone" : "polite"}
+{"text" : "hi", "intent" : "greeting", "language" : "auto", "entities" : {}, "tone" : "polite"}
+{"text" : "hi", "intent" : "greeting", "language" : "auto", "entities" : {}, "tone" : "polite"}
+{"text" : "what can you do", "intent" : "browse_menu", "language" : "auto", "entities" : {}, "tone" : "neutral"}
+{"text" : "hello", "intent" : "greeting", "language" : "auto", "entities" : {}, "tone" : "polite"}
+{"text" : "hi", "intent" : "greeting", "language" : "auto", "entities" : {}, "tone" : "polite"}
+{"text" : "hello", "intent" : "greeting", "language" : "auto", "entities" : {}, "tone" : "neutral"}
+{"text" : "hi", "intent" : "greeting", "language" : "auto", "entities" : {}, "tone" : "polite"}
+{"text" : "hello", "intent" : "greeting", "language" : "auto", "entities" : {}, "tone" : "polite"}
+{"text" : "hi", "intent" : "greeting", "language" : "auto", "entities" : {}, "tone" : "polite"}
+{"text" : "hello", "intent" : "greeting", "language" : "auto", "entities" : {}, "tone" : "polite"}
+{"text" : "parcel", "intent" : "create_parcel_order", "language" : "auto", "entities" : {}, "tone" : "neutral"}
+{"text" : "my home", "intent" : "browse_menu", "language" : "auto", "entities" : {}, "tone" : "neutral"}
+{"text" : "its there my address", "intent" : "track_order", "language" : "auto", "entities" : {}, "tone" : "neutral"}
+{"text" : "login", "intent" : "account_login", "language" : "auto", "entities" : {}, "tone" : "neutral"}
+{"text" : "hello", "intent" : "greeting", "language" : "auto", "entities" : {}, "tone" : "polite"}
+{"text" : "hi", "intent" : "greeting", "language" : "auto", "entities" : {}, "tone" : "polite"}
+{"text" : "hi", "intent" : "greeting", "language" : "auto", "entities" : {}, "tone" : "polite"}
+{"text" : "hello", "intent" : "greeting", "language" : "auto", "entities" : {}, "tone" : "polite"}
+{"text" : "parcel", "intent" : "create_parcel_order", "language" : "auto", "entities" : {}, "tone" : "neutral"}
+{"text" : "📍 My current location is: 19.977685, 73.776274", "intent" : "share_location", "language" : "auto", "entities" : {}, "tone" : "neutral"}
+{"text" : "📍 My current location is: 19.977685, 73.776274", "intent" : "share_location", "language" : "auto", "entities" : {}, "tone" : "neutral"}
+{"text" : "Hello", "intent" : "greeting", "language" : "auto", "entities" : {}, "tone" : "polite"}
+{"text" : "Hello", "intent" : "greeting", "language" : "auto", "entities" : {}, "tone" : "neutral"}
+{"text" : "Any games", "intent" : "play_game", "language" : "auto", "entities" : {}, "tone" : "neutral"}
+{"text" : "hello", "intent" : "greeting", "language" : "auto", "entities" : {}, "tone" : "polite"}
+{"text" : "lets play some game", "intent" : "play_game", "language" : "auto", "entities" : {}, "tone" : "neutral"}
+{"text" : "yes", "intent" : "greeting", "language" : "auto", "entities" : {}, "tone" : "neutral"}
+{"text" : "lets play the game", "intent" : "play_game", "language" : "auto", "entities" : {}, "tone" : "neutral"}
+{"text" : "parcel", "intent" : "create_parcel_order", "language" : "auto", "entities" : {}, "tone" : "neutral"}
+{"text" : "pick up from my home and give it to my office address are saved if not ask me", "intent" : "create_parcel_order", "language" : "auto", "entities" : {}, "tone" : "neutral"}
+{"text" : "yes lets proceed", "intent" : "confirm", "language" : "auto", "entities" : {}, "tone" : "neutral"}
+{"text" : "book a parcel", "intent" : "create_parcel_order", "language" : "auto", "entities" : {}, "tone" : "neutral"}
+{"text" : "can you book a parvel pickup from https://maps.app.goo.gl/k2pysWPmw316cGbJ7 and drop to my home address a bike would be fine , its just a small food parcel", "intent" : "create_parcel_order", "language" : "auto", "entities" : {"bike": "true", "product": "food parcel", "location": "https://maps.app.goo.gl/k2pysWPmw316cGbJ7", "drop_location": "user's home address (not provided)", "pickup_location": "https://maps.app.goo.gl/k2pysWPmw316cGbJ7"}, "tone" : "neutral"}
+{"text" : "parcel booking", "intent" : "create_parcel_order", "language" : "auto", "entities" : {}, "tone" : "neutral"}
+{"text" : "who are you ?", "intent" : "greeting", "language" : "auto", "entities" : {}, "tone" : "polite"}
+{"text" : "earn reawds", "intent" : "earn", "language" : "auto", "entities" : {}, "tone" : "neutral"}
+{"text" : "hi", "intent" : "greeting", "language" : "auto", "entities" : {}, "tone" : "polite"}
+{"text" : "plat game", "intent" : "play_game", "language" : "auto", "entities" : {}, "tone" : "neutral"}
+{"text" : "food", "intent" : "order_food", "language" : "auto", "entities" : {}, "tone" : "neutral"}
+{"text" : "food ordering", "intent" : "order_food", "language" : "auto", "entities" : {}, "tone" : "neutral"}
+{"text" : "ganesh sweet mali paneer 1kg", "intent" : "order_food", "language" : "auto", "entities" : {"product": "ganesh sweet mali paneer 1kg"}, "tone" : "neutral"}
+{"text" : "hi", "intent" : "greeting", "language" : "auto", "entities" : {}, "tone" : "polite"}
+{"text" : "lets play a game", "intent" : "play_game", "language" : "auto", "entities" : {}, "tone" : "neutral"}
+{"text" : "yes", "intent" : "greeting", "language" : "auto", "entities" : {}, "tone" : "polite"}
+{"text" : "yes", "intent" : "greeting", "language" : "auto", "entities" : {}, "tone" : "polite"}
+{"text" : "i want to get a parcel", "intent" : "create_parcel_order", "language" : "auto", "entities" : {}, "tone" : "polite"}
+{"text" : "yes now", "intent" : "greeting", "language" : "auto", "entities" : {}, "tone" : "polite"}
+{"text" : "cany i place the order here", "intent" : "create_parcel_order", "language" : "auto", "entities" : {}, "tone" : "neutral"}
+{"text" : "i can login", "intent" : "account_login", "language" : "auto", "entities" : {}, "tone" : "neutral"}
+{"text" : "what my name ?", "intent" : "account_info", "language" : "auto", "entities" : {}, "tone" : "neutral"}
+{"text" : "📍 My current location is: 19.977686, 73.776263", "intent" : "share_location", "language" : "auto", "entities" : {}, "tone" : "neutral"}
+{"text" : "can i order food", "intent" : "order_food", "language" : "auto", "entities" : {}, "tone" : "polite"}
+{"text" : "get me 1kg paneer to my home from ganesh sweets", "intent" : "order_food", "language" : "auto", "entities" : {"store": "ganesh sweets", "product": "paneer", "location": "home"}, "tone" : "polite"}
+{"text" : "📍 My current location is: 19.977687, 73.776273", "intent" : "share_location", "language" : "auto", "entities" : {}, "tone" : "neutral"}
+{"text" : "yes correct place the order", "intent" : "create_parcel_order", "language" : "auto", "entities" : {}, "tone" : "polite"}
+{"text" : "thats it", "intent" : "greeting", "language" : "auto", "entities" : {}, "tone" : "polite"}
+{"text" : "whats my order number", "intent" : "track_order", "language" : "auto", "entities" : {}, "tone" : "neutral"}
+{"text" : "no playment taken", "intent" : "support_request", "language" : "auto", "entities" : {}, "tone" : "neutral"}
+{"text" : "h", "intent" : "greeting", "language" : "auto", "entities" : {}, "tone" : "polite"}
+{"text" : "parcel", "intent" : "create_parcel_order", "language" : "auto", "entities" : {}, "tone" : "neutral"}
+{"text" : "Hi", "intent" : "greeting", "language" : "auto", "entities" : {}, "tone" : "polite"}
+{"text" : "Hello", "intent" : "greeting", "language" : "auto", "entities" : {}, "tone" : "polite"}
+{"text" : "Food", "intent" : "order_food", "language" : "auto", "entities" : {}, "tone" : "neutral"}
+{"text" : "paneer", "intent" : "order_food", "language" : "auto", "entities" : {"product": "paneer"}, "tone" : "neutral"}
+{"text" : "paneer", "intent" : "search_product", "language" : "auto", "entities" : {}, "tone" : "neutral"}
+{"text" : "I want 1kg Paneer from ganesh sweets , delivered at my home", "intent" : "order_food", "language" : "auto", "entities" : {"store": "ganesh sweets", "product": "1kg Paneer", "location": "my home"}, "tone" : "polite"}
+{"text" : "I want to send a parcel", "intent" : "create_parcel_order", "language" : "auto", "entities" : {}, "tone" : "polite"}
+{"text" : "I want to send a parcel", "intent" : "create_parcel_order", "language" : "auto", "entities" : {}, "tone" : "polite"}
+{"text" : "hi! i want to order biryani", "intent" : "order_food", "language" : "auto", "entities" : {"product": "biryani"}, "tone" : "polite"}
+{"text" : "i need to send a parcel from nashik to mumbai", "intent" : "parcel_booking", "language" : "auto", "entities" : {"to_location": "mumbai", "from_location": "nashik"}, "tone" : "neutral"}
+{"text" : "i want to buy a smartphone under 15000", "intent" : "search_product", "language" : "auto", "entities" : {"budget": "15000", "product": "smartphone"}, "tone" : "neutral"}
+{"text" : "can i get 2 chicken tikka pizzas delivered?", "intent" : "order_food", "language" : "auto", "entities" : {"product": "chicken tikka pizzas"}, "tone" : "polite"}
+{"text" : "hello! what can you do?", "intent" : "greeting", "language" : "auto", "entities" : {}, "tone" : "polite"}
+{"text" : "i need to send urgent documents to my client in pune by tomorrow morning, also want to order lunch for 5 people with vegetarian options, and buy a laptop bag under 2000 rupees", "intent" : "parcel_booking", "language" : "auto", "entities" : {"date": "tomorrow morning", "urgency": "urgent", "destination": "pune"}, "tone" : "polite"}
+{"text" : "hi", "intent" : "greeting", "language" : "auto", "entities" : {}, "tone" : "polite"}
+{"text" : "whats up", "intent" : "greeting", "language" : "auto", "entities" : {}, "tone" : "polite"}
+{"text" : "what do you do", "intent" : "support_request", "language" : "auto", "entities" : {}, "tone" : "neutral"}
+{"text" : "i never said parcel?", "intent" : "create_parcel_order", "language" : "auto", "entities" : {}, "tone" : "confused"}
+{"text" : "Hi! I want to order biryani", "intent" : "order_food", "language" : "auto", "entities" : {"product": "biryani"}, "tone" : "polite"}
+{"text" : "Make it spicy", "intent" : "order_food", "language" : "auto", "entities" : {"product": "spicy food"}, "tone" : "polite"}
+{"text" : "Make it spicy", "intent" : "search_product", "language" : "auto", "entities" : {}, "tone" : "neutral"}
+{"text" : "Hi! I want to order biryani", "intent" : "order_food", "language" : "auto", "entities" : {"product": "biryani"}, "tone" : "polite"}
+{"text" : "Make it spicy", "intent" : "order_food", "language" : "auto", "entities" : {"product": "spicy food"}, "tone" : "polite"}
+{"text" : "Make it spicy", "intent" : "search_product", "language" : "auto", "entities" : {}, "tone" : "neutral"}
+{"text" : "hi", "intent" : "greeting", "language" : "auto", "entities" : {}, "tone" : "polite"}
+{"text" : "hi", "intent" : "greeting", "language" : "auto", "entities" : {}, "tone" : "polite"}
+{"text" : "Lets play game", "intent" : "play_game", "language" : "auto", "entities" : {}, "tone" : "neutral"}
+{"text" : "i said lets play game", "intent" : "play_game", "language" : "auto", "entities" : {}, "tone" : "neutral"}
+{"text" : "lets play game", "intent" : "earn", "language" : "auto", "entities" : {}, "tone" : "polite"}
+{"text" : "Hello", "intent" : "greeting", "language" : "auto", "entities" : {}, "tone" : "polite"}
+{"text" : "Lets play a game", "intent" : "earn", "language" : "auto", "entities" : {}, "tone" : "polite"}
+{"text" : "i want to earn money", "intent" : "earn", "language" : "auto", "entities" : {}, "tone" : "polite"}
+{"text" : "I want to play intent quest game", "intent" : "earn", "language" : "auto", "entities" : {}, "tone" : "polite"}
+{"text" : "I want pizza", "intent" : "order_food", "language" : "auto", "entities" : {"product": "pizza"}, "tone" : "polite"}
+{"text" : "Hi", "intent" : "greeting", "language" : "auto", "entities" : {}, "tone" : "polite"}
+{"text" : "Let me earn some points", "intent" : "earn", "language" : "auto", "entities" : {}, "tone" : "neutral"}
+{"text" : "hi", "intent" : "greeting", "language" : "auto", "entities" : {}, "tone" : "polite"}
+{"text" : "Whats up", "intent" : "greeting", "language" : "auto", "entities" : {}, "tone" : "polite"}
+{"text" : "No i didnt know", "intent" : "confirm", "language" : "auto", "entities" : {}, "tone" : "neutral"}
+{"text" : "tell me more about it", "intent" : "browse_menu", "language" : "auto", "entities" : {}, "tone" : "neutral"}
+{"text" : "hi", "intent" : "greeting", "language" : "auto", "entities" : {}, "tone" : "polite"}
+{"text" : "lets go", "intent" : "confirm", "language" : "auto", "entities" : {}, "tone" : "neutral"}
+{"text" : "can u also order food here", "intent" : "order_food", "language" : "auto", "entities" : {}, "tone" : "polite"}
+{"text" : "place order to a resurant near me to 2  butter naan sent to my home i will pay online now", "intent" : "order_food", "language" : "auto", "entities" : {"product": "2 butter naan"}, "tone" : "polite"}
+{"text" : "place order to a resurant near me to 2  butter naan sent to my home i will pay online now", "intent" : "parcel_booking", "language" : "auto", "entities" : {}, "tone" : "urgent"}
+{"text" : "📍 My current location is: 18.579456, 73.816474", "intent" : "browse_menu", "language" : "auto", "entities" : {"location": "18.579456, 73.816474"}, "tone" : "neutral"}
+{"text" : "hi", "intent" : "greeting", "language" : "auto", "entities" : {}, "tone" : "polite"}
+{"text" : "game", "intent" : "earn", "language" : "auto", "entities" : {}, "tone" : "neutral"}
+{"text" : "hi", "intent" : "greeting", "language" : "auto", "entities" : {}, "tone" : "polite"}
+{"text" : "order food", "intent" : "order_food", "language" : "auto", "entities" : {}, "tone" : "neutral"}
+{"text" : "kuch aacha , aur jaldi aajaye", "intent" : "polite", "language" : "auto", "entities" : {}, "tone" : "polite"}
+{"text" : "kuch aacha , aur jaldi aajaye", "intent" : "neutral", "language" : "auto", "entities" : {}, "tone" : "urgent"}
+{"text" : "paneer tikka", "intent" : "order_food", "language" : "auto", "entities" : {"product": "paneer tikka"}, "tone" : "neutral"}
+{"text" : "earn", "intent" : "earn", "language" : "auto", "entities" : {}, "tone" : "neutral"}
+{"text" : "earn", "intent" : "earn", "language" : "auto", "entities" : {}, "tone" : "neutral"}
+{"text" : "lets play game", "intent" : "earn", "language" : "auto", "entities" : {}, "tone" : "polite"}
+{"text" : "earn", "intent" : "earn", "language" : "auto", "entities" : {}, "tone" : "neutral"}
+{"text" : "hello", "intent" : "greeting", "language" : "auto", "entities" : {}, "tone" : "polite"}
+{"text" : "earn", "intent" : "earn", "language" : "auto", "entities" : {}, "tone" : "neutral"}
+{"text" : "Hello", "intent" : "greeting", "language" : "auto", "entities" : {}, "tone" : "polite"}
+{"text" : "Parcel", "intent" : "parcel_booking", "language" : "auto", "entities" : {}, "tone" : "neutral"}
+{"text" : "📍 My current location is: 19.960491, 73.758813", "intent" : "browse_menu", "language" : "auto", "entities" : {"location": "19.960491, 73.758813"}, "tone" : "neutral"}
+{"text" : "📍 My current location is: 19.960491, 73.758813", "intent" : "share_location", "language" : "auto", "entities" : {}, "tone" : "neutral"}
+{"text" : "Drop location you don't need", "intent" : "cancel_order", "language" : "auto", "entities" : {}, "tone" : "polite"}
+{"text" : "Hello", "intent" : "greeting", "language" : "auto", "entities" : {}, "tone" : "polite"}
+{"text" : "What can you do for me", "intent" : "browse_menu", "language" : "auto", "entities" : {}, "tone" : "neutral"}
+{"text" : "📍 My current location is: 18.572902, 73.793536", "intent" : "browse_menu", "language" : "auto", "entities" : {"location": "18.572902, 73.793536"}, "tone" : "neutral"}
+{"text" : "Do you want drop address", "intent" : "parcel_booking", "language" : "auto", "entities" : {}, "tone" : "neutral"}
+{"text" : "📍 My current location is: 19.960547, 73.758779", "intent" : "browse_menu", "language" : "auto", "entities" : {"location": "19.960547, 73.758779"}, "tone" : "neutral"}
+{"text" : "📍 My current location is: 19.960547, 73.758779", "intent" : "share_location", "language" : "auto", "entities" : {}, "tone" : "neutral"}
+{"text" : "ok", "intent" : "greeting", "language" : "auto", "entities" : {}, "tone" : "polite"}
+{"text" : "Hello", "intent" : "greeting", "language" : "auto", "entities" : {}, "tone" : "polite"}
+{"text" : "What does mangwale do", "intent" : "search_product", "language" : "auto", "entities" : {"product": "mangwale"}, "tone" : "neutral"}
+{"text" : "i am looking for mali paneer", "intent" : "order_food", "language" : "auto", "entities" : {"product": "mali paneer"}, "tone" : "neutral"}
+{"text" : "i am looking for mali paneer", "intent" : "search_product", "language" : "auto", "entities" : {"product_name": "mali paneer"}, "tone" : "neutral"}
+{"text" : "mali paneer 1 kg from ganesh sweets", "intent" : "order_food", "language" : "auto", "entities" : {"vendor": "ganesh sweets", "product": "mali paneer", "quantity": "1 kg"}, "tone" : "neutral"}
+{"text" : "Hello", "intent" : "greeting", "language" : "auto", "entities" : {}, "tone" : "polite"}
+{"text" : "lets play a game", "intent" : "earn", "language" : "auto", "entities" : {}, "tone" : "polite"}
+{"text" : "hi", "intent" : "greeting", "language" : "auto", "entities" : {}, "tone" : "polite"}
+{"text" : "hello", "intent" : "greeting", "language" : "auto", "entities" : {}, "tone" : "polite"}
+{"text" : "hello", "intent" : "greeting", "language" : "auto", "entities" : {}, "tone" : "polite"}
+{"text" : "hi", "intent" : "greeting", "language" : "auto", "entities" : {}, "tone" : "polite"}
+{"text" : "I want to play a game", "intent" : "earn", "language" : "auto", "entities" : {}, "tone" : "polite"}
+{"text" : "hello", "intent" : "greeting", "language" : "auto", "entities" : {}, "tone" : "neutral"}
+{"text" : "Hello, I want to order food", "intent" : "order_food", "language" : "auto", "entities" : {}, "tone" : "neutral"}
+{"text" : "I want to play a game", "intent" : "unknown", "language" : "auto", "entities" : {}, "tone" : "neutral"}
+{"text" : "I want to earn", "intent" : "unknown", "language" : "auto", "entities" : {}, "tone" : "neutral"}
+{"text" : "hi", "intent" : "unknown", "language" : "auto", "entities" : {}, "tone" : "neutral"}
+{"text" : "hi", "intent" : "unknown", "language" : "auto", "entities" : {}, "tone" : "neutral"}
+{"text" : "hello", "intent" : "greeting", "language" : "auto", "entities" : {}, "tone" : "polite"}
+{"text" : "I want to play a game", "intent" : "unknown", "language" : "auto", "entities" : {}, "tone" : "neutral"}
+{"text" : "earn", "intent" : "unknown", "language" : "auto", "entities" : {}, "tone" : "neutral"}
+{"text" : "game", "intent" : "unknown", "language" : "auto", "entities" : {}, "tone" : "neutral"}

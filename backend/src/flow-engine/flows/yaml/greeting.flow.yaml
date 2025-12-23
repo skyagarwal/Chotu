@@ -1,0 +1,204 @@
+# Greeting Flow - Simple example of YAML flow definition
+# This file demonstrates the compact YAML syntax for flows
+
+id: greeting_flow
+name: Greeting Flow
+description: Handle greeting intents with personalized responses
+version: "1.0.0"
+trigger: greet
+module: general
+
+# Metadata for tracking and analytics
+metadata:
+  author: system
+  category: general
+  priority: high
+  tags:
+    - greeting
+    - welcome
+    - onboarding
+
+# Define all states in the flow
+states:
+  # Initial state - check if user is authenticated
+  init:
+    type: action
+    onEnter:
+      - executor: auth
+        action: check_auth
+        params:
+          required: false
+        saveAs: authStatus
+    transitions:
+      - condition: authStatus.isAuthenticated
+        target: personalized_greeting
+      - condition: "!authStatus.isAuthenticated"
+        target: anonymous_greeting
+
+  # Personalized greeting for authenticated users
+  personalized_greeting:
+    type: action
+    onEnter:
+      - executor: auth
+        action: get_user_profile
+        saveAs: userProfile
+      - executor: llm
+        action: generate
+        params:
+          template: greeting_personalized
+          variables:
+            userName: userProfile.name
+            lastOrder: userProfile.lastOrder
+        saveAs: greetingMessage
+      - executor: response
+        action: send_message
+        params:
+          messageKey: greetingMessage
+    transitions:
+      - target: await_intent
+
+  # Anonymous greeting for non-authenticated users
+  anonymous_greeting:
+    type: action
+    onEnter:
+      - executor: response
+        action: send_message
+        params:
+          message: "नमस्ते! मंगवाले में आपका स्वागत है। मैं आपकी कैसे मदद कर सकता हूं?"
+          messageHi: "नमस्ते! मंगवाले में आपका स्वागत है। मैं आपकी कैसे मदद कर सकता हूं?"
+          messageEn: "Hello! Welcome to Mangwale. How can I help you today?"
+    transitions:
+      - target: await_intent
+
+  # Wait for user to express intent
+  await_intent:
+    type: input
+    prompt:
+      hi: "आप क्या करना चाहेंगे?"
+      en: "What would you like to do?"
+    validation:
+      type: intent
+      allowedIntents:
+        - search_product
+        - book_service
+        - track_order
+        - login
+        - help
+    transitions:
+      - condition: intent == 'search_product'
+        target: start_search_flow
+        action:
+          executor: flow
+          action: start
+          params:
+            flowId: search_flow
+      - condition: intent == 'book_service'
+        target: start_booking_flow
+        action:
+          executor: flow
+          action: start
+          params:
+            flowId: booking_flow
+      - condition: intent == 'track_order'
+        target: start_order_flow
+        action:
+          executor: flow
+          action: start
+          params:
+            flowId: order_flow
+      - condition: intent == 'login'
+        target: start_auth_flow
+        action:
+          executor: flow
+          action: start
+          params:
+            flowId: auth_flow
+      - condition: intent == 'help'
+        target: show_help
+      - condition: default
+        target: fallback
+
+  # Show help options
+  show_help:
+    type: action
+    onEnter:
+      - executor: response
+        action: send_message
+        params:
+          message: "मैं आपकी निम्न तरीकों से मदद कर सकता हूं:"
+          buttons:
+            - label: "🔍 प्रोडक्ट खोजें"
+              action: search_product
+            - label: "📦 ऑर्डर ट्रैक करें"
+              action: track_order
+            - label: "🛵 सर्विस बुक करें"
+              action: book_service
+            - label: "👤 लॉगिन करें"
+              action: login
+    transitions:
+      - target: await_intent
+
+  # Start search flow (delegate)
+  start_search_flow:
+    type: action
+    isTerminal: true
+    onEnter:
+      - executor: flow
+        action: handoff
+        params:
+          flowId: search_flow
+          preserveContext: true
+
+  # Start booking flow (delegate)
+  start_booking_flow:
+    type: action
+    isTerminal: true
+    onEnter:
+      - executor: flow
+        action: handoff
+        params:
+          flowId: booking_flow
+          preserveContext: true
+
+  # Start order flow (delegate)
+  start_order_flow:
+    type: action
+    isTerminal: true
+    onEnter:
+      - executor: flow
+        action: handoff
+        params:
+          flowId: order_flow
+          preserveContext: true
+
+  # Start auth flow (delegate)
+  start_auth_flow:
+    type: action
+    isTerminal: true
+    onEnter:
+      - executor: flow
+        action: handoff
+        params:
+          flowId: auth_flow
+          preserveContext: true
+
+  # Fallback for unrecognized intents
+  fallback:
+    type: action
+    onEnter:
+      - executor: llm
+        action: generate
+        params:
+          template: fallback_response
+          context:
+            userMessage: input.text
+        saveAs: fallbackResponse
+      - executor: response
+        action: send_message
+        params:
+          messageKey: fallbackResponse
+    transitions:
+      - target: await_intent
+
+# Initial state to start from
+initialState: init

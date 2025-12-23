@@ -1,0 +1,2170 @@
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "debian-openssl-3.0.x", "linux-musl-openssl-3.0.x"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                 Int                  @id @default(autoincrement())
+  phpUserId          Int?                 @unique @map("php_user_id")
+  phone              String               @unique @db.VarChar(50)
+  email              String?              @db.VarChar(255)
+  firstName          String?              @map("first_name") @db.VarChar(100)
+  lastName           String?              @map("last_name") @db.VarChar(100)
+  preferredLanguage  String?              @default("en") @map("preferred_language") @db.VarChar(10)
+  preferences        Json?                @default("{}")
+  interests          Json?                @default("[]")
+  totalGamesPlayed   Int                  @default(0) @map("total_games_played")
+  totalRewardsEarned Decimal              @default(0) @map("total_rewards_earned") @db.Decimal(10, 2)
+  loyaltyPoints      Int                  @default(0) @map("loyalty_points")
+  createdAt          DateTime             @default(now()) @map("created_at")
+  updatedAt          DateTime             @updatedAt @map("updated_at")
+  lastActiveAt       DateTime?            @map("last_active_at")
+  conversationMemory ConversationMemory[]
+  gameSessions       GameSession[]
+
+  @@index([phone], map: "idx_users_phone")
+  @@index([phpUserId], map: "idx_users_php_id")
+  @@map("users")
+}
+
+model Flow {
+  id             String    @id
+  name           String
+  description    String?
+  module         String    @default("general")
+  trigger        String?
+  version        String    @default("1.0.0")
+  states         Json
+  initialState   String    @map("initialState")
+  finalStates    Json      @map("finalStates")
+  contextSchema  Json?     @map("contextSchema")
+  metadata       Json?
+  enabled        Boolean   @default(true)
+  systemCritical Boolean   @default(false) @map("system_critical")
+  status         String    @default("active")
+  createdAt      DateTime  @default(now()) @map("created_at")
+  updatedAt      DateTime  @updatedAt @map("updated_at")
+  flowRuns       FlowRun[]
+
+  @@index([enabled])
+  @@index([module])
+  @@index([status])
+  @@map("flows")
+}
+
+model FlowRun {
+  id           String    @id @default(uuid())
+  flowId       String    @map("flow_id")
+  sessionId    String    @map("session_id")
+  phoneNumber  String    @map("phone_number")
+  currentState String    @map("current_state")
+  context      Json      @default("{}")
+  status       String    @default("active")
+  error        String?
+  startedAt    DateTime  @default(now()) @map("started_at")
+  completedAt  DateTime? @map("completed_at")
+  updatedAt    DateTime  @updatedAt @map("updated_at")
+  flow         Flow      @relation(fields: [flowId], references: [id], onDelete: Cascade)
+
+  @@index([sessionId])
+  @@index([phoneNumber])
+  @@index([flowId])
+  @@index([status])
+  @@map("flow_runs")
+}
+
+model LlmModelUsage {
+  id           String   @id @default(dbgenerated("(gen_random_uuid())::text"))
+  modelId      String   @map("model_id")
+  modelName    String?  @map("model_name")
+  provider     String
+  userId       String?  @map("user_id")
+  sessionId    String?  @map("session_id")
+  inputTokens  Int      @map("input_tokens")
+  outputTokens Int      @map("output_tokens")
+  totalTokens  Int      @map("total_tokens")
+  latencyMs    Int      @map("latency_ms")
+  cost         Decimal  @db.Decimal(10, 6)
+  purpose      String?
+  channel      String?
+  status       String
+  errorMessage String?  @map("error_message")
+  metadata     Json?
+  createdAt    DateTime @default(now()) @map("created_at") @db.Timestamp(6)
+
+  @@index([createdAt], map: "idx_llm_usage_created")
+  @@index([modelId], map: "idx_llm_usage_model")
+  @@index([provider], map: "idx_llm_usage_provider")
+  @@index([status], map: "idx_llm_usage_status")
+  @@index([userId], map: "idx_llm_usage_user")
+  @@map("llm_model_usage")
+}
+
+model auth_group {
+  id                     Int                      @id @default(autoincrement())
+  name                   String                   @unique @db.VarChar(150)
+  auth_group_permissions auth_group_permissions[]
+  htx_user_groups        htx_user_groups[]
+
+  @@index([name], map: "auth_group_name_a6ea08ec_like")
+}
+
+/// This model has constraints using non-default deferring rules and requires additional setup for migrations. Visit https://pris.ly/d/constraint-deferring for more info.
+model auth_group_permissions {
+  id              Int             @id @default(autoincrement())
+  group_id        Int
+  permission_id   Int
+  auth_permission auth_permission @relation(fields: [permission_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "auth_group_permissio_permission_id_84c5c92e_fk_auth_perm")
+  auth_group      auth_group      @relation(fields: [group_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "auth_group_permissions_group_id_b120cbf9_fk_auth_group_id")
+
+  @@unique([group_id, permission_id], map: "auth_group_permissions_group_id_permission_id_0cd325b0_uniq")
+  @@index([group_id], map: "auth_group_permissions_group_id_b120cbf9")
+  @@index([permission_id], map: "auth_group_permissions_permission_id_84c5c92e")
+}
+
+/// This model has constraints using non-default deferring rules and requires additional setup for migrations. Visit https://pris.ly/d/constraint-deferring for more info.
+model auth_permission {
+  id                        Int                         @id @default(autoincrement())
+  name                      String                      @db.VarChar(255)
+  content_type_id           Int
+  codename                  String                      @db.VarChar(100)
+  auth_group_permissions    auth_group_permissions[]
+  django_content_type       django_content_type         @relation(fields: [content_type_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "auth_permission_content_type_id_2f476e4b_fk_django_co")
+  htx_user_user_permissions htx_user_user_permissions[]
+
+  @@unique([content_type_id, codename], map: "auth_permission_content_type_id_codename_01ab375a_uniq")
+  @@index([content_type_id], map: "auth_permission_content_type_id_2f476e4b")
+}
+
+/// This model has constraints using non-default deferring rules and requires additional setup for migrations. Visit https://pris.ly/d/constraint-deferring for more info.
+model authtoken_token {
+  key      String   @id @db.VarChar(40)
+  created  DateTime @db.Timestamptz(6)
+  user_id  Int      @unique
+  htx_user htx_user @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "authtoken_token_user_id_35299eff_fk_htx_user_id")
+
+  @@index([key], map: "authtoken_token_key_10f0b77e_like")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model ConversationMemory {
+  id         Int       @id @default(autoincrement())
+  userId     Int       @map("user_id")
+  role       String?   @db.VarChar(10)
+  content    String
+  turnNumber Int?      @map("turn_number")
+  sessionId  String?   @map("session_id") @db.VarChar(100)
+  createdAt  DateTime? @default(now()) @map("created_at") @db.Timestamp(6)
+  user       User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([sessionId], map: "idx_conversation_memory_session")
+  @@index([userId], map: "idx_conversation_memory_user_id")
+  @@map("conversation_memory")
+}
+
+model GameSession {
+  id                    Int       @id @default(autoincrement())
+  sessionId             String    @unique @map("session_id") @db.VarChar(100)
+  userId                Int       @map("user_id")
+  gameType              String    @map("game_type") @db.VarChar(50)
+  difficulty            String?   @default("medium") @db.VarChar(20)
+  language              String?   @default("en") @db.VarChar(10)
+  missionId             String?   @map("mission_id") @db.VarChar(100)
+  missionData           Json?     @map("mission_data")
+  status                String?   @default("active") @db.VarChar(20)
+  score                 Int?      @default(0)
+  completionTimeSeconds Int?      @map("completion_time_seconds")
+  rewardsEarned         Json?     @map("rewards_earned")
+  startedAt             DateTime? @default(now()) @map("started_at")
+  completedAt           DateTime? @map("completed_at")
+  updatedAt             DateTime? @default(now()) @map("updated_at")
+  trainingSampleId      Int?      @map("training_sample_id")
+  conversationLogId     Int?      @map("conversation_log_id")
+  rewardTransactionId   String?   @map("reward_transaction_id") @db.VarChar(100)
+  rewardStatus          String    @default("pending") @map("reward_status") @db.VarChar(20)
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId], map: "idx_game_sessions_user")
+  @@index([status], map: "idx_game_sessions_status")
+  @@map("game_sessions")
+}
+
+model GamificationSettings {
+  id          Int      @id @default(autoincrement())
+  key         String   @unique @db.VarChar(100)
+  value       String
+  type        String   @db.VarChar(20)
+  description String?
+  category    String?  @db.VarChar(50)
+  updatedAt   DateTime @default(now()) @map("updated_at")
+  updatedBy   String?  @map("updated_by") @db.VarChar(100)
+
+  @@map("gamification_settings")
+}
+
+model SystemSettings {
+  id          Int      @id @default(autoincrement())
+  key         String   @unique @db.VarChar(100)
+  value       String
+  type        String   @default("string") @db.VarChar(20)
+  description String?
+  category    String?  @db.VarChar(50)
+  isSecret    Boolean  @default(false) @map("is_secret")
+  updatedAt   DateTime @default(now()) @map("updated_at")
+  updatedBy   String?  @map("updated_by") @db.VarChar(100)
+
+  @@map("system_settings")
+}
+
+model GameQuestion {
+  id              Int      @id @default(autoincrement())
+  gameType        String   @map("game_type") @db.VarChar(50)
+  questionText    String   @map("question_text")
+  questionContext String?  @map("question_context")
+  correctAnswer   String   @map("correct_answer")
+  answerOptions   Json?    @map("answer_options")
+  difficulty      String   @default("medium") @db.VarChar(20)
+  rewardAmount    Decimal? @map("reward_amount") @db.Decimal(10, 2)
+  contextRequired Boolean  @default(false) @map("context_required")
+  tags            String[]
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @default(now()) @map("updated_at")
+  enabled         Boolean  @default(true)
+  usageCount      Int      @default(0) @map("usage_count")
+  successRate     Decimal? @map("success_rate") @db.Decimal(5, 4)
+
+  @@index([gameType], map: "idx_game_questions_type")
+  @@index([enabled], map: "idx_game_questions_enabled")
+  @@map("game_questions")
+}
+
+model TrainingSample {
+  id              Int       @id @default(autoincrement())
+  userId          Int?      @map("user_id")
+  sessionId       String?   @map("session_id") @db.VarChar(100)
+  gameSessionId   String?   @map("game_session_id") @db.VarChar(100)
+  text            String
+  intent          String    @db.VarChar(100)
+  entities        Json?
+  confidence      Decimal?  @db.Decimal(5, 4)
+  language        String?   @db.VarChar(10)
+  tone            String?   @db.VarChar(50)
+  context         Json?
+  source          String    @default("game") @db.VarChar(50)
+  nluProvider     String?   @map("nlu_provider") @db.VarChar(50)
+  approved        Boolean   @default(false)
+  approvedBy      String?   @map("approved_by") @db.VarChar(100)
+  approvedAt      DateTime? @map("approved_at")
+  reviewStatus    String    @default("pending") @map("review_status") @db.VarChar(20)
+  reviewPriority  Int       @default(0) @map("review_priority")
+  usedInTraining  Boolean   @default(false) @map("used_in_training")
+  trainingBatchId String?   @map("training_batch_id") @db.VarChar(100)
+  createdAt       DateTime  @default(now()) @map("created_at")
+
+  @@index([intent], map: "idx_training_samples_intent")
+  @@index([language], map: "idx_training_samples_language")
+  @@index([approved], map: "idx_training_samples_approved")
+  @@index([reviewStatus], map: "idx_training_samples_review_status")
+  @@index([source], map: "idx_training_samples_source")
+  @@map("training_samples")
+}
+
+model ConversationLog {
+  id                       Int      @id @default(autoincrement())
+  userId                   Int?     @map("user_id")
+  sessionId                String   @map("session_id") @db.VarChar(100)
+  phoneNumber              String?  @map("phone_number") @db.VarChar(50)
+  channel                  String   @default("web") @db.VarChar(50)
+  userMessage              String   @map("user_message")
+  botResponse              String?  @map("bot_response")
+  messageType              String   @default("text") @map("message_type") @db.VarChar(20)
+  nluIntent                String?  @map("nlu_intent") @db.VarChar(100)
+  nluConfidence            Decimal? @map("nlu_confidence") @db.Decimal(5, 4)
+  nluAlternateIntents      Json?    @map("nlu_alternate_intents")
+  nluEntities              Json?    @map("nlu_entities")
+  nluLanguage              String?  @map("nlu_language") @db.VarChar(10)
+  nluTone                  String?  @map("nlu_tone") @db.VarChar(50)
+  nluProvider              String?  @map("nlu_provider") @db.VarChar(50)
+  nluProcessingTimeMs      Int?     @map("nlu_processing_time_ms")
+  routedTo                 String?  @map("routed_to") @db.VarChar(100)
+  routingReason            String?  @map("routing_reason")
+  flowId                   String?  @map("flow_id") @db.VarChar(100)
+  agentId                  String?  @map("agent_id") @db.VarChar(100)
+  responseType             String?  @map("response_type") @db.VarChar(50)
+  responseSuccess          Boolean  @default(true) @map("response_success")
+  responseTimeMs           Int?     @map("response_time_ms")
+  conversationContext      Json?    @map("conversation_context")
+  turnNumber               Int?     @map("turn_number")
+  isTrainingCandidate      Boolean  @default(false) @map("is_training_candidate")
+  trainingConfidenceBucket String?  @map("training_confidence_bucket") @db.VarChar(20)
+  createdAt                DateTime @default(now()) @map("created_at")
+
+  @@index([sessionId], map: "idx_conversation_logs_session")
+  @@index([userId], map: "idx_conversation_logs_user")
+  @@index([nluIntent], map: "idx_conversation_logs_intent")
+  @@index([isTrainingCandidate], map: "idx_conversation_logs_training")
+  @@index([createdAt(sort: Desc)], map: "idx_conversation_logs_created")
+  @@map("conversation_logs")
+}
+
+model Model {
+  id              String   @id @default(uuid())
+  name            String   @db.VarChar(255)
+  provider        String   @db.VarChar(100)
+  providerModelId String   @map("provider_model_id") @db.VarChar(255)
+  modelType       String   @map("model_type") @db.VarChar(50)
+  endpoint        String?  @db.VarChar(512)
+  apiKey          String?  @map("api_key")
+  deploymentName  String?  @map("deployment_name") @db.VarChar(255)
+  config          Json?    @default("{}")
+  capabilities    String[] @default([])
+  maxTokens       Int?     @map("max_tokens")
+  costPerToken    Decimal? @map("cost_per_token") @db.Decimal(10, 8)
+  status          String   @default("active") @db.VarChar(50)
+  isLocal         Boolean  @default(false) @map("is_local")
+  metadata        Json?    @default("{}")
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt @map("updated_at")
+
+  @@index([provider], map: "idx_models_provider")
+  @@index([modelType], map: "idx_models_type")
+  @@index([status], map: "idx_models_status")
+  @@map("models")
+}
+
+/// This model has constraints using non-default deferring rules and requires additional setup for migrations. Visit https://pris.ly/d/constraint-deferring for more info.
+model core_asyncmigrationstatus {
+  id         Int      @id @default(autoincrement())
+  meta       Json?
+  name       String
+  status     String?  @db.VarChar(100)
+  created_at DateTime @db.Timestamptz(6)
+  updated_at DateTime @db.Timestamptz(6)
+  project_id Int?
+  project    project? @relation(fields: [project_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "core_asyncmigrationstatus_project_id_c78fbf75_fk_project_id")
+
+  @@index([project_id], map: "core_asyncmigrationstatus_project_id_c78fbf75")
+}
+
+model core_deletedrow {
+  id              Int      @id @default(autoincrement())
+  model           String   @db.VarChar(1024)
+  row_id          Int?
+  data            Json?
+  reason          String?
+  created_at      DateTime @db.Timestamptz(6)
+  updated_at      DateTime @db.Timestamptz(6)
+  organization_id Int?
+  project_id      Int?
+  user_id         Int?
+}
+
+/// This model has constraints using non-default deferring rules and requires additional setup for migrations. Visit https://pris.ly/d/constraint-deferring for more info.
+model data_export_convertedformat {
+  id                 Int                @id @default(autoincrement())
+  file               String?            @db.VarChar(100)
+  status             String             @db.VarChar(64)
+  export_type        String             @db.VarChar(64)
+  export_id          Int
+  created_at         DateTime?          @db.Timestamptz(6)
+  created_by_id      Int?
+  finished_at        DateTime?          @db.Timestamptz(6)
+  organization_id    Int?
+  project_id         Int?
+  updated_at         DateTime?          @db.Timestamptz(6)
+  traceback          String?
+  htx_user           htx_user?          @relation(fields: [created_by_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "data_export_converte_created_by_id_a765f2cd_fk_htx_user_")
+  data_export_export data_export_export @relation(fields: [export_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "data_export_converte_export_id_3305f028_fk_data_expo")
+  organization       organization?      @relation(fields: [organization_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "data_export_converte_organization_id_d0e9d7c8_fk_organizat")
+  project            project?           @relation(fields: [project_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "data_export_convertedformat_project_id_3cda1a1c_fk_project_id")
+
+  @@index([created_by_id], map: "data_export_convertedformat_created_by_id_a765f2cd")
+  @@index([export_id], map: "data_export_convertedformat_export_id_3305f028")
+  @@index([organization_id], map: "data_export_convertedformat_organization_id_d0e9d7c8")
+  @@index([project_id], map: "data_export_convertedformat_project_id_3cda1a1c")
+}
+
+/// This model has constraints using non-default deferring rules and requires additional setup for migrations. Visit https://pris.ly/d/constraint-deferring for more info.
+model data_export_export {
+  id                          Int                           @id @default(autoincrement())
+  created_at                  DateTime                      @db.Timestamptz(6)
+  file                        String?                       @db.VarChar(100)
+  md5                         String                        @db.VarChar(128)
+  finished_at                 DateTime?                     @db.Timestamptz(6)
+  status                      String                        @db.VarChar(64)
+  counters                    Json
+  created_by_id               Int?
+  project_id                  Int
+  title                       String                        @db.VarChar(2048)
+  data_export_convertedformat data_export_convertedformat[]
+  htx_user                    htx_user?                     @relation(fields: [created_by_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "data_export_export_created_by_id_ae0b7af3_fk_htx_user_id")
+  project                     project                       @relation(fields: [project_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "data_export_export_project_id_dc05487f_fk_project_id")
+
+  @@index([created_by_id], map: "data_export_export_created_by_id_ae0b7af3")
+  @@index([project_id], map: "data_export_export_project_id_dc05487f")
+}
+
+/// This model has constraints using non-default deferring rules and requires additional setup for migrations. Visit https://pris.ly/d/constraint-deferring for more info.
+model data_import_fileupload {
+  id         Int      @id @default(autoincrement())
+  file       String   @db.VarChar(100)
+  project_id Int
+  user_id    Int
+  project    project  @relation(fields: [project_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "data_import_fileupload_project_id_1f511810_fk_project_id")
+  htx_user   htx_user @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "data_import_fileupload_user_id_a3e1f065_fk_htx_user_id")
+  task       task[]
+
+  @@index([project_id], map: "data_import_fileupload_project_id_1f511810")
+  @@index([user_id], map: "data_import_fileupload_user_id_a3e1f065")
+}
+
+/// This model has constraints using non-default deferring rules and requires additional setup for migrations. Visit https://pris.ly/d/constraint-deferring for more info.
+model data_manager_filter {
+  id                               Int                                @id @default(autoincrement())
+  column                           String                             @db.VarChar(1024)
+  type                             String                             @db.VarChar(1024)
+  operator                         String                             @db.VarChar(1024)
+  value                            Json?
+  index                            Int?
+  parent_id                        Int?
+  data_manager_filter              data_manager_filter?               @relation("data_manager_filterTodata_manager_filter", fields: [parent_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "data_manager_filter_parent_id_b5dd2a37_fk_data_mana")
+  other_data_manager_filter        data_manager_filter[]              @relation("data_manager_filterTodata_manager_filter")
+  data_manager_filtergroup_filters data_manager_filtergroup_filters[]
+
+  @@index([parent_id], map: "data_manager_filter_parent_id_b5dd2a37")
+}
+
+model data_manager_filtergroup {
+  id                               Int                                @id @default(autoincrement())
+  conjunction                      String                             @db.VarChar(1024)
+  data_manager_filtergroup_filters data_manager_filtergroup_filters[]
+  data_manager_view                data_manager_view[]
+}
+
+/// This model has constraints using non-default deferring rules and requires additional setup for migrations. Visit https://pris.ly/d/constraint-deferring for more info.
+model data_manager_filtergroup_filters {
+  id                       Int                      @id @default(autoincrement())
+  filtergroup_id           Int
+  filter_id                Int
+  data_manager_filter      data_manager_filter      @relation(fields: [filter_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "data_manager_filterg_filter_id_954bc394_fk_data_mana")
+  data_manager_filtergroup data_manager_filtergroup @relation(fields: [filtergroup_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "data_manager_filterg_filtergroup_id_85d9bb16_fk_data_mana")
+
+  @@unique([filtergroup_id, filter_id], map: "data_manager_filtergroup_filtergroup_id_filter_id_196c3e22_uniq")
+  @@index([filter_id], map: "data_manager_filtergroup_filters_filter_id_954bc394")
+  @@index([filtergroup_id], map: "data_manager_filtergroup_filters_filtergroup_id_85d9bb16")
+}
+
+/// This model has constraints using non-default deferring rules and requires additional setup for migrations. Visit https://pris.ly/d/constraint-deferring for more info.
+model data_manager_view {
+  id                       Int                       @id @default(autoincrement())
+  data                     Json?
+  project_id               Int
+  ordering                 Json?
+  filter_group_id          Int?
+  selected_items           Json?
+  user_id                  Int?
+  order                    Int?
+  data_manager_filtergroup data_manager_filtergroup? @relation(fields: [filter_group_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "data_manager_view_filter_group_id_39a9ec2b_fk_data_mana")
+  project                  project                   @relation(fields: [project_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "data_manager_view_project_id_59f5a002_fk_project_id")
+  htx_user                 htx_user?                 @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "data_manager_view_user_id_e71e14cd_fk_htx_user_id")
+
+  @@index([project_id, order], map: "data_manage_project_69b96e_idx")
+  @@index([filter_group_id], map: "data_manager_view_filter_group_id_39a9ec2b")
+  @@index([project_id], map: "data_manager_view_project_id_59f5a002")
+  @@index([user_id], map: "data_manager_view_user_id_e71e14cd")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+/// This model has constraints using non-default deferring rules and requires additional setup for migrations. Visit https://pris.ly/d/constraint-deferring for more info.
+model django_admin_log {
+  id                  Int                  @id @default(autoincrement())
+  action_time         DateTime             @db.Timestamptz(6)
+  object_id           String?
+  object_repr         String               @db.VarChar(200)
+  action_flag         Int                  @db.SmallInt
+  change_message      String
+  content_type_id     Int?
+  user_id             Int
+  django_content_type django_content_type? @relation(fields: [content_type_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "django_admin_log_content_type_id_c4bce8eb_fk_django_co")
+  htx_user            htx_user             @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "django_admin_log_user_id_c564eba6_fk_htx_user_id")
+
+  @@index([content_type_id], map: "django_admin_log_content_type_id_c4bce8eb")
+  @@index([user_id], map: "django_admin_log_user_id_c564eba6")
+}
+
+model django_content_type {
+  id               Int                @id @default(autoincrement())
+  app_label        String             @db.VarChar(100)
+  model            String             @db.VarChar(100)
+  auth_permission  auth_permission[]
+  django_admin_log django_admin_log[]
+
+  @@unique([app_label, model], map: "django_content_type_app_label_model_76bd3d3b_uniq")
+}
+
+model django_migrations {
+  id      Int      @id @default(autoincrement())
+  app     String   @db.VarChar(255)
+  name    String   @db.VarChar(255)
+  applied DateTime @db.Timestamptz(6)
+}
+
+model django_session {
+  session_key  String   @id @db.VarChar(40)
+  session_data String
+  expire_date  DateTime @db.Timestamptz(6)
+
+  @@index([expire_date], map: "django_session_expire_date_a5c62663")
+  @@index([session_key], map: "django_session_session_key_c0390e0f_like")
+}
+
+/// This model has constraints using non-default deferring rules and requires additional setup for migrations. Visit https://pris.ly/d/constraint-deferring for more info.
+model htx_user {
+  id                                                                 Int                                          @id @default(autoincrement())
+  password                                                           String                                       @db.VarChar(128)
+  last_login                                                         DateTime?                                    @db.Timestamptz(6)
+  is_superuser                                                       Boolean
+  username                                                           String                                       @db.VarChar(256)
+  email                                                              String                                       @unique @db.VarChar(254)
+  first_name                                                         String                                       @db.VarChar(256)
+  last_name                                                          String                                       @db.VarChar(256)
+  is_staff                                                           Boolean
+  is_active                                                          Boolean
+  date_joined                                                        DateTime                                     @db.Timestamptz(6)
+  last_activity                                                      DateTime                                     @db.Timestamptz(6)
+  activity_at                                                        DateTime                                     @db.Timestamptz(6)
+  phone                                                              String                                       @db.VarChar(256)
+  avatar                                                             String                                       @db.VarChar(100)
+  active_organization_id                                             Int?
+  allow_newsletters                                                  Boolean?
+  custom_hotkeys                                                     Json?
+  authtoken_token                                                    authtoken_token?
+  data_export_convertedformat                                        data_export_convertedformat[]
+  data_export_export                                                 data_export_export[]
+  data_import_fileupload                                             data_import_fileupload[]
+  data_manager_view                                                  data_manager_view[]
+  django_admin_log                                                   django_admin_log[]
+  organization_htx_user_active_organization_idToorganization         organization?                                @relation("htx_user_active_organization_idToorganization", fields: [active_organization_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "htx_user_active_organization_id_2e1bb565_fk_organization_id")
+  htx_user_groups                                                    htx_user_groups[]
+  htx_user_user_permissions                                          htx_user_user_permissions[]
+  labels_manager_label_labels_manager_label_approved_by_idTohtx_user labels_manager_label[]                       @relation("labels_manager_label_approved_by_idTohtx_user")
+  labels_manager_label_labels_manager_label_created_by_idTohtx_user  labels_manager_label[]                       @relation("labels_manager_label_created_by_idTohtx_user")
+  ml_model_providers_modelproviderconnection                         ml_model_providers_modelproviderconnection[]
+  ml_models_modelinterface                                           ml_models_modelinterface[]
+  ml_models_modelrun                                                 ml_models_modelrun[]
+  ml_models_thirdpartymodelversion                                   ml_models_thirdpartymodelversion[]
+  organization_organization_created_by_idTohtx_user                  organization?                                @relation("organization_created_by_idTohtx_user")
+  organizations_organizationmember                                   organizations_organizationmember[]
+  project                                                            project[]
+  projects_labelstreamhistory                                        projects_labelstreamhistory[]
+  projects_projectmember                                             projects_projectmember[]
+  task                                                               task[]
+  task_comment_authors                                               task_comment_authors[]
+  task_completion_task_completion_completed_by_idTohtx_user          task_completion[]                            @relation("task_completion_completed_by_idTohtx_user")
+  task_completion_task_completion_last_created_by_idTohtx_user       task_completion[]                            @relation("task_completion_last_created_by_idTohtx_user")
+  task_completion_task_completion_updated_by_idTohtx_user            task_completion[]                            @relation("task_completion_updated_by_idTohtx_user")
+  tasks_annotationdraft                                              tasks_annotationdraft[]
+  tasks_tasklock                                                     tasks_tasklock[]
+  token_blacklist_outstandingtoken                                   token_blacklist_outstandingtoken[]
+  users_userproducttour                                              users_userproducttour[]
+
+  @@index([active_organization_id], map: "htx_user_active_organization_id_2e1bb565")
+  @@index([date_joined], map: "htx_user_date_jo_3bd95e_idx")
+  @@index([email], map: "htx_user_email_051c68_idx")
+  @@index([email], map: "htx_user_email_9375607c_like")
+  @@index([first_name], map: "htx_user_first_n_93c5de_idx")
+  @@index([last_name], map: "htx_user_last_na_2ace53_idx")
+  @@index([username], map: "htx_user_usernam_a41619_idx")
+}
+
+/// This model has constraints using non-default deferring rules and requires additional setup for migrations. Visit https://pris.ly/d/constraint-deferring for more info.
+model htx_user_groups {
+  id         Int        @id @default(autoincrement())
+  user_id    Int
+  group_id   Int
+  auth_group auth_group @relation(fields: [group_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "htx_user_groups_group_id_d0fee99a_fk_auth_group_id")
+  htx_user   htx_user   @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "htx_user_groups_user_id_620c9163_fk_htx_user_id")
+
+  @@unique([user_id, group_id], map: "htx_user_groups_user_id_group_id_34da071d_uniq")
+  @@index([group_id], map: "htx_user_groups_group_id_d0fee99a")
+  @@index([user_id], map: "htx_user_groups_user_id_620c9163")
+}
+
+/// This model has constraints using non-default deferring rules and requires additional setup for migrations. Visit https://pris.ly/d/constraint-deferring for more info.
+model htx_user_user_permissions {
+  id              Int             @id @default(autoincrement())
+  user_id         Int
+  permission_id   Int
+  auth_permission auth_permission @relation(fields: [permission_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "htx_user_user_permis_permission_id_edaf5db1_fk_auth_perm")
+  htx_user        htx_user        @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "htx_user_user_permissions_user_id_a71f59ac_fk_htx_user_id")
+
+  @@unique([user_id, permission_id], map: "htx_user_user_permissions_user_id_permission_id_12eb87f0_uniq")
+  @@index([permission_id], map: "htx_user_user_permissions_permission_id_edaf5db1")
+  @@index([user_id], map: "htx_user_user_permissions_user_id_a71f59ac")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+/// This model has constraints using non-default deferring rules and requires additional setup for migrations. Visit https://pris.ly/d/constraint-deferring for more info.
+model io_storages_azureblobexportstorage {
+  azureblobstoragemixin_ptr_id           Int                                      @id
+  title                                  String?                                  @db.VarChar(256)
+  description                            String?
+  created_at                             DateTime                                 @db.Timestamptz(6)
+  project_id                             Int
+  last_sync                              DateTime?                                @db.Timestamptz(6)
+  last_sync_count                        Int?
+  can_delete_objects                     Boolean?
+  last_sync_job                          String?                                  @db.VarChar(256)
+  meta                                   Json?
+  status                                 String                                   @db.VarChar(64)
+  traceback                              String?
+  synchronizable                         Boolean
+  io_storages_azureblobstoragemixin      io_storages_azureblobstoragemixin        @relation(fields: [azureblobstoragemixin_ptr_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "io_storages_azureblo_azureblobstoragemixi_54a8d52d_fk_io_storag")
+  project                                project                                  @relation(fields: [project_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "io_storages_azureblo_project_id_43222df5_fk_project_i")
+  io_storages_azureblobexportstoragelink io_storages_azureblobexportstoragelink[]
+
+  @@index([project_id], map: "io_storages_azureblobexportstorage_project_id_43222df5")
+}
+
+/// This model has constraints using non-default deferring rules and requires additional setup for migrations. Visit https://pris.ly/d/constraint-deferring for more info.
+model io_storages_azureblobexportstoragelink {
+  id                                 Int                                @id @default(autoincrement())
+  object_exists                      Boolean
+  created_at                         DateTime                           @db.Timestamptz(6)
+  annotation_id                      Int                                @unique
+  storage_id                         Int
+  updated_at                         DateTime                           @db.Timestamptz(6)
+  task_completion                    task_completion                    @relation(fields: [annotation_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "io_storages_azureblo_annotation_id_6cc15c83_fk_task_comp")
+  io_storages_azureblobexportstorage io_storages_azureblobexportstorage @relation(fields: [storage_id], references: [azureblobstoragemixin_ptr_id], onDelete: NoAction, onUpdate: NoAction, map: "io_storages_azureblo_storage_id_1b260b1e_fk_io_storag")
+
+  @@index([annotation_id], map: "io_storages_azureblobexportstoragelink_annotation_id_6cc15c83")
+  @@index([storage_id], map: "io_storages_azureblobexportstoragelink_storage_id_1b260b1e")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+/// This model has constraints using non-default deferring rules and requires additional setup for migrations. Visit https://pris.ly/d/constraint-deferring for more info.
+model io_storages_azureblobimportstorage {
+  azureblobstoragemixin_ptr_id           Int                                      @id
+  title                                  String?                                  @db.VarChar(256)
+  description                            String?
+  created_at                             DateTime                                 @db.Timestamptz(6)
+  presign                                Boolean
+  presign_ttl                            Int                                      @db.SmallInt
+  project_id                             Int
+  last_sync                              DateTime?                                @db.Timestamptz(6)
+  last_sync_count                        Int?
+  last_sync_job                          String?                                  @db.VarChar(256)
+  meta                                   Json?
+  status                                 String                                   @db.VarChar(64)
+  traceback                              String?
+  synchronizable                         Boolean
+  recursive_scan                         Boolean?                                 @default(false)
+  io_storages_azureblobstoragemixin      io_storages_azureblobstoragemixin        @relation(fields: [azureblobstoragemixin_ptr_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "io_storages_azureblo_azureblobstoragemixi_e6234dd9_fk_io_storag")
+  project                                project                                  @relation(fields: [project_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "io_storages_azureblo_project_id_67a67313_fk_project_i")
+  io_storages_azureblobimportstoragelink io_storages_azureblobimportstoragelink[]
+
+  @@index([project_id], map: "io_storages_azureblobimportstorage_project_id_67a67313")
+}
+
+/// This model has constraints using non-default deferring rules and requires additional setup for migrations. Visit https://pris.ly/d/constraint-deferring for more info.
+model io_storages_azureblobimportstoragelink {
+  id                                 Int                                @id @default(autoincrement())
+  key                                String
+  object_exists                      Boolean
+  created_at                         DateTime                           @db.Timestamptz(6)
+  task_id                            Int                                @unique
+  storage_id                         Int
+  row_group                          Int?
+  row_index                          Int?
+  io_storages_azureblobimportstorage io_storages_azureblobimportstorage @relation(fields: [storage_id], references: [azureblobstoragemixin_ptr_id], onDelete: NoAction, onUpdate: NoAction, map: "io_storages_azureblo_storage_id_a08c3173_fk_io_storag")
+  task                               task                               @relation(fields: [task_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "io_storages_azureblob_task_id_26c31809_fk_task_id")
+
+  @@index([storage_id], map: "io_storages_azureblobimportstoragelink_storage_id_a08c3173")
+}
+
+model io_storages_azureblobstoragemixin {
+  id                                 Int                                 @id @default(autoincrement())
+  container                          String?
+  prefix                             String?
+  regex_filter                       String?
+  use_blob_urls                      Boolean
+  account_name                       String?
+  account_key                        String?
+  io_storages_azureblobexportstorage io_storages_azureblobexportstorage?
+  io_storages_azureblobimportstorage io_storages_azureblobimportstorage?
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+/// This model has constraints using non-default deferring rules and requires additional setup for migrations. Visit https://pris.ly/d/constraint-deferring for more info.
+model io_storages_gcsexportstorage {
+  gcsstoragemixin_ptr_id           Int                                @id
+  title                            String?                            @db.VarChar(256)
+  description                      String?
+  created_at                       DateTime                           @db.Timestamptz(6)
+  project_id                       Int
+  last_sync                        DateTime?                          @db.Timestamptz(6)
+  last_sync_count                  Int?
+  can_delete_objects               Boolean?
+  last_sync_job                    String?                            @db.VarChar(256)
+  meta                             Json?
+  status                           String                             @db.VarChar(64)
+  traceback                        String?
+  synchronizable                   Boolean
+  io_storages_gcsstoragemixin      io_storages_gcsstoragemixin        @relation(fields: [gcsstoragemixin_ptr_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "io_storages_gcsexpor_gcsstoragemixin_ptr__007e6803_fk_io_storag")
+  project                          project                            @relation(fields: [project_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "io_storages_gcsexportstorage_project_id_c3141a14_fk_project_id")
+  io_storages_gcsexportstoragelink io_storages_gcsexportstoragelink[]
+
+  @@index([project_id], map: "io_storages_gcsexportstorage_project_id_c3141a14")
+}
+
+/// This model has constraints using non-default deferring rules and requires additional setup for migrations. Visit https://pris.ly/d/constraint-deferring for more info.
+model io_storages_gcsexportstoragelink {
+  id                           Int                          @id @default(autoincrement())
+  object_exists                Boolean
+  created_at                   DateTime                     @db.Timestamptz(6)
+  annotation_id                Int                          @unique
+  storage_id                   Int
+  updated_at                   DateTime                     @db.Timestamptz(6)
+  task_completion              task_completion              @relation(fields: [annotation_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "io_storages_gcsexpor_annotation_id_2df715a6_fk_task_comp")
+  io_storages_gcsexportstorage io_storages_gcsexportstorage @relation(fields: [storage_id], references: [gcsstoragemixin_ptr_id], onDelete: NoAction, onUpdate: NoAction, map: "io_storages_gcsexpor_storage_id_e940a32d_fk_io_storag")
+
+  @@index([annotation_id], map: "io_storages_gcsexportstoragelink_annotation_id_2df715a6")
+  @@index([storage_id], map: "io_storages_gcsexportstoragelink_storage_id_e940a32d")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+/// This model has constraints using non-default deferring rules and requires additional setup for migrations. Visit https://pris.ly/d/constraint-deferring for more info.
+model io_storages_gcsimportstorage {
+  gcsstoragemixin_ptr_id           Int                                @id
+  title                            String?                            @db.VarChar(256)
+  description                      String?
+  created_at                       DateTime                           @db.Timestamptz(6)
+  presign                          Boolean
+  presign_ttl                      Int                                @db.SmallInt
+  project_id                       Int
+  last_sync                        DateTime?                          @db.Timestamptz(6)
+  last_sync_count                  Int?
+  last_sync_job                    String?                            @db.VarChar(256)
+  meta                             Json?
+  status                           String                             @db.VarChar(64)
+  traceback                        String?
+  synchronizable                   Boolean
+  recursive_scan                   Boolean?                           @default(false)
+  io_storages_gcsstoragemixin      io_storages_gcsstoragemixin        @relation(fields: [gcsstoragemixin_ptr_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "io_storages_gcsimpor_gcsstoragemixin_ptr__10604ed3_fk_io_storag")
+  project                          project                            @relation(fields: [project_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "io_storages_gcsimportstorage_project_id_dfb68296_fk_project_id")
+  io_storages_gcsimportstoragelink io_storages_gcsimportstoragelink[]
+
+  @@index([project_id], map: "io_storages_gcsimportstorage_project_id_dfb68296")
+}
+
+/// This model has constraints using non-default deferring rules and requires additional setup for migrations. Visit https://pris.ly/d/constraint-deferring for more info.
+model io_storages_gcsimportstoragelink {
+  id                           Int                          @id @default(autoincrement())
+  key                          String
+  object_exists                Boolean
+  created_at                   DateTime                     @db.Timestamptz(6)
+  task_id                      Int                          @unique
+  storage_id                   Int
+  row_group                    Int?
+  row_index                    Int?
+  io_storages_gcsimportstorage io_storages_gcsimportstorage @relation(fields: [storage_id], references: [gcsstoragemixin_ptr_id], onDelete: NoAction, onUpdate: NoAction, map: "io_storages_gcsimpor_storage_id_f3037a96_fk_io_storag")
+  task                         task                         @relation(fields: [task_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "io_storages_gcsimportstoragelink_task_id_3bedcb9b_fk_task_id")
+
+  @@index([storage_id], map: "io_storages_gcsimportstoragelink_storage_id_f3037a96")
+}
+
+model io_storages_gcsstoragemixin {
+  id                             Int                           @id @default(autoincrement())
+  bucket                         String?
+  prefix                         String?
+  regex_filter                   String?
+  use_blob_urls                  Boolean
+  google_application_credentials String?
+  google_project_id              String?                       @db.VarChar(255)
+  io_storages_gcsexportstorage   io_storages_gcsexportstorage?
+  io_storages_gcsimportstorage   io_storages_gcsimportstorage?
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+/// This model has constraints using non-default deferring rules and requires additional setup for migrations. Visit https://pris.ly/d/constraint-deferring for more info.
+model io_storages_localfilesexportstorage {
+  localfilesmixin_ptr_id                  Int                                       @id
+  title                                   String?                                   @db.VarChar(256)
+  description                             String?
+  created_at                              DateTime                                  @db.Timestamptz(6)
+  last_sync                               DateTime?                                 @db.Timestamptz(6)
+  last_sync_count                         Int?
+  project_id                              Int
+  can_delete_objects                      Boolean?
+  last_sync_job                           String?                                   @db.VarChar(256)
+  meta                                    Json?
+  status                                  String                                    @db.VarChar(64)
+  traceback                               String?
+  synchronizable                          Boolean
+  io_storages_localfilesmixin             io_storages_localfilesmixin               @relation(fields: [localfilesmixin_ptr_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "io_storages_localfil_localfilesmixin_ptr__f0b19499_fk_io_storag")
+  project                                 project                                   @relation(fields: [project_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "io_storages_localfil_project_id_35dd9dc7_fk_project_i")
+  io_storages_localfilesexportstoragelink io_storages_localfilesexportstoragelink[]
+
+  @@index([project_id], map: "io_storages_localfilesexportstorage_project_id_35dd9dc7")
+}
+
+/// This model has constraints using non-default deferring rules and requires additional setup for migrations. Visit https://pris.ly/d/constraint-deferring for more info.
+model io_storages_localfilesexportstoragelink {
+  id                                  Int                                 @id @default(autoincrement())
+  object_exists                       Boolean
+  created_at                          DateTime                            @db.Timestamptz(6)
+  annotation_id                       Int                                 @unique
+  storage_id                          Int
+  updated_at                          DateTime                            @db.Timestamptz(6)
+  task_completion                     task_completion                     @relation(fields: [annotation_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "io_storages_localfil_annotation_id_fc4f9825_fk_task_comp")
+  io_storages_localfilesexportstorage io_storages_localfilesexportstorage @relation(fields: [storage_id], references: [localfilesmixin_ptr_id], onDelete: NoAction, onUpdate: NoAction, map: "io_storages_localfil_storage_id_87392e7a_fk_io_storag")
+
+  @@index([annotation_id], map: "io_storages_localfilesexportstoragelink_annotation_id_fc4f9825")
+  @@index([storage_id], map: "io_storages_localfilesexportstoragelink_storage_id_87392e7a")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+/// This model has constraints using non-default deferring rules and requires additional setup for migrations. Visit https://pris.ly/d/constraint-deferring for more info.
+model io_storages_localfilesimportstorage {
+  localfilesmixin_ptr_id                  Int                                       @id
+  title                                   String?                                   @db.VarChar(256)
+  description                             String?
+  created_at                              DateTime                                  @db.Timestamptz(6)
+  last_sync                               DateTime?                                 @db.Timestamptz(6)
+  last_sync_count                         Int?
+  project_id                              Int
+  last_sync_job                           String?                                   @db.VarChar(256)
+  meta                                    Json?
+  status                                  String                                    @db.VarChar(64)
+  traceback                               String?
+  synchronizable                          Boolean
+  recursive_scan                          Boolean?                                  @default(false)
+  io_storages_localfilesmixin             io_storages_localfilesmixin               @relation(fields: [localfilesmixin_ptr_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "io_storages_localfil_localfilesmixin_ptr__fb0a0be4_fk_io_storag")
+  project                                 project                                   @relation(fields: [project_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "io_storages_localfil_project_id_9ae1d2c5_fk_project_i")
+  io_storages_localfilesimportstoragelink io_storages_localfilesimportstoragelink[]
+
+  @@index([project_id], map: "io_storages_localfilesimportstorage_project_id_9ae1d2c5")
+}
+
+/// This model has constraints using non-default deferring rules and requires additional setup for migrations. Visit https://pris.ly/d/constraint-deferring for more info.
+model io_storages_localfilesimportstoragelink {
+  id                                  Int                                 @id @default(autoincrement())
+  key                                 String
+  object_exists                       Boolean
+  created_at                          DateTime                            @db.Timestamptz(6)
+  task_id                             Int                                 @unique
+  storage_id                          Int
+  row_group                           Int?
+  row_index                           Int?
+  task                                task                                @relation(fields: [task_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "io_storages_localblob_task_id_d0e8315f_fk_task_id")
+  io_storages_localfilesimportstorage io_storages_localfilesimportstorage @relation(fields: [storage_id], references: [localfilesmixin_ptr_id], onDelete: NoAction, onUpdate: NoAction, map: "io_storages_localfil_storage_id_59a5663c_fk_io_storag")
+
+  @@index([storage_id], map: "io_storages_localfilesimportstoragelink_storage_id_59a5663c")
+}
+
+model io_storages_localfilesmixin {
+  id                                  Int                                  @id @default(autoincrement())
+  path                                String?
+  regex_filter                        String?
+  use_blob_urls                       Boolean
+  io_storages_localfilesexportstorage io_storages_localfilesexportstorage?
+  io_storages_localfilesimportstorage io_storages_localfilesimportstorage?
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+/// This model has constraints using non-default deferring rules and requires additional setup for migrations. Visit https://pris.ly/d/constraint-deferring for more info.
+model io_storages_redisexportstorage {
+  redisstoragemixin_ptr_id           Int                                  @id
+  title                              String?                              @db.VarChar(256)
+  description                        String?
+  created_at                         DateTime                             @db.Timestamptz(6)
+  db                                 Int                                  @db.SmallInt
+  project_id                         Int
+  last_sync                          DateTime?                            @db.Timestamptz(6)
+  last_sync_count                    Int?
+  can_delete_objects                 Boolean?
+  last_sync_job                      String?                              @db.VarChar(256)
+  meta                               Json?
+  status                             String                               @db.VarChar(64)
+  traceback                          String?
+  synchronizable                     Boolean
+  project                            project                              @relation(fields: [project_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "io_storages_redisexp_project_id_12a2546c_fk_project_i")
+  io_storages_redisstoragemixin      io_storages_redisstoragemixin        @relation(fields: [redisstoragemixin_ptr_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "io_storages_redisexp_redisstoragemixin_pt_d1c2d337_fk_io_storag")
+  io_storages_redisexportstoragelink io_storages_redisexportstoragelink[]
+
+  @@index([project_id], map: "io_storages_redisexportstorage_project_id_12a2546c")
+}
+
+/// This model has constraints using non-default deferring rules and requires additional setup for migrations. Visit https://pris.ly/d/constraint-deferring for more info.
+model io_storages_redisexportstoragelink {
+  id                             Int                            @id @default(autoincrement())
+  object_exists                  Boolean
+  created_at                     DateTime                       @db.Timestamptz(6)
+  annotation_id                  Int                            @unique
+  storage_id                     Int
+  updated_at                     DateTime                       @db.Timestamptz(6)
+  task_completion                task_completion                @relation(fields: [annotation_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "io_storages_redisexp_annotation_id_8547e508_fk_task_comp")
+  io_storages_redisexportstorage io_storages_redisexportstorage @relation(fields: [storage_id], references: [redisstoragemixin_ptr_id], onDelete: NoAction, onUpdate: NoAction, map: "io_storages_redisexp_storage_id_807898d8_fk_io_storag")
+
+  @@index([annotation_id], map: "io_storages_redisexportstoragelink_annotation_id_8547e508")
+  @@index([storage_id], map: "io_storages_redisexportstoragelink_storage_id_807898d8")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+/// This model has constraints using non-default deferring rules and requires additional setup for migrations. Visit https://pris.ly/d/constraint-deferring for more info.
+model io_storages_redisimportstorage {
+  redisstoragemixin_ptr_id           Int                                  @id
+  title                              String?                              @db.VarChar(256)
+  description                        String?
+  created_at                         DateTime                             @db.Timestamptz(6)
+  db                                 Int                                  @db.SmallInt
+  project_id                         Int
+  last_sync                          DateTime?                            @db.Timestamptz(6)
+  last_sync_count                    Int?
+  last_sync_job                      String?                              @db.VarChar(256)
+  meta                               Json?
+  status                             String                               @db.VarChar(64)
+  traceback                          String?
+  synchronizable                     Boolean
+  project                            project                              @relation(fields: [project_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "io_storages_redisimp_project_id_c7b9adc0_fk_project_i")
+  io_storages_redisstoragemixin      io_storages_redisstoragemixin        @relation(fields: [redisstoragemixin_ptr_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "io_storages_redisimp_redisstoragemixin_pt_73982db6_fk_io_storag")
+  io_storages_redisimportstoragelink io_storages_redisimportstoragelink[]
+
+  @@index([project_id], map: "io_storages_redisimportstorage_project_id_c7b9adc0")
+}
+
+/// This model has constraints using non-default deferring rules and requires additional setup for migrations. Visit https://pris.ly/d/constraint-deferring for more info.
+model io_storages_redisimportstoragelink {
+  id                             Int                            @id @default(autoincrement())
+  key                            String
+  object_exists                  Boolean
+  created_at                     DateTime                       @db.Timestamptz(6)
+  task_id                        Int                            @unique
+  storage_id                     Int
+  row_group                      Int?
+  row_index                      Int?
+  io_storages_redisimportstorage io_storages_redisimportstorage @relation(fields: [storage_id], references: [redisstoragemixin_ptr_id], onDelete: NoAction, onUpdate: NoAction, map: "io_storages_redisimp_storage_id_17124de8_fk_io_storag")
+  task                           task                           @relation(fields: [task_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "io_storages_redisimportstoragelink_task_id_6730b8ad_fk_task_id")
+
+  @@index([storage_id], map: "io_storages_redisimportstoragelink_storage_id_17124de8")
+}
+
+model io_storages_redisstoragemixin {
+  id                             Int                             @id @default(autoincrement())
+  path                           String?
+  host                           String?
+  port                           String?
+  password                       String?
+  regex_filter                   String?
+  use_blob_urls                  Boolean
+  io_storages_redisexportstorage io_storages_redisexportstorage?
+  io_storages_redisimportstorage io_storages_redisimportstorage?
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+/// This model has constraints using non-default deferring rules and requires additional setup for migrations. Visit https://pris.ly/d/constraint-deferring for more info.
+model io_storages_s3exportstorage {
+  id                              Int                               @id @default(autoincrement())
+  title                           String?                           @db.VarChar(256)
+  description                     String?
+  created_at                      DateTime                          @db.Timestamptz(6)
+  bucket                          String?
+  prefix                          String?
+  regex_filter                    String?
+  use_blob_urls                   Boolean
+  aws_access_key_id               String?
+  aws_secret_access_key           String?
+  aws_session_token               String?
+  region_name                     String?
+  s3_endpoint                     String?
+  project_id                      Int
+  last_sync                       DateTime?                         @db.Timestamptz(6)
+  last_sync_count                 Int?
+  can_delete_objects              Boolean?
+  last_sync_job                   String?                           @db.VarChar(256)
+  meta                            Json?
+  status                          String                            @db.VarChar(64)
+  traceback                       String?
+  synchronizable                  Boolean
+  aws_sse_kms_key_id              String?
+  project                         project                           @relation(fields: [project_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "io_storages_s3exportstorage_project_id_5e76add6_fk_project_id")
+  io_storages_s3exportstoragelink io_storages_s3exportstoragelink[]
+
+  @@index([project_id], map: "io_storages_s3exportstorage_project_id_5e76add6")
+}
+
+/// This model has constraints using non-default deferring rules and requires additional setup for migrations. Visit https://pris.ly/d/constraint-deferring for more info.
+model io_storages_s3exportstoragelink {
+  id                          Int                         @id @default(autoincrement())
+  object_exists               Boolean
+  created_at                  DateTime                    @db.Timestamptz(6)
+  annotation_id               Int                         @unique
+  storage_id                  Int
+  updated_at                  DateTime                    @db.Timestamptz(6)
+  task_completion             task_completion             @relation(fields: [annotation_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "io_storages_s3export_annotation_id_729994fe_fk_task_comp")
+  io_storages_s3exportstorage io_storages_s3exportstorage @relation(fields: [storage_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "io_storages_s3export_storage_id_a4563d13_fk_io_storag")
+
+  @@index([annotation_id], map: "io_storages_s3exportstoragelink_annotation_id_729994fe")
+  @@index([storage_id], map: "io_storages_s3exportstoragelink_storage_id_a4563d13")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+/// This model has constraints using non-default deferring rules and requires additional setup for migrations. Visit https://pris.ly/d/constraint-deferring for more info.
+model io_storages_s3importstorage {
+  id                              Int                               @id @default(autoincrement())
+  title                           String?                           @db.VarChar(256)
+  description                     String?
+  created_at                      DateTime                          @db.Timestamptz(6)
+  bucket                          String?
+  prefix                          String?
+  regex_filter                    String?
+  use_blob_urls                   Boolean
+  aws_access_key_id               String?
+  aws_secret_access_key           String?
+  aws_session_token               String?
+  region_name                     String?
+  s3_endpoint                     String?
+  presign                         Boolean
+  presign_ttl                     Int                               @db.SmallInt
+  project_id                      Int
+  last_sync                       DateTime?                         @db.Timestamptz(6)
+  last_sync_count                 Int?
+  recursive_scan                  Boolean
+  last_sync_job                   String?                           @db.VarChar(256)
+  meta                            Json?
+  status                          String                            @db.VarChar(64)
+  traceback                       String?
+  synchronizable                  Boolean
+  aws_sse_kms_key_id              String?
+  project                         project                           @relation(fields: [project_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "io_storages_s3importstorage_project_id_dee63a8d_fk_project_id")
+  io_storages_s3importstoragelink io_storages_s3importstoragelink[]
+
+  @@index([project_id], map: "io_storages_s3importstorage_project_id_dee63a8d")
+}
+
+/// This model has constraints using non-default deferring rules and requires additional setup for migrations. Visit https://pris.ly/d/constraint-deferring for more info.
+model io_storages_s3importstoragelink {
+  id                          Int                         @id @default(autoincrement())
+  key                         String
+  object_exists               Boolean
+  created_at                  DateTime                    @db.Timestamptz(6)
+  storage_id                  Int
+  task_id                     Int                         @unique
+  row_group                   Int?
+  row_index                   Int?
+  io_storages_s3importstorage io_storages_s3importstorage @relation(fields: [storage_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "io_storages_s3import_storage_id_50ca5bd8_fk_io_storag")
+  task                        task                        @relation(fields: [task_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "io_storages_s3importstoragelink_task_id_126f4f82_fk_task_id")
+
+  @@index([storage_id], map: "io_storages_s3importstoragelink_storage_id_50ca5bd8")
+}
+
+/// This model has constraints using non-default deferring rules and requires additional setup for migrations. Visit https://pris.ly/d/constraint-deferring for more info.
+model jwt_auth_jwtsettings {
+  organization_id           Int          @id
+  api_tokens_enabled        Boolean
+  api_token_ttl_days        Int
+  legacy_api_tokens_enabled Boolean
+  created_at                DateTime     @db.Timestamptz(6)
+  updated_at                DateTime     @db.Timestamptz(6)
+  organization              organization @relation(fields: [organization_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "jwt_auth_jwtsettings_organization_id_1e76aa12_fk_organizat")
+}
+
+/// This model has constraints using non-default deferring rules and requires additional setup for migrations. Visit https://pris.ly/d/constraint-deferring for more info.
+model labels_manager_label {
+  id                                                     Int                        @id @default(autoincrement())
+  created_at                                             DateTime                   @db.Timestamptz(6)
+  updated_at                                             DateTime                   @db.Timestamptz(6)
+  value                                                  Json
+  title                                                  String                     @db.VarChar(2048)
+  description                                            String?
+  approved                                               Boolean
+  approved_by_id                                         Int?
+  created_by_id                                          Int
+  organization_id                                        Int
+  htx_user_labels_manager_label_approved_by_idTohtx_user htx_user?                  @relation("labels_manager_label_approved_by_idTohtx_user", fields: [approved_by_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "labels_manager_label_approved_by_id_4b6a871f_fk_htx_user_id")
+  htx_user_labels_manager_label_created_by_idTohtx_user  htx_user                   @relation("labels_manager_label_created_by_idTohtx_user", fields: [created_by_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "labels_manager_label_created_by_id_e3b3e785_fk_htx_user_id")
+  organization                                           organization               @relation(fields: [organization_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "labels_manager_label_organization_id_5f714874_fk_organizat")
+  labels_manager_labellink                               labels_manager_labellink[]
+
+  @@unique([title, organization_id], map: "unique_title")
+  @@index([approved_by_id], map: "labels_manager_label_approved_by_id_4b6a871f")
+  @@index([created_by_id], map: "labels_manager_label_created_by_id_e3b3e785")
+  @@index([organization_id], map: "labels_manager_label_organization_id_5f714874")
+}
+
+/// This model has constraints using non-default deferring rules and requires additional setup for migrations. Visit https://pris.ly/d/constraint-deferring for more info.
+model labels_manager_labellink {
+  id                   Int                  @id @default(autoincrement())
+  from_name            String               @db.VarChar(2048)
+  label_id             Int
+  project_id           Int
+  labels_manager_label labels_manager_label @relation(fields: [label_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "labels_manager_label_label_id_c8afbfa4_fk_labels_ma")
+  project              project              @relation(fields: [project_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "labels_manager_labellink_project_id_e3d33738_fk_project_id")
+
+  @@unique([project_id, label_id], map: "unique_label_project")
+  @@index([label_id], map: "labels_manager_labellink_label_id_c8afbfa4")
+  @@index([project_id], map: "labels_manager_labellink_project_id_e3d33738")
+}
+
+/// This model has constraints using non-default deferring rules and requires additional setup for migrations. Visit https://pris.ly/d/constraint-deferring for more info.
+model ml_mlbackend {
+  id                        Int                         @id @default(autoincrement())
+  state                     String                      @db.VarChar(2)
+  url                       String
+  error_message             String?
+  title                     String?
+  description               String?
+  model_version             String?
+  created_at                DateTime                    @db.Timestamptz(6)
+  updated_at                DateTime                    @db.Timestamptz(6)
+  project_id                Int
+  is_interactive            Boolean
+  timeout                   Float
+  auto_update               Boolean
+  auth_method               String                      @db.VarChar(255)
+  basic_auth_pass           String?
+  basic_auth_user           String?
+  extra_params              Json?
+  project                   project                     @relation(fields: [project_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "ml_mlbackend_project_id_ca08142d_fk_project_id")
+  ml_mlbackendpredictionjob ml_mlbackendpredictionjob[]
+  ml_mlbackendtrainjob      ml_mlbackendtrainjob[]
+  prediction                prediction[]
+  tasks_failedprediction    tasks_failedprediction[]
+
+  @@index([project_id], map: "ml_mlbackend_project_id_ca08142d")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+/// This model has constraints using non-default deferring rules and requires additional setup for migrations. Visit https://pris.ly/d/constraint-deferring for more info.
+model ml_mlbackendpredictionjob {
+  id            Int          @id @default(autoincrement())
+  job_id        String       @db.VarChar(128)
+  model_version String?
+  batch_size    Int          @db.SmallInt
+  created_at    DateTime     @db.Timestamptz(6)
+  updated_at    DateTime     @db.Timestamptz(6)
+  ml_backend_id Int
+  ml_mlbackend  ml_mlbackend @relation(fields: [ml_backend_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "ml_mlbackendpredicti_ml_backend_id_c1aea4f1_fk_ml_mlback")
+
+  @@index([ml_backend_id], map: "ml_mlbackendpredictionjob_ml_backend_id_c1aea4f1")
+}
+
+/// This model has constraints using non-default deferring rules and requires additional setup for migrations. Visit https://pris.ly/d/constraint-deferring for more info.
+model ml_mlbackendtrainjob {
+  id            Int          @id @default(autoincrement())
+  job_id        String       @db.VarChar(128)
+  model_version String?
+  created_at    DateTime     @db.Timestamptz(6)
+  updated_at    DateTime     @db.Timestamptz(6)
+  ml_backend_id Int
+  ml_mlbackend  ml_mlbackend @relation(fields: [ml_backend_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "ml_mlbackendtrainjob_ml_backend_id_3d40686e_fk_ml_mlbackend_id")
+
+  @@index([ml_backend_id], map: "ml_mlbackendtrainjob_ml_backend_id_3d40686e")
+}
+
+/// This model has constraints using non-default deferring rules and requires additional setup for migrations. Visit https://pris.ly/d/constraint-deferring for more info.
+model ml_model_providers_modelproviderconnection {
+  id                               Int                                @id @default(autoincrement())
+  provider                         String                             @db.VarChar(255)
+  api_key                          String?
+  scope                            String                             @db.VarChar(255)
+  created_at                       DateTime                           @db.Timestamptz(6)
+  updated_at                       DateTime                           @db.Timestamptz(6)
+  created_by_id                    Int?
+  organization_id                  Int?
+  deployment_name                  String?                            @db.VarChar(512)
+  endpoint                         String?                            @db.VarChar(512)
+  cached_available_models          String?                            @db.VarChar(4096)
+  auth_token                       String?
+  budget_alert_threshold           Float?
+  budget_last_reset_date           DateTime?                          @db.Timestamptz(6)
+  budget_limit                     Float?
+  budget_reset_period              String?                            @db.VarChar(20)
+  budget_total_spent               Float?
+  is_internal                      Boolean?
+  google_application_credentials   String?
+  google_location                  String?                            @db.VarChar(255)
+  google_project_id                String?                            @db.VarChar(255)
+  htx_user                         htx_user?                          @relation(fields: [created_by_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "ml_model_providers_m_created_by_id_2e24aab7_fk_htx_user_")
+  organization                     organization?                      @relation(fields: [organization_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "ml_model_providers_m_organization_id_ef7f6136_fk_organizat")
+  ml_models_thirdpartymodelversion ml_models_thirdpartymodelversion[]
+
+  @@index([created_by_id], map: "ml_model_providers_modelpr_created_by_id_2e24aab7")
+  @@index([organization_id], map: "ml_model_providers_modelpr_organization_id_ef7f6136")
+}
+
+/// This model has constraints using non-default deferring rules and requires additional setup for migrations. Visit https://pris.ly/d/constraint-deferring for more info.
+model ml_models_modelinterface {
+  id                                           Int                                            @id @default(autoincrement())
+  title                                        String                                         @db.VarChar(500)
+  description                                  String?
+  created_at                                   DateTime                                       @db.Timestamptz(6)
+  updated_at                                   DateTime                                       @db.Timestamptz(6)
+  created_by_id                                Int?
+  organization_id                              Int?
+  input_fields                                 Json
+  output_classes                               Json
+  skill_name                                   String?                                        @db.VarChar(255)
+  organization                                 organization?                                  @relation(fields: [organization_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "ml_models_modelinter_organization_id_d5688149_fk_organizat")
+  htx_user                                     htx_user?                                      @relation(fields: [created_by_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "ml_models_modelinterface_created_by_id_8ba717c0_fk_htx_user_id")
+  ml_models_modelinterface_associated_projects ml_models_modelinterface_associated_projects[]
+  ml_models_thirdpartymodelversion             ml_models_thirdpartymodelversion[]
+
+  @@index([created_by_id], map: "ml_models_modelinterface_created_by_id_8ba717c0")
+  @@index([organization_id], map: "ml_models_modelinterface_organization_id_d5688149")
+}
+
+/// This model has constraints using non-default deferring rules and requires additional setup for migrations. Visit https://pris.ly/d/constraint-deferring for more info.
+model ml_models_modelinterface_associated_projects {
+  id                       Int                      @id @default(autoincrement())
+  modelinterface_id        Int
+  project_id               Int
+  ml_models_modelinterface ml_models_modelinterface @relation(fields: [modelinterface_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "ml_models_modelinter_modelinterface_id_035df3df_fk_ml_models")
+  project                  project                  @relation(fields: [project_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "ml_models_modelinter_project_id_76a17855_fk_project_i")
+
+  @@unique([modelinterface_id, project_id], map: "ml_models_modelinterface_modelinterface_id_projec_4278f3da_uniq")
+  @@index([modelinterface_id], map: "ml_models_modelinterface_a_modelinterface_id_035df3df")
+  @@index([project_id], map: "ml_models_modelinterface_a_project_id_76a17855")
+}
+
+/// This model has constraints using non-default deferring rules and requires additional setup for migrations. Visit https://pris.ly/d/constraint-deferring for more info.
+model ml_models_modelrun {
+  id                               Int                              @id @default(autoincrement())
+  project_subset                   String                           @db.VarChar(255)
+  status                           String                           @db.VarChar(255)
+  created_at                       DateTime                         @db.Timestamptz(6)
+  triggered_at                     DateTime?                        @db.Timestamptz(6)
+  completed_at                     DateTime?                        @db.Timestamptz(6)
+  created_by_id                    Int?
+  model_version_id                 Int
+  organization_id                  Int?
+  project_id                       Int
+  job_id                           String?                          @db.VarChar(255)
+  predictions_updated_at           DateTime?                        @db.Timestamptz(6)
+  total_correct_predictions        Int
+  total_predictions                Int
+  total_tasks                      Int
+  htx_user                         htx_user?                        @relation(fields: [created_by_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "ml_models_modelrun_created_by_id_1a302218_fk_htx_user_id")
+  ml_models_thirdpartymodelversion ml_models_thirdpartymodelversion @relation(fields: [model_version_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "ml_models_modelrun_model_version_id_e15572eb_fk_ml_models")
+  organization                     organization?                    @relation(fields: [organization_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "ml_models_modelrun_organization_id_1f7f8243_fk_organization_id")
+  project                          project                          @relation(fields: [project_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "ml_models_modelrun_project_id_1b76ea76_fk_project_id")
+  prediction                       prediction[]
+  tasks_failedprediction           tasks_failedprediction[]
+
+  @@index([created_by_id], map: "ml_models_modelrun_created_by_id_1a302218")
+  @@index([model_version_id], map: "ml_models_modelrun_model_version_id_e15572eb")
+  @@index([organization_id], map: "ml_models_modelrun_organization_id_1f7f8243")
+  @@index([project_id], map: "ml_models_modelrun_project_id_1b76ea76")
+}
+
+/// This model has constraints using non-default deferring rules and requires additional setup for migrations. Visit https://pris.ly/d/constraint-deferring for more info.
+model ml_models_thirdpartymodelversion {
+  id                                         Int                                         @id @default(autoincrement())
+  title                                      String                                      @db.VarChar(500)
+  prompt                                     String
+  provider                                   String                                      @db.VarChar(255)
+  provider_model_id                          String                                      @db.VarChar(255)
+  created_at                                 DateTime                                    @db.Timestamptz(6)
+  updated_at                                 DateTime                                    @db.Timestamptz(6)
+  created_by_id                              Int?
+  organization_id                            Int?
+  parent_model_id                            Int
+  model_provider_connection_id               Int?
+  ml_models_modelrun                         ml_models_modelrun[]
+  htx_user                                   htx_user?                                   @relation(fields: [created_by_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "ml_models_thirdparty_created_by_id_b1fb2c2f_fk_htx_user_")
+  ml_model_providers_modelproviderconnection ml_model_providers_modelproviderconnection? @relation(fields: [model_provider_connection_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "ml_models_thirdparty_model_provider_conne_b98c173f_fk_ml_model_")
+  organization                               organization?                               @relation(fields: [organization_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "ml_models_thirdparty_organization_id_a4a5df4d_fk_organizat")
+  ml_models_modelinterface                   ml_models_modelinterface                    @relation(fields: [parent_model_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "ml_models_thirdparty_parent_model_id_599e1869_fk_ml_models")
+
+  @@index([model_provider_connection_id], map: "ml_models_thirdpartymodelv_model_provider_connection__b98c173f")
+  @@index([created_by_id], map: "ml_models_thirdpartymodelversion_created_by_id_b1fb2c2f")
+  @@index([organization_id], map: "ml_models_thirdpartymodelversion_organization_id_a4a5df4d")
+  @@index([parent_model_id], map: "ml_models_thirdpartymodelversion_parent_model_id_599e1869")
+}
+
+/// This model has constraints using non-default deferring rules and requires additional setup for migrations. Visit https://pris.ly/d/constraint-deferring for more info.
+model organization {
+  id                                                     Int                                          @id @default(autoincrement())
+  title                                                  String                                       @db.VarChar(1000)
+  created_at                                             DateTime                                     @db.Timestamptz(6)
+  updated_at                                             DateTime                                     @db.Timestamptz(6)
+  created_by_id                                          Int?                                         @unique
+  token                                                  String?                                      @unique @db.VarChar(256)
+  contact_info                                           String?                                      @db.VarChar(254)
+  data_export_convertedformat                            data_export_convertedformat[]
+  htx_user_htx_user_active_organization_idToorganization htx_user[]                                   @relation("htx_user_active_organization_idToorganization")
+  jwt_auth_jwtsettings                                   jwt_auth_jwtsettings?
+  labels_manager_label                                   labels_manager_label[]
+  ml_model_providers_modelproviderconnection             ml_model_providers_modelproviderconnection[]
+  ml_models_modelinterface                               ml_models_modelinterface[]
+  ml_models_modelrun                                     ml_models_modelrun[]
+  ml_models_thirdpartymodelversion                       ml_models_thirdpartymodelversion[]
+  htx_user_organization_created_by_idTohtx_user          htx_user?                                    @relation("organization_created_by_idTohtx_user", fields: [created_by_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "organization_created_by_id_35551e36_fk_htx_user_id")
+  organizations_organizationmember                       organizations_organizationmember[]
+  project                                                project[]
+  session_policy_sessiontimeoutpolicy                    session_policy_sessiontimeoutpolicy?
+  webhook                                                webhook[]
+
+  @@index([token], map: "organization_token_5bd2529a_like")
+}
+
+/// This model has constraints using non-default deferring rules and requires additional setup for migrations. Visit https://pris.ly/d/constraint-deferring for more info.
+model organizations_organizationmember {
+  id              Int          @id @default(autoincrement())
+  created_at      DateTime     @db.Timestamptz(6)
+  updated_at      DateTime     @db.Timestamptz(6)
+  organization_id Int
+  user_id         Int
+  deleted_at      DateTime?    @db.Timestamptz(6)
+  organization    organization @relation(fields: [organization_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "organizations_organi_organization_id_f26cf71b_fk_organizat")
+  htx_user        htx_user     @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "organizations_organi_user_id_f3845ee5_fk_htx_user_")
+
+  @@index([deleted_at], map: "organizations_organizationmember_deleted_at_af2d5523")
+  @@index([organization_id], map: "organizations_organizationmember_organization_id_f26cf71b")
+  @@index([user_id], map: "organizations_organizationmember_user_id_f3845ee5")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model personalization_rules {
+  id              Int       @id @default(autoincrement())
+  rule_name       String    @db.VarChar(100)
+  rule_type       String    @db.VarChar(30)
+  priority        Int?      @default(100)
+  conditions      Json?
+  boost_factor    Decimal?  @default(1.5) @db.Decimal(5, 2)
+  filter_rule     Json?
+  rerank_rule     Json?
+  times_applied   Int?      @default(0)
+  avg_improvement Decimal?  @db.Decimal(5, 4)
+  enabled         Boolean?  @default(true)
+  created_at      DateTime? @default(now()) @db.Timestamp(6)
+  updated_at      DateTime? @default(now()) @db.Timestamp(6)
+
+  @@index([rule_type, enabled], map: "idx_personalization_rules_type")
+}
+
+/// This model has constraints using non-default deferring rules and requires additional setup for migrations. Visit https://pris.ly/d/constraint-deferring for more info.
+/// This model contains an expression index which requires additional setup for migrations. Visit https://pris.ly/d/expression-indexes for more info.
+model prediction {
+  id                 Int                 @id @default(autoincrement())
+  result             Json?
+  score              Float?
+  model_version      String?
+  created_at         DateTime            @db.Timestamptz(6)
+  updated_at         DateTime            @db.Timestamptz(6)
+  task_id            Int
+  cluster            Int?
+  neighbors          Json?
+  mislabeling        Float
+  project_id         Int?
+  model_run_id       Int?
+  model_id           Int?
+  ml_mlbackend       ml_mlbackend?       @relation(fields: [model_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "prediction_model_id_f9d54ad0_fk_ml_mlbackend_id")
+  ml_models_modelrun ml_models_modelrun? @relation(fields: [model_run_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "prediction_model_run_id_9d95621b_fk_ml_models_modelrun_id")
+  project            project?            @relation(fields: [project_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "prediction_project_id_ec1ad819_fk_project_id")
+  task               task                @relation(fields: [task_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "prediction_task_id_4e4fb4d3_fk_task_id")
+  prediction_meta    prediction_meta?
+  task_completion    task_completion[]
+
+  @@index([model_id], map: "prediction_model_id_f9d54ad0")
+  @@index([model_run_id], map: "prediction_model_run_id_9d95621b")
+  @@index([project_id], map: "prediction_project_id_ec1ad819")
+  @@index([task_id], map: "prediction_task_id_4e4fb4d3")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+/// This model has constraints using non-default deferring rules and requires additional setup for migrations. Visit https://pris.ly/d/constraint-deferring for more info.
+model prediction_meta {
+  id                      Int                     @id @default(autoincrement())
+  inference_time          Float?
+  prompt_tokens_count     Int?
+  completion_tokens_count Int?
+  total_tokens_count      Int?
+  prompt_cost             Float?
+  completion_cost         Float?
+  total_cost              Float?
+  extra                   Json?
+  failed_prediction_id    Int?                    @unique
+  prediction_id           Int?                    @unique
+  tasks_failedprediction  tasks_failedprediction? @relation(fields: [failed_prediction_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "prediction_meta_failed_prediction_id_082536d6_fk_tasks_fai")
+  prediction              prediction?             @relation(fields: [prediction_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "prediction_meta_prediction_id_c33b5954_fk_prediction_id")
+}
+
+/// This model has constraints using non-default deferring rules and requires additional setup for migrations. Visit https://pris.ly/d/constraint-deferring for more info.
+model project {
+  id                                           Int                                            @id @default(autoincrement())
+  title                                        String?                                        @db.VarChar(50)
+  label_config                                 String?
+  expert_instruction                           String?
+  show_instruction                             Boolean
+  maximum_annotations                          Int
+  model_version                                String?
+  data_types                                   Json?
+  is_published                                 Boolean
+  created_at                                   DateTime                                       @db.Timestamptz(6)
+  updated_at                                   DateTime                                       @db.Timestamptz(6)
+  created_by_id                                Int?
+  show_skip_button                             Boolean
+  enable_empty_annotation                      Boolean
+  min_annotations_to_start_training            Int
+  show_annotation_history                      Boolean
+  show_collab_predictions                      Boolean
+  show_ground_truth_first                      Boolean
+  sampling                                     String?                                        @db.VarChar(100)
+  task_data_login                              String?                                        @db.VarChar(256)
+  task_data_password                           String?                                        @db.VarChar(256)
+  overlap_cohort_percentage                    Int
+  show_overlap_first                           Boolean
+  control_weights                              Json?
+  token                                        String?                                        @db.VarChar(256)
+  result_count                                 Int
+  organization_id                              Int?
+  is_draft                                     Boolean
+  description                                  String?
+  color                                        String?                                        @db.VarChar(16)
+  evaluate_predictions_automatically           Boolean
+  reveal_preannotations_interactively          Boolean
+  skip_queue                                   String?                                        @db.VarChar(100)
+  parsed_label_config                          Json?
+  pinned_at                                    DateTime?                                      @db.Timestamptz(6)
+  label_config_hash                            BigInt?
+  custom_task_lock_ttl                         Int?
+  search_vector                                Unsupported("tsvector")?
+  core_asyncmigrationstatus                    core_asyncmigrationstatus[]
+  data_export_convertedformat                  data_export_convertedformat[]
+  data_export_export                           data_export_export[]
+  data_import_fileupload                       data_import_fileupload[]
+  data_manager_view                            data_manager_view[]
+  io_storages_azureblobexportstorage           io_storages_azureblobexportstorage[]
+  io_storages_azureblobimportstorage           io_storages_azureblobimportstorage[]
+  io_storages_gcsexportstorage                 io_storages_gcsexportstorage[]
+  io_storages_gcsimportstorage                 io_storages_gcsimportstorage[]
+  io_storages_localfilesexportstorage          io_storages_localfilesexportstorage[]
+  io_storages_localfilesimportstorage          io_storages_localfilesimportstorage[]
+  io_storages_redisexportstorage               io_storages_redisexportstorage[]
+  io_storages_redisimportstorage               io_storages_redisimportstorage[]
+  io_storages_s3exportstorage                  io_storages_s3exportstorage[]
+  io_storages_s3importstorage                  io_storages_s3importstorage[]
+  labels_manager_labellink                     labels_manager_labellink[]
+  ml_mlbackend                                 ml_mlbackend[]
+  ml_models_modelinterface_associated_projects ml_models_modelinterface_associated_projects[]
+  ml_models_modelrun                           ml_models_modelrun[]
+  prediction                                   prediction[]
+  htx_user                                     htx_user?                                      @relation(fields: [created_by_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "project_created_by_id_6cc13408_fk_htx_user_id")
+  organization                                 organization?                                  @relation(fields: [organization_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "project_organization_id_3c9f74fb_fk_organization_id")
+  projects_labelstreamhistory                  projects_labelstreamhistory[]
+  projects_projectimport                       projects_projectimport[]
+  projects_projectmember                       projects_projectmember[]
+  projects_projectonboarding                   projects_projectonboarding[]
+  projects_projectreimport                     projects_projectreimport[]
+  projects_projectsummary                      projects_projectsummary?
+  task                                         task[]
+  task_completion                              task_completion[]
+  tasks_failedprediction                       tasks_failedprediction[]
+  webhook                                      webhook[]
+
+  @@index([created_by_id], map: "project_created_by_id_6cc13408")
+  @@index([organization_id], map: "project_organization_id_3c9f74fb")
+  @@index([pinned_at, created_at], map: "project_pinned__a39ccb_idx")
+  @@index([search_vector], type: Gin)
+}
+
+/// This model has constraints using non-default deferring rules and requires additional setup for migrations. Visit https://pris.ly/d/constraint-deferring for more info.
+model projects_labelstreamhistory {
+  id         Int      @id @default(autoincrement())
+  data       Json
+  project_id Int
+  user_id    Int
+  project    project  @relation(fields: [project_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "projects_labelstreamhistory_project_id_906c91dd_fk_project_id")
+  htx_user   htx_user @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "projects_labelstreamhistory_user_id_1b571ab9_fk_htx_user_id")
+
+  @@unique([user_id, project_id], map: "unique_history")
+  @@index([project_id], map: "projects_labelstreamhistory_project_id_906c91dd")
+  @@index([user_id], map: "projects_labelstreamhistory_user_id_1b571ab9")
+}
+
+/// This model has constraints using non-default deferring rules and requires additional setup for migrations. Visit https://pris.ly/d/constraint-deferring for more info.
+model projects_projectimport {
+  id                       Int       @id @default(autoincrement())
+  preannotated_from_fields Json?
+  commit_to_project        Boolean
+  return_task_ids          Boolean
+  status                   String    @db.VarChar(64)
+  url                      String?   @db.VarChar(2048)
+  traceback                String?
+  error                    String?
+  created_at               DateTime? @db.Timestamptz(6)
+  updated_at               DateTime? @db.Timestamptz(6)
+  finished_at              DateTime? @db.Timestamptz(6)
+  task_count               Int
+  annotation_count         Int
+  prediction_count         Int
+  duration                 Int
+  file_upload_ids          Json
+  could_be_tasks_list      Boolean
+  found_formats            Json
+  data_columns             Json
+  tasks                    Json?
+  task_ids                 Json
+  project_id               Int?
+  project                  project?  @relation(fields: [project_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "projects_projectimport_project_id_619e3461_fk_project_id")
+
+  @@index([project_id], map: "projects_projectimport_project_id_619e3461")
+}
+
+/// This model has constraints using non-default deferring rules and requires additional setup for migrations. Visit https://pris.ly/d/constraint-deferring for more info.
+model projects_projectmember {
+  id         Int      @id @default(autoincrement())
+  enabled    Boolean
+  created_at DateTime @db.Timestamptz(6)
+  updated_at DateTime @db.Timestamptz(6)
+  project_id Int
+  user_id    Int
+  project    project  @relation(fields: [project_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "projects_projectmember_project_id_e589ddea_fk_project_id")
+  htx_user   htx_user @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "projects_projectmember_user_id_a475bbd8_fk_htx_user_id")
+
+  @@index([project_id], map: "projects_projectmember_project_id_e589ddea")
+  @@index([user_id], map: "projects_projectmember_user_id_a475bbd8")
+}
+
+/// This model has constraints using non-default deferring rules and requires additional setup for migrations. Visit https://pris.ly/d/constraint-deferring for more info.
+model projects_projectonboarding {
+  id                              Int                             @id @default(autoincrement())
+  finished                        Boolean
+  created_at                      DateTime                        @db.Timestamptz(6)
+  updated_at                      DateTime                        @db.Timestamptz(6)
+  project_id                      Int
+  step_id                         Int
+  projects_projectonboardingsteps projects_projectonboardingsteps @relation(fields: [step_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "projects_projectonbo_step_id_c232d94b_fk_projects_")
+  project                         project                         @relation(fields: [project_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "projects_projectonboarding_project_id_120e4f53_fk_project_id")
+
+  @@index([project_id], map: "projects_projectonboarding_project_id_120e4f53")
+  @@index([step_id], map: "projects_projectonboarding_step_id_c232d94b")
+}
+
+model projects_projectonboardingsteps {
+  id                         Int                          @id @default(autoincrement())
+  code                       String?                      @db.VarChar(2)
+  title                      String                       @db.VarChar(1000)
+  description                String
+  order                      Int
+  created_at                 DateTime                     @db.Timestamptz(6)
+  updated_at                 DateTime                     @db.Timestamptz(6)
+  projects_projectonboarding projects_projectonboarding[]
+}
+
+/// This model has constraints using non-default deferring rules and requires additional setup for migrations. Visit https://pris.ly/d/constraint-deferring for more info.
+model projects_projectreimport {
+  id                  Int      @id @default(autoincrement())
+  status              String   @db.VarChar(64)
+  error               String?
+  task_count          Int
+  annotation_count    Int
+  prediction_count    Int
+  duration            Int
+  file_upload_ids     Json
+  files_as_tasks_list Boolean
+  found_formats       Json
+  data_columns        Json
+  traceback           String?
+  project_id          Int?
+  project             project? @relation(fields: [project_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "projects_projectreimport_project_id_6bcffbed_fk_project_id")
+
+  @@index([project_id], map: "projects_projectreimport_project_id_6bcffbed")
+}
+
+/// This model has constraints using non-default deferring rules and requires additional setup for migrations. Visit https://pris.ly/d/constraint-deferring for more info.
+model projects_projectsummary {
+  project_id            Int      @id
+  created_at            DateTime @db.Timestamptz(6)
+  all_data_columns      Json?
+  common_data_columns   Json?
+  created_annotations   Json?
+  created_labels        Json?
+  created_labels_drafts Json?
+  project               project  @relation(fields: [project_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "projects_projectsummary_project_id_0d5aff36_fk_project_id")
+}
+
+/// This model has constraints using non-default deferring rules and requires additional setup for migrations. Visit https://pris.ly/d/constraint-deferring for more info.
+model session_policy_sessiontimeoutpolicy {
+  organization_id           Int          @id
+  max_session_age           Int
+  max_time_between_activity Int
+  created_at                DateTime     @db.Timestamptz(6)
+  updated_at                DateTime     @db.Timestamptz(6)
+  organization              organization @relation(fields: [organization_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "session_policy_sessi_organization_id_c2feae9a_fk_organizat")
+}
+
+/// This model has constraints using non-default deferring rules and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+/// This model contains an expression index which requires additional setup for migrations. Visit https://pris.ly/d/expression-indexes for more info.
+model task {
+  id                                      Int                                      @id @default(autoincrement())
+  data                                    Json
+  created_at                              DateTime                                 @db.Timestamptz(6)
+  updated_at                              DateTime                                 @db.Timestamptz(6)
+  is_labeled                              Boolean
+  project_id                              Int?
+  meta                                    Json?
+  overlap                                 Int
+  file_upload_id                          Int?
+  updated_by_id                           Int?
+  inner_id                                BigInt?
+  total_annotations                       Int
+  cancelled_annotations                   Int
+  total_predictions                       Int
+  comment_count                           Int
+  last_comment_updated_at                 DateTime?                                @db.Timestamptz(6)
+  unresolved_comment_count                Int
+  io_storages_azureblobimportstoragelink  io_storages_azureblobimportstoragelink?
+  io_storages_gcsimportstoragelink        io_storages_gcsimportstoragelink?
+  io_storages_localfilesimportstoragelink io_storages_localfilesimportstoragelink?
+  io_storages_redisimportstoragelink      io_storages_redisimportstoragelink?
+  io_storages_s3importstoragelink         io_storages_s3importstoragelink?
+  prediction                              prediction[]
+  data_import_fileupload                  data_import_fileupload?                  @relation(fields: [file_upload_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "task_file_upload_id_549188ed_fk_data_import_fileupload_id")
+  project                                 project?                                 @relation(fields: [project_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "task_project_id_963d6354_fk_project_id")
+  htx_user                                htx_user?                                @relation(fields: [updated_by_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "task_updated_by_id_c9d9ddfb_fk_htx_user_id")
+  task_comment_authors                    task_comment_authors[]
+  task_completion                         task_completion[]
+  tasks_annotationdraft                   tasks_annotationdraft[]
+  tasks_failedprediction                  tasks_failedprediction[]
+  tasks_tasklock                          tasks_tasklock[]
+
+  @@index([cancelled_annotations], map: "task_cancelled_annotations_60dfe3b9")
+  @@index([comment_count], map: "task_comment_count_049355cc")
+  @@index([file_upload_id], map: "task_file_upload_id_549188ed")
+  @@index([id, overlap], map: "task_id_7a9aca_idx")
+  @@index([id, project_id], map: "task_id_aef988_idx")
+  @@index([last_comment_updated_at], map: "task_last_comment_updated_at_d1bc3403")
+  @@index([overlap], map: "task_overlap_455a13f0")
+  @@index([overlap], map: "task_overlap_6a196e_idx")
+  @@index([project_id, inner_id], map: "task_project_499b59_idx")
+  @@index([project_id, is_labeled], map: "task_project_6acf5f_idx")
+  @@index([project_id, id], map: "task_project_7b1c80_idx")
+  @@index([project_id], map: "task_project_id_963d6354")
+  @@index([total_annotations], map: "task_total_annotations_e77e347b")
+  @@index([total_predictions], map: "task_total_predictions_f1a6b218")
+  @@index([unresolved_comment_count], map: "task_unresolved_comment_count_8707d0c7")
+  @@index([updated_at], map: "task_updated_at_brin_idx", type: Brin)
+  @@index([updated_by_id], map: "task_updated_by_id_c9d9ddfb")
+}
+
+/// This model has constraints using non-default deferring rules and requires additional setup for migrations. Visit https://pris.ly/d/constraint-deferring for more info.
+model task_comment_authors {
+  id       Int      @id @default(autoincrement())
+  task_id  Int
+  user_id  Int
+  task     task     @relation(fields: [task_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "task_comment_authors_task_id_80618a4a_fk_task_id")
+  htx_user htx_user @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "task_comment_authors_user_id_ff0b1cf0_fk_htx_user_id")
+
+  @@unique([task_id, user_id], map: "task_comment_authors_task_id_user_id_f6f772c9_uniq")
+  @@index([task_id], map: "task_comment_authors_task_id_80618a4a")
+  @@index([user_id], map: "task_comment_authors_user_id_ff0b1cf0")
+}
+
+/// This model has constraints using non-default deferring rules and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+/// This model contains an expression index which requires additional setup for migrations. Visit https://pris.ly/d/expression-indexes for more info.
+model task_completion {
+  id                                                    Int                                      @id @default(autoincrement())
+  result                                                Json?
+  was_cancelled                                         Boolean
+  ground_truth                                          Boolean
+  created_at                                            DateTime                                 @db.Timestamptz(6)
+  updated_at                                            DateTime                                 @db.Timestamptz(6)
+  task_id                                               Int?
+  prediction_result                                     Json?                                    @map("prediction")
+  lead_time                                             Float?
+  result_count                                          Int
+  completed_by_id                                       Int?
+  parent_prediction_id                                  Int?
+  parent_annotation_id                                  Int?
+  last_action                                           String?                                  @db.VarChar(128)
+  last_created_by_id                                    Int?
+  project_id                                            Int?
+  updated_by_id                                         Int?
+  unique_id                                             String?                                  @unique @db.Uuid
+  draft_created_at                                      DateTime?                                @db.Timestamptz(6)
+  import_id                                             BigInt?
+  bulk_created                                          Boolean?                                 @default(false)
+  io_storages_azureblobexportstoragelink                io_storages_azureblobexportstoragelink?
+  io_storages_gcsexportstoragelink                      io_storages_gcsexportstoragelink?
+  io_storages_localfilesexportstoragelink               io_storages_localfilesexportstoragelink?
+  io_storages_redisexportstoragelink                    io_storages_redisexportstoragelink?
+  io_storages_s3exportstoragelink                       io_storages_s3exportstoragelink?
+  htx_user_task_completion_completed_by_idTohtx_user    htx_user?                                @relation("task_completion_completed_by_idTohtx_user", fields: [completed_by_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "task_completion_completed_by_id_3f3206b1_fk_htx_user_id")
+  htx_user_task_completion_last_created_by_idTohtx_user htx_user?                                @relation("task_completion_last_created_by_idTohtx_user", fields: [last_created_by_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "task_completion_last_created_by_id_a04457d1_fk_htx_user_id")
+  task_completion                                       task_completion?                         @relation("task_completionTotask_completion", fields: [parent_annotation_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "task_completion_parent_annotation_id_58398c37_fk_task_comp")
+  other_task_completion                                 task_completion[]                        @relation("task_completionTotask_completion")
+  prediction                                            prediction?                              @relation(fields: [parent_prediction_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "task_completion_parent_prediction_id_053d00d9_fk_prediction_id")
+  project                                               project?                                 @relation(fields: [project_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "task_completion_project_id_94072c87_fk_project_id")
+  task                                                  task?                                    @relation(fields: [task_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "task_completion_task_id_b9049fbc_fk_task_id")
+  htx_user_task_completion_updated_by_idTohtx_user      htx_user?                                @relation("task_completion_updated_by_idTohtx_user", fields: [updated_by_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "task_completion_updated_by_id_1164a739_fk_htx_user_id")
+  tasks_annotationdraft                                 tasks_annotationdraft[]
+
+  @@index([created_at], map: "task_comple_created_f55e6f_idx")
+  @@index([ground_truth], map: "task_comple_ground__088a1b_idx")
+  @@index([id, task_id], map: "task_comple_id_653858_idx")
+  @@index([last_action], map: "task_comple_last_ac_777e69_idx")
+  @@index([project_id, completed_by_id], map: "task_comple_project_0bc0be_idx")
+  @@index([project_id, ground_truth], map: "task_comple_project_2cbbfc_idx")
+  @@index([project_id, was_cancelled], map: "task_comple_project_5c60f3_idx")
+  @@index([project_id, id], map: "task_comple_project_c7e507_idx")
+  @@index([task_id, was_cancelled], map: "task_comple_task_id_8072c3_idx")
+  @@index([task_id, id], map: "task_comple_task_id_a6bdec_idx")
+  @@index([task_id, completed_by_id], map: "task_comple_task_id_d49cd7_idx")
+  @@index([task_id, ground_truth], map: "task_comple_task_id_e82920_idx")
+  @@index([was_cancelled], map: "task_comple_was_can_f87d4e_idx")
+  @@index([completed_by_id], map: "task_completion_completed_by_id_3f3206b1")
+  @@index([import_id], map: "task_completion_import_id_e434c5af")
+  @@index([last_created_by_id], map: "task_completion_last_created_by_id_a04457d1")
+  @@index([parent_annotation_id], map: "task_completion_parent_annotation_id_58398c37")
+  @@index([parent_prediction_id], map: "task_completion_parent_prediction_id_053d00d9")
+  @@index([project_id], map: "task_completion_project_id_94072c87")
+  @@index([task_id], map: "task_completion_task_id_b9049fbc")
+  @@index([updated_by_id], map: "task_completion_updated_by_id_1164a739")
+}
+
+/// This model has constraints using non-default deferring rules and requires additional setup for migrations. Visit https://pris.ly/d/constraint-deferring for more info.
+model tasks_annotationdraft {
+  id              Int              @id(map: "tasks_taskcompletiondraft_pkey") @default(autoincrement())
+  result          Json
+  lead_time       Float?
+  created_at      DateTime         @db.Timestamptz(6)
+  updated_at      DateTime         @db.Timestamptz(6)
+  annotation_id   Int?
+  task_id         Int?
+  user_id         Int
+  was_postponed   Boolean
+  import_id       BigInt?
+  task_completion task_completion? @relation(fields: [annotation_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "tasks_annotationdraf_annotation_id_86db74e5_fk_task_comp")
+  task            task?            @relation(fields: [task_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "tasks_taskcompletiondraft_task_id_e575af88_fk_task_id")
+  htx_user        htx_user         @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "tasks_taskcompletiondraft_user_id_b4b84cef_fk_htx_user_id")
+
+  @@index([import_id], map: "tasks_annotationdraft_import_id_29542ca8")
+  @@index([was_postponed], map: "tasks_annotationdraft_was_postponed_6a1ee000")
+  @@index([annotation_id], map: "tasks_taskcompletiondraft_completion_id_dc5dea99")
+  @@index([task_id], map: "tasks_taskcompletiondraft_task_id_e575af88")
+  @@index([user_id], map: "tasks_taskcompletiondraft_user_id_b4b84cef")
+}
+
+/// This model has constraints using non-default deferring rules and requires additional setup for migrations. Visit https://pris.ly/d/constraint-deferring for more info.
+model tasks_failedprediction {
+  id                  Int                 @id @default(autoincrement())
+  message             String?
+  error_type          String?             @db.VarChar(512)
+  model_version       String?
+  created_at          DateTime            @db.Timestamptz(6)
+  ml_backend_model_id Int?
+  model_run_id        Int?
+  project_id          Int?
+  task_id             Int
+  prediction_meta     prediction_meta?
+  ml_mlbackend        ml_mlbackend?       @relation(fields: [ml_backend_model_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "tasks_failedpredicti_ml_backend_model_id_5813a377_fk_ml_mlback")
+  ml_models_modelrun  ml_models_modelrun? @relation(fields: [model_run_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "tasks_failedpredicti_model_run_id_eec73944_fk_ml_models")
+  project             project?            @relation(fields: [project_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "tasks_failedprediction_project_id_6b803bbe_fk_project_id")
+  task                task                @relation(fields: [task_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "tasks_failedprediction_task_id_ed2f3848_fk_task_id")
+
+  @@index([ml_backend_model_id], map: "tasks_failedprediction_ml_backend_model_id_5813a377")
+  @@index([model_run_id], map: "tasks_failedprediction_model_run_id_eec73944")
+  @@index([project_id], map: "tasks_failedprediction_project_id_6b803bbe")
+  @@index([task_id], map: "tasks_failedprediction_task_id_ed2f3848")
+}
+
+/// This model has constraints using non-default deferring rules and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+/// This model has constraints using non-default deferring rules and requires additional setup for migrations. Visit https://pris.ly/d/constraint-deferring for more info.
+model tasks_tasklock {
+  id         Int       @id @default(autoincrement())
+  expire_at  DateTime  @db.Timestamptz(6)
+  task_id    Int
+  user_id    Int
+  unique_id  String?   @unique @db.Uuid
+  created_at DateTime? @db.Timestamptz(6)
+  task       task      @relation(fields: [task_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "tasks_tasklock_task_id_6531a5ed_fk_task_id")
+  htx_user   htx_user  @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "tasks_tasklock_user_id_748ae86f_fk_htx_user_id")
+
+  @@index([task_id], map: "tasks_tasklock_task_id_6531a5ed")
+  @@index([user_id], map: "tasks_tasklock_user_id_748ae86f")
+}
+
+/// This model has constraints using non-default deferring rules and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+/// This model has constraints using non-default deferring rules and requires additional setup for migrations. Visit https://pris.ly/d/constraint-deferring for more info.
+model token_blacklist_blacklistedtoken {
+  id                               BigInt                           @id @default(autoincrement())
+  blacklisted_at                   DateTime                         @db.Timestamptz(6)
+  token_id                         BigInt                           @unique
+  token_blacklist_outstandingtoken token_blacklist_outstandingtoken @relation(fields: [token_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "token_blacklist_blacklistedtoken_token_id_3cc7fe56_fk")
+}
+
+/// This model has constraints using non-default deferring rules and requires additional setup for migrations. Visit https://pris.ly/d/constraint-deferring for more info.
+model token_blacklist_outstandingtoken {
+  id                               BigInt                            @id @default(autoincrement())
+  token                            String
+  created_at                       DateTime?                         @db.Timestamptz(6)
+  expires_at                       DateTime                          @db.Timestamptz(6)
+  user_id                          Int?
+  jti                              String                            @unique(map: "token_blacklist_outstandingtoken_jti_hex_d9bdf6f7_uniq") @db.VarChar(255)
+  token_blacklist_blacklistedtoken token_blacklist_blacklistedtoken?
+  htx_user                         htx_user?                         @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "token_blacklist_outs_user_id_83bc629a_fk_htx_user_")
+
+  @@index([jti], map: "token_blacklist_outstandingtoken_jti_hex_d9bdf6f7_like")
+  @@index([user_id], map: "token_blacklist_outstandingtoken_user_id_83bc629a")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model user_insights {
+  id              Int       @id @default(autoincrement())
+  user_id         Int
+  insight_type    String    @db.VarChar(50)
+  insight_key     String    @db.VarChar(100)
+  insight_value   String
+  confidence      Decimal?  @db.Decimal(5, 4)
+  source          String?   @db.VarChar(50)
+  conversation_id String?   @db.VarChar(100)
+  extracted_at    DateTime? @default(now()) @db.Timestamp(6)
+
+  @@index([confidence], map: "idx_user_insights_confidence")
+  @@index([insight_type], map: "idx_user_insights_type")
+  @@index([user_id], map: "idx_user_insights_user_id")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model user_interactions {
+  id               Int       @id @default(autoincrement())
+  user_id          Int
+  item_id          Int
+  interaction_type String?   @db.VarChar(20)
+  metadata         Json?
+  created_at       DateTime? @default(now()) @db.Timestamp(6)
+
+  @@index([item_id], map: "idx_user_interactions_item_id")
+  @@index([interaction_type], map: "idx_user_interactions_type")
+  @@index([user_id], map: "idx_user_interactions_user_id")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model user_profiles {
+  id                         Int       @id @default(autoincrement())
+  user_id                    Int       @unique
+  phone                      String    @unique @db.VarChar(20)
+  dietary_type               String?   @db.VarChar(20)
+  dietary_restrictions       String[]
+  allergies                  String[]
+  favorite_cuisines          Json?     @default("{}")
+  disliked_ingredients       String[]
+  avg_order_value            Decimal?  @db.Decimal(10, 2)
+  order_frequency            String?   @db.VarChar(20)
+  preferred_meal_times       Json?
+  price_sensitivity          String?   @db.VarChar(20)
+  communication_tone         String?   @db.VarChar(20)
+  personality_traits         Json?     @default("{}")
+  profile_completeness       Int?      @default(0)
+  last_conversation_analyzed DateTime? @db.Timestamp(6)
+  created_at                 DateTime? @default(now()) @db.Timestamp(6)
+  updated_at                 DateTime? @default(now()) @db.Timestamp(6)
+
+  @@index([phone], map: "idx_user_profiles_phone")
+  @@index([user_id], map: "idx_user_profiles_user_id")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model user_search_patterns {
+  id             Int       @id @default(autoincrement())
+  user_id        Int
+  search_query   String?
+  search_filters Json?
+  result_clicked Int?
+  result_ordered Boolean?  @default(false)
+  search_time    DateTime? @default(now()) @db.Timestamp(6)
+
+  @@index([search_time], map: "idx_user_search_patterns_time")
+  @@index([user_id], map: "idx_user_search_patterns_user_id")
+}
+
+/// This model has constraints using non-default deferring rules and requires additional setup for migrations. Visit https://pris.ly/d/constraint-deferring for more info.
+model users_userproducttour {
+  id               Int      @id @default(autoincrement())
+  name             String   @db.VarChar(256)
+  state            String   @db.VarChar(32)
+  interaction_data Json
+  created_at       DateTime @db.Timestamptz(6)
+  updated_at       DateTime @db.Timestamptz(6)
+  user_id          Int
+  htx_user         htx_user @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "users_userproducttour_user_id_64e8adfc_fk_htx_user_id")
+
+  @@index([user_id], map: "users_userproducttour_user_id_64e8adfc")
+}
+
+/// This model has constraints using non-default deferring rules and requires additional setup for migrations. Visit https://pris.ly/d/constraint-deferring for more info.
+model webhook {
+  id                   Int              @id @default(autoincrement())
+  url                  String           @db.VarChar(2048)
+  send_payload         Boolean
+  send_for_all_actions Boolean
+  headers              Json
+  is_active            Boolean
+  created_at           DateTime         @db.Timestamptz(6)
+  updated_at           DateTime         @db.Timestamptz(6)
+  organization_id      Int
+  project_id           Int?
+  organization         organization     @relation(fields: [organization_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "webhook_organization_id_b5440e9a_fk_organization_id")
+  project              project?         @relation(fields: [project_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "webhook_project_id_e686d00c_fk_project_id")
+  webhook_action       webhook_action[]
+
+  @@index([created_at], map: "webhook_created_at_b2a71ea5")
+  @@index([organization_id], map: "webhook_organization_id_b5440e9a")
+  @@index([project_id], map: "webhook_project_id_e686d00c")
+  @@index([updated_at], map: "webhook_updated_at_695b4e7f")
+}
+
+/// This model has constraints using non-default deferring rules and requires additional setup for migrations. Visit https://pris.ly/d/constraint-deferring for more info.
+model webhook_action {
+  id         Int     @id @default(autoincrement())
+  action     String  @db.VarChar(128)
+  webhook_id Int
+  webhook    webhook @relation(fields: [webhook_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "webhook_action_webhook_id_4eb6213f_fk_webhook_id")
+
+  @@unique([webhook_id, action], map: "webhook_action_webhook_id_action_11842b15_uniq")
+  @@index([action], map: "webhook_action_action_4398909e")
+  @@index([action], map: "webhook_action_action_4398909e_like")
+  @@index([webhook_id], map: "webhook_action_webhook_id_4eb6213f")
+}
+
+model ConversationMessage {
+  id          String   @id @default(uuid())
+  sessionId   String   @map("session_id")
+  userId      String?  @map("user_id")
+  phoneNumber String?  @map("phone_number")
+  role        String?
+  content     String?
+  intent      String?
+  confidence  Float?
+  turnNumber  Int?     @map("turn_number")
+  metadata    Json?
+  createdAt   DateTime @default(now()) @map("created_at")
+  sender      String?
+  message     String?
+  phone       String?
+  messageType String?  @map("message_type")
+  messageText String?  @map("message_text")
+  flowId      String?  @map("flow_id")
+  stepId      String?  @map("step_id")
+  variables   Json?
+  platform    String?
+  entities    Json?    @default("{}")
+
+  @@index([sessionId])
+  @@index([userId])
+  @@index([phoneNumber])
+  @@index([intent])
+  @@index([createdAt])
+  @@map("conversation_messages")
+}
+
+model IntentDefinition {
+  id          String   @id @default(uuid())
+  name        String   @unique
+  description String?
+  examples    String[]
+  slots       Json?
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  @@map("intent_definitions")
+}
+
+model NluTrainingData {
+  id           String   @id @default(uuid())
+  text         String   @unique
+  intent       String
+  entities     Json?    @default("{}")
+  tone         String?
+  sentiment    String?
+  confidence   Float
+  source       String
+  reviewStatus String   @default("pending") @map("review_status")
+  userId       String?  @map("user_id")
+  sessionId    String?  @map("session_id")
+  language     String   @default("en")
+  createdAt    DateTime @default(now()) @map("created_at")
+
+  @@index([intent])
+  @@index([reviewStatus])
+  @@index([source])
+  @@map("nlu_training_data")
+}
+
+model VoiceCharacter {
+  id                  String                 @id @default(uuid())
+  name                String                 @unique @db.VarChar(50)
+  displayName         String                 @map("display_name") @db.VarChar(100)
+  description         String?
+  avatar              String?                @db.VarChar(512)
+  personality         Json?                  @default("{}")
+  traits              String[]               @default([])
+  defaultLanguage     String                 @default("hi") @map("default_language") @db.VarChar(10)
+  defaultExaggeration Float                  @default(0.5) @map("default_exaggeration")
+  defaultCfgWeight    Float                  @default(0.5) @map("default_cfg_weight")
+  defaultSpeed        Float                  @default(1.0) @map("default_speed")
+  defaultPitch        Float                  @default(1.0) @map("default_pitch")
+  voiceReferenceUrl   String?                @map("voice_reference_url") @db.VarChar(512)
+  voiceReferenceText  String?                @map("voice_reference_text")
+  ttsEngine           String                 @default("chatterbox") @map("tts_engine") @db.VarChar(50)
+  ttsConfig           Json?                  @default("{}") @map("tts_config")
+  isActive            Boolean                @default(true) @map("is_active")
+  isDefault           Boolean                @default(false) @map("is_default")
+  sortOrder           Int                    @default(0) @map("sort_order")
+  createdAt           DateTime               @default(now()) @map("created_at")
+  updatedAt           DateTime               @updatedAt @map("updated_at")
+  createdBy           String?                @map("created_by") @db.VarChar(100)
+  emotionPresets      VoiceEmotionPreset[]
+  languageSettings    VoiceLanguageSetting[]
+  stylePresets        VoiceStylePreset[]
+  usageLogs           VoiceUsageLog[]
+
+  @@index([isActive], map: "idx_voice_characters_active")
+  @@index([isDefault], map: "idx_voice_characters_default")
+  @@map("voice_characters")
+}
+
+model VoiceLanguageSetting {
+  id                 String         @id @default(uuid())
+  characterId        String         @map("character_id")
+  languageCode       String         @map("language_code") @db.VarChar(10)
+  languageName       String         @map("language_name") @db.VarChar(50)
+  exaggeration       Float          @default(0.5)
+  cfgWeight          Float          @default(0.5) @map("cfg_weight")
+  speed              Float          @default(1.0)
+  pitch              Float          @default(1.0)
+  voiceReferenceUrl  String?        @map("voice_reference_url") @db.VarChar(512)
+  voiceReferenceText String?        @map("voice_reference_text")
+  isEnabled          Boolean        @default(true) @map("is_enabled")
+  createdAt          DateTime       @default(now()) @map("created_at")
+  updatedAt          DateTime       @updatedAt @map("updated_at")
+  character          VoiceCharacter @relation(fields: [characterId], references: [id], onDelete: Cascade)
+
+  @@unique([characterId, languageCode])
+  @@index([characterId], map: "idx_voice_language_character")
+  @@map("voice_language_settings")
+}
+
+model VoiceEmotionPreset {
+  id              String         @id @default(uuid())
+  characterId     String         @map("character_id")
+  name            String         @db.VarChar(50)
+  displayName     String         @map("display_name") @db.VarChar(100)
+  description     String?
+  category        String?        @db.VarChar(50)
+  exaggeration    Float          @default(0.5)
+  cfgWeight       Float          @default(0.5) @map("cfg_weight")
+  speedMultiplier Float          @default(1.0) @map("speed_multiplier")
+  voiceModifiers  Json?          @default("{}") @map("voice_modifiers")
+  sampleText      String?        @map("sample_text")
+  sampleAudioUrl  String?        @map("sample_audio_url") @db.VarChar(512)
+  isActive        Boolean        @default(true) @map("is_active")
+  sortOrder       Int            @default(0) @map("sort_order")
+  createdAt       DateTime       @default(now()) @map("created_at")
+  updatedAt       DateTime       @updatedAt @map("updated_at")
+  character       VoiceCharacter @relation(fields: [characterId], references: [id], onDelete: Cascade)
+
+  @@unique([characterId, name])
+  @@index([characterId], map: "idx_voice_emotion_character")
+  @@map("voice_emotion_presets")
+}
+
+model VoiceStylePreset {
+  id              String         @id @default(uuid())
+  characterId     String         @map("character_id")
+  name            String         @db.VarChar(50)
+  displayName     String         @map("display_name") @db.VarChar(100)
+  description     String?
+  exaggeration    Float          @default(0.5)
+  cfgWeight       Float          @default(0.5) @map("cfg_weight")
+  speed           Float          @default(1.0)
+  pitch           Float          @default(1.0)
+  triggerPatterns String[]       @default([]) @map("trigger_patterns")
+  useForIntents   String[]       @default([]) @map("use_for_intents")
+  sampleText      String?        @map("sample_text")
+  sampleAudioUrl  String?        @map("sample_audio_url") @db.VarChar(512)
+  isActive        Boolean        @default(true) @map("is_active")
+  sortOrder       Int            @default(0) @map("sort_order")
+  createdAt       DateTime       @default(now()) @map("created_at")
+  updatedAt       DateTime       @updatedAt @map("updated_at")
+  character       VoiceCharacter @relation(fields: [characterId], references: [id], onDelete: Cascade)
+
+  @@unique([characterId, name])
+  @@index([characterId], map: "idx_voice_style_character")
+  @@map("voice_style_presets")
+}
+
+model VoiceUsageLog {
+  id               String          @id @default(uuid())
+  characterId      String?         @map("character_id")
+  text             String
+  language         String          @db.VarChar(10)
+  emotionUsed      String?         @map("emotion_used") @db.VarChar(50)
+  styleUsed        String?         @map("style_used") @db.VarChar(50)
+  exaggeration     Float?
+  cfgWeight        Float?          @map("cfg_weight")
+  speed            Float?
+  pitch            Float?
+  processingTimeMs Int?            @map("processing_time_ms")
+  audioLengthMs    Int?            @map("audio_length_ms")
+  audioBytesSize   Int?            @map("audio_bytes_size")
+  source           String          @default("api") @db.VarChar(50)
+  sessionId        String?         @map("session_id") @db.VarChar(100)
+  userId           String?         @map("user_id") @db.VarChar(100)
+  success          Boolean         @default(true)
+  errorMessage     String?         @map("error_message")
+  createdAt        DateTime        @default(now()) @map("created_at")
+  character        VoiceCharacter? @relation(fields: [characterId], references: [id])
+
+  @@index([characterId], map: "idx_voice_usage_character")
+  @@index([createdAt(sort: Desc)], map: "idx_voice_usage_created")
+  @@index([source], map: "idx_voice_usage_source")
+  @@map("voice_usage_logs")
+}
+
+model TtsEngine {
+  id                 String    @id @default(uuid())
+  name               String    @unique @db.VarChar(50)
+  displayName        String    @map("display_name") @db.VarChar(100)
+  description        String?
+  endpoint           String    @db.VarChar(512)
+  healthEndpoint     String?   @map("health_endpoint") @db.VarChar(512)
+  supportedLanguages String[]  @default([]) @map("supported_languages")
+  supportsStreaming  Boolean   @default(false) @map("supports_streaming")
+  supportsCloning    Boolean   @default(false) @map("supports_cloning")
+  supportsEmotions   Boolean   @default(false) @map("supports_emotions")
+  minExaggeration    Float     @default(0.0) @map("min_exaggeration")
+  maxExaggeration    Float     @default(1.0) @map("max_exaggeration")
+  minCfgWeight       Float     @default(0.0) @map("min_cfg_weight")
+  maxCfgWeight       Float     @default(1.0) @map("max_cfg_weight")
+  isActive           Boolean   @default(true) @map("is_active")
+  isDefault          Boolean   @default(false) @map("is_default")
+  lastHealthCheck    DateTime? @map("last_health_check")
+  healthStatus       String?   @map("health_status") @db.VarChar(20)
+  createdAt          DateTime  @default(now()) @map("created_at")
+  updatedAt          DateTime  @updatedAt @map("updated_at")
+
+  @@map("tts_engines")
+}
+
+model search_logs {
+  id                String    @id @db.Uuid
+  query             String
+  search_type       String?   @db.VarChar(50)
+  filters           Json?
+  results_count     Int?
+  execution_time_ms Int?
+  session_id        String?   @db.VarChar(100)
+  user_id           String?   @db.VarChar(100)
+  created_at        DateTime? @default(now()) @db.Timestamp(6)
+
+  @@index([created_at], map: "idx_search_logs_created_at")
+  @@index([query], map: "idx_search_logs_query")
+}

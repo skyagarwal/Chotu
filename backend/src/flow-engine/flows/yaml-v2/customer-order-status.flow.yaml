@@ -1,0 +1,371 @@
+# Customer Order Status Flow (v1)
+# Handles order tracking, status updates, and proactive notifications
+
+id: customer_order_status_v1
+name: Customer Order Status
+version: '1.0'
+description: Track orders and receive status updates
+enabled: true
+finalStates: [end_flow]
+
+triggers:
+  - type: intent
+    intents: [track_order, order_status, where_is_my_order, check_order]
+  - type: message
+    patterns:
+      - 'track'
+      - 'order.*status'
+      - 'where.*order'
+      - 'kahan.*order'
+      - 'mera.*order'
+      - 'my order'
+
+variables:
+  order_id: ''
+  order_status: ''
+  order_details: null
+  eta_minutes: 0
+  delivery_man_name: ''
+  delivery_man_phone: ''
+  tracking_link: ''
+
+nodes:
+  # Entry - check if user has active orders
+  - id: check_active_orders
+    type: action
+    action: php_api
+    params:
+      action: get_customer_orders
+      token: '{{session.auth_token}}'
+      status: active
+    outputs:
+      orders: orders
+      has_active_orders: has_active_orders
+    next: check_orders_exist
+
+  - id: check_orders_exist
+    type: condition
+    conditions:
+      - condition: '{{has_active_orders}} == false'
+        next: no_active_orders
+      - condition: 'length({{orders}}) == 1'
+        next: show_single_order
+      - condition: 'length({{orders}}) > 1'
+        next: list_active_orders
+    default: no_active_orders
+
+  # No active orders
+  - id: no_active_orders
+    type: message
+    message:
+      en: "You don't have any active orders right now. 📭\n\nWould you like to:\n1. 🛒 Place a new order\n2. 📜 View order history"
+      hi: "अभी आपके पास कोई सक्रिय ऑर्डर नहीं है। 📭\n\nक्या आप:\n1. 🛒 नया ऑर्डर दें\n2. 📜 ऑर्डर इतिहास देखें"
+      mr: "सध्या तुमच्याकडे कोणतेही सक्रिय ऑर्डर नाहीत. 📭\n\nतुम्हाला:\n1. 🛒 नवीन ऑर्डर द्यायचे आहे का\n2. 📜 ऑर्डर इतिहास पहा"
+    next: wait_for_order_choice
+
+  # Show single order status
+  - id: show_single_order
+    type: action
+    action: get_order_status_details
+    params:
+      order_id: '{{orders[0].id}}'
+      token: '{{session.auth_token}}'
+    outputs:
+      order_details: order_details
+      eta_minutes: eta_minutes
+      delivery_man: delivery_man
+    next: display_order_status
+
+  # List multiple active orders
+  - id: list_active_orders
+    type: message
+    message:
+      en: "You have {{length(orders)}} active orders:\n\n{{#each orders}}{{@index+1}}. Order #{{this.order_id}} - {{this.status_display}}\n   {{this.store_name}} - ₹{{this.total}}\n\n{{/each}}Reply with the number to track that order."
+      hi: "आपके {{length(orders)}} सक्रिय ऑर्डर हैं:\n\n{{#each orders}}{{@index+1}}. ऑर्डर #{{this.order_id}} - {{this.status_display}}\n   {{this.store_name}} - ₹{{this.total}}\n\n{{/each}}उस ऑर्डर को ट्रैक करने के लिए नंबर भेजें।"
+      mr: "तुमचे {{length(orders)}} सक्रिय ऑर्डर आहेत:\n\n{{#each orders}}{{@index+1}}. ऑर्डर #{{this.order_id}} - {{this.status_display}}\n   {{this.store_name}} - ₹{{this.total}}\n\n{{/each}}त्या ऑर्डरचा मागोवा घेण्यासाठी क्रमांक पाठवा."
+    next: wait_for_order_selection
+
+  - id: wait_for_order_selection
+    type: input
+    input_type: text
+    validation:
+      pattern: '^\d+$'
+    next: get_selected_order_details
+
+  - id: get_selected_order_details
+    type: action
+    action: get_order_status_details
+    params:
+      order_id: '{{orders[input-1].id}}'
+      token: '{{session.auth_token}}'
+    outputs:
+      order_details: order_details
+      eta_minutes: eta_minutes
+      delivery_man: delivery_man
+    next: display_order_status
+
+  # Display detailed order status
+  - id: display_order_status
+    type: message
+    message:
+      en: |
+        📦 *Order #{{order_details.order_id}}*
+        
+        *Status:* {{order_details.status_emoji}} {{order_details.status_display}}
+        
+        *From:* {{order_details.store_name}}
+        *Items:* {{order_details.items_summary}}
+        *Total:* ₹{{order_details.total}}
+        
+        {{#if eta_minutes}}
+        ⏱️ *Estimated Time:* {{eta_minutes}} minutes
+        {{/if}}
+        
+        {{#if delivery_man}}
+        🚴 *Delivery Partner:* {{delivery_man.name}}
+        📞 Contact: {{delivery_man.phone}}
+        {{/if}}
+        
+        {{#if order_details.tracking_link}}
+        📍 *Live Tracking:* {{order_details.tracking_link}}
+        {{/if}}
+        
+        ---
+        Reply:
+        • *CALL* - Call delivery partner
+        • *CANCEL* - Cancel order (if allowed)
+        • *HELP* - Contact support
+      hi: |
+        📦 *ऑर्डर #{{order_details.order_id}}*
+        
+        *स्थिति:* {{order_details.status_emoji}} {{order_details.status_display}}
+        
+        *से:* {{order_details.store_name}}
+        *आइटम:* {{order_details.items_summary}}
+        *कुल:* ₹{{order_details.total}}
+        
+        {{#if eta_minutes}}
+        ⏱️ *अनुमानित समय:* {{eta_minutes}} मिनट
+        {{/if}}
+        
+        {{#if delivery_man}}
+        🚴 *डिलीवरी पार्टनर:* {{delivery_man.name}}
+        📞 संपर्क: {{delivery_man.phone}}
+        {{/if}}
+        
+        {{#if order_details.tracking_link}}
+        📍 *लाइव ट्रैकिंग:* {{order_details.tracking_link}}
+        {{/if}}
+        
+        ---
+        जवाब दें:
+        • *CALL* - डिलीवरी पार्टनर को कॉल करें
+        • *CANCEL* - ऑर्डर रद्द करें (यदि अनुमति हो)
+        • *HELP* - सहायता से संपर्क करें
+      mr: |
+        📦 *ऑर्डर #{{order_details.order_id}}*
+        
+        *स्थिती:* {{order_details.status_emoji}} {{order_details.status_display}}
+        
+        *पासून:* {{order_details.store_name}}
+        *आयटम:* {{order_details.items_summary}}
+        *एकूण:* ₹{{order_details.total}}
+        
+        {{#if eta_minutes}}
+        ⏱️ *अंदाजित वेळ:* {{eta_minutes}} मिनिटे
+        {{/if}}
+        
+        {{#if delivery_man}}
+        🚴 *डिलिव्हरी पार्टनर:* {{delivery_man.name}}
+        📞 संपर्क: {{delivery_man.phone}}
+        {{/if}}
+        
+        {{#if order_details.tracking_link}}
+        📍 *लाइव्ह ट्रॅकिंग:* {{order_details.tracking_link}}
+        {{/if}}
+        
+        ---
+        उत्तर द्या:
+        • *CALL* - डिलिव्हरी पार्टनरला कॉल करा
+        • *CANCEL* - ऑर्डर रद्द करा (परवानगी असल्यास)
+        • *HELP* - समर्थनाशी संपर्क साधा
+    next: wait_for_action
+
+  # Wait for user action
+  - id: wait_for_action
+    type: input
+    input_type: text
+    next: process_action
+
+  - id: process_action
+    type: condition
+    conditions:
+      - condition: 'match({{input}}, "^(call|कॉल)$", "i")'
+        next: initiate_call_delivery
+      - condition: 'match({{input}}, "^(cancel|रद्द)$", "i")'
+        next: check_cancel_allowed
+      - condition: 'match({{input}}, "^(help|मदद|सहायता)$", "i")'
+        next: transfer_to_support
+    default: end_flow
+
+  # Call delivery partner
+  - id: initiate_call_delivery
+    type: condition
+    conditions:
+      - condition: '{{delivery_man}} != null'
+        next: show_delivery_contact
+    default: no_delivery_assigned
+
+  - id: show_delivery_contact
+    type: message
+    message:
+      en: "📞 Your delivery partner's number:\n\n*{{delivery_man.name}}*\n{{delivery_man.phone}}\n\nYou can call them directly or tap the number above."
+      hi: "📞 आपके डिलीवरी पार्टनर का नंबर:\n\n*{{delivery_man.name}}*\n{{delivery_man.phone}}\n\nआप उन्हें सीधे कॉल कर सकते हैं।"
+      mr: "📞 तुमच्या डिलिव्हरी पार्टनरचा नंबर:\n\n*{{delivery_man.name}}*\n{{delivery_man.phone}}\n\nतुम्ही त्यांना थेट कॉल करू शकता."
+    next: end_flow
+
+  - id: no_delivery_assigned
+    type: message
+    message:
+      en: "No delivery partner has been assigned yet. Your order is still being prepared. 🍳"
+      hi: "अभी तक कोई डिलीवरी पार्टनर नियुक्त नहीं किया गया है। आपका ऑर्डर अभी तैयार हो रहा है। 🍳"
+      mr: "अजून कोणताही डिलिव्हरी पार्टनर नियुक्त केलेला नाही. तुमचा ऑर्डर अजून तयार होत आहे. 🍳"
+    next: end_flow
+
+  # Check if cancel is allowed
+  - id: check_cancel_allowed
+    type: action
+    action: check_cancel_eligibility
+    params:
+      order_id: '{{order_details.id}}'
+      token: '{{session.auth_token}}'
+    outputs:
+      can_cancel: can_cancel
+      cancel_reason: cancel_reason
+    next: process_cancel_check
+
+  - id: process_cancel_check
+    type: condition
+    conditions:
+      - condition: '{{can_cancel}} == true'
+        next: confirm_cancel
+    default: cancel_not_allowed
+
+  - id: cancel_not_allowed
+    type: message
+    message:
+      en: "❌ Sorry, this order cannot be canceled.\n\n*Reason:* {{cancel_reason}}\n\nIf you have concerns, please contact support."
+      hi: "❌ क्षमा करें, यह ऑर्डर रद्द नहीं किया जा सकता।\n\n*कारण:* {{cancel_reason}}\n\nकिसी समस्या के लिए कृपया सहायता से संपर्क करें।"
+      mr: "❌ माफ करा, हा ऑर्डर रद्द करता येणार नाही.\n\n*कारण:* {{cancel_reason}}\n\nसमस्या असल्यास कृपया समर्थनाशी संपर्क साधा."
+    next: end_flow
+
+  - id: confirm_cancel
+    type: message
+    message:
+      en: "Are you sure you want to cancel this order?\n\n*Order #{{order_details.order_id}}*\n*Total:* ₹{{order_details.total}}\n\nReply *YES* to confirm or *NO* to keep the order."
+      hi: "क्या आप वाकई इस ऑर्डर को रद्द करना चाहते हैं?\n\n*ऑर्डर #{{order_details.order_id}}*\n*कुल:* ₹{{order_details.total}}\n\nपुष्टि के लिए *YES* या रखने के लिए *NO* भेजें।"
+      mr: "तुम्हाला खरोखर हा ऑर्डर रद्द करायचा आहे का?\n\n*ऑर्डर #{{order_details.order_id}}*\n*एकूण:* ₹{{order_details.total}}\n\nपुष्टीसाठी *YES* किंवा ठेवण्यासाठी *NO* पाठवा."
+    next: wait_cancel_confirmation
+
+  - id: wait_cancel_confirmation
+    type: input
+    input_type: text
+    next: process_cancel_confirmation
+
+  - id: process_cancel_confirmation
+    type: condition
+    conditions:
+      - condition: 'match({{input}}, "^(yes|हां|होय)$", "i")'
+        next: execute_cancel
+    default: cancel_aborted
+
+  - id: execute_cancel
+    type: action
+    action: php_api
+    params:
+      action: cancel_order
+      order_id: '{{order_details.id}}'
+      token: '{{session.auth_token}}'
+      reason: 'Customer requested cancellation via WhatsApp'
+    outputs:
+      cancel_success: success
+      refund_info: refund_info
+    next: show_cancel_result
+
+  - id: show_cancel_result
+    type: condition
+    conditions:
+      - condition: '{{cancel_success}} == true'
+        next: cancel_success_message
+    default: cancel_failed_message
+
+  - id: cancel_success_message
+    type: message
+    message:
+      en: "✅ Your order has been canceled.\n\n{{#if refund_info}}*Refund:* ₹{{refund_info.amount}} will be credited to your {{refund_info.method}} within {{refund_info.days}} days.{{/if}}\n\nWe hope to serve you again soon! 🙏"
+      hi: "✅ आपका ऑर्डर रद्द कर दिया गया है।\n\n{{#if refund_info}}*रिफंड:* ₹{{refund_info.amount}} {{refund_info.days}} दिनों में आपके {{refund_info.method}} में क्रेडिट होगा।{{/if}}\n\nहमें उम्मीद है कि जल्द ही आपकी सेवा करेंगे! 🙏"
+      mr: "✅ तुमचा ऑर्डर रद्द केला आहे.\n\n{{#if refund_info}}*परतावा:* ₹{{refund_info.amount}} {{refund_info.days}} दिवसांत तुमच्या {{refund_info.method}} मध्ये जमा होईल.{{/if}}\n\nआम्हाला आशा आहे की लवकरच तुमची सेवा करू! 🙏"
+    next: end_flow
+
+  - id: cancel_failed_message
+    type: message
+    message:
+      en: "❌ Sorry, we couldn't cancel your order. Please contact support for assistance."
+      hi: "❌ क्षमा करें, हम आपका ऑर्डर रद्द नहीं कर सके। कृपया सहायता के लिए सपोर्ट से संपर्क करें।"
+      mr: "❌ माफ करा, आम्ही तुमचा ऑर्डर रद्द करू शकलो नाही. कृपया मदतीसाठी समर्थनाशी संपर्क साधा."
+    next: transfer_to_support
+
+  - id: cancel_aborted
+    type: message
+    message:
+      en: "Okay, your order is still active. 👍"
+      hi: "ठीक है, आपका ऑर्डर अभी भी सक्रिय है। 👍"
+      mr: "ठीक आहे, तुमचा ऑर्डर अजूनही सक्रिय आहे. 👍"
+    next: end_flow
+
+  # Transfer to support
+  - id: transfer_to_support
+    type: flow_transfer
+    target_flow: customer_support
+
+  # Wait for order choice
+  - id: wait_for_order_choice
+    type: input
+    input_type: text
+    next: process_order_choice
+
+  - id: process_order_choice
+    type: condition
+    conditions:
+      - condition: '{{input}} == "1"'
+        next: transfer_to_ordering
+      - condition: '{{input}} == "2"'
+        next: show_order_history
+    default: end_flow
+
+  - id: transfer_to_ordering
+    type: flow_transfer
+    target_flow: food_ordering
+
+  - id: show_order_history
+    type: action
+    action: php_api
+    params:
+      action: get_customer_orders
+      token: '{{session.auth_token}}'
+      status: all
+      limit: 5
+    outputs:
+      orders: past_orders
+    next: display_history
+
+  - id: display_history
+    type: message
+    message:
+      en: "📜 *Your Recent Orders*\n\n{{#each past_orders}}{{@index+1}}. #{{this.order_id}} - {{this.status_display}}\n   {{this.store_name}} | ₹{{this.total}}\n   {{this.date}}\n\n{{/each}}"
+      hi: "📜 *आपके हाल के ऑर्डर*\n\n{{#each past_orders}}{{@index+1}}. #{{this.order_id}} - {{this.status_display}}\n   {{this.store_name}} | ₹{{this.total}}\n   {{this.date}}\n\n{{/each}}"
+      mr: "📜 *तुमचे अलीकडील ऑर्डर*\n\n{{#each past_orders}}{{@index+1}}. #{{this.order_id}} - {{this.status_display}}\n   {{this.store_name}} | ₹{{this.total}}\n   {{this.date}}\n\n{{/each}}"
+    next: end_flow
+
+  - id: end_flow
+    type: end

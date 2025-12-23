@@ -1,0 +1,1090 @@
+text,intent
+thank you,thanks
+parcel_booking,parcel_booking
+"19.97780465482046, 73.77563128660017",manage_address
+John Doe 9876543210,use_my_details
+Rahul Sharma 9876543210,use_my_details
+how are you,greeting
+pickup https://maps.app.goo.gl/1ENgXjqQP9JCDnvB7,parcel_booking
+Can you find me some samosas,order_food
+बवाँश्वाँ बवाँश्वाँ,chitchat
+Add pizza to cart,order_food
+how are you doing today?,chitchat
+"thanks, that was nice of you",thanks
+"hi, i am rahul from delhi",greeting
+what did i tell you earlier?,repeat_order
+hi there!,greeting
+Heplo,greeting
+प्लेस एन ओर्डर नाओ,order_food
+raj 9983213121,use_my_details
+कि मुझे एक ओडर प्लेस करना है पार्सल का तुरंत हुआ था,parcel_booking
+"shantanu, 9370407508",use_my_details
+"19.98983099878748, 73.77613351417814",manage_address
+akash 9923383838,use_my_details
+btn-0,chitchat
+हुआ थी झाला हुआ था,chitchat
+वो बद्याँ परसन्या,parcel_booking
+उजे पर्सल भेजना है  उजे पर्सल भेजना है  उजे पर्सल भेजना है  उजे पर्सल भेजना है  उजे पर्सल भेजना है  उजे पर्सल भेजना है  उजे पर्सल भेजना है  उजे पर्सल भेजना है  उजे पर्सल भेजना है  उजे पर्सल भेजना है,parcel_booking
+"📍 Location shared:
+XQCP+4JH, Chintamani Colony, Bhagirath Sankul, Nashik, Maharashtra 422009, India
+Road: Barne Road
+
+Coordinates: 19.970256, 73.786782",manage_address
+"📍 Location shared:
+ASC-42, Ashwin Nagar, Nashik, Maharashtra 422009, India
+Road: Barne Road
+
+Coordinates: 19.960518, 73.758770",manage_address
+order_food,order_food
+Where is my order?,track_order
+Track my delivery,track_order
+I want to track my parcel,track_order
+What is the status of my order?,track_order
+Can you tell me where my package is?,track_order
+How can I check my order status?,track_order
+Show me my order tracking,track_order
+I need to track something I ordered,track_order
+Give me tracking update,track_order
+Is my order out for delivery?,track_order
+When will my parcel arrive?,track_order
+Check delivery status,track_order
+My order tracking please,track_order
+Where is my food delivery?,track_order
+Track food order,track_order
+Has my order been shipped?,track_order
+Order status check,track_order
+I want to see where my delivery is,track_order
+I want to order food,order_food
+Show tracking info,track_order
+ETA for my delivery?,track_order
+9,create_parcel_order
+8,login
+send a parcel,create_parcel_order
+YES,repeat_order
+https://maps.app.goo.gl/zWBWuV8QbrXEd48R8,manage_address
+"19.964190567593565, 73.76975438931225",manage_address
+2,chitchat
+5,chitchat
+online payment,checkout
+cash on delivery,checkout
+9923833883 ajasa,use_my_details
+can you share me my saved address,manage_address
+"cool, thanks",thanks
+how are you?,chitchat
+thanks for the help earlier,thanks
+"hey, i am feeling a bit tired today",chitchat
+i am doing ok,chitchat
+मेरा ऑर्डर कहां है?,track_order
+पार्सल ट्रैक करो,track_order
+मेरी डिलीवरी कब आएगी?,track_order
+ऑर्डर का स्टेटस बताओ,track_order
+मेरा सामान कहां पहुंचा?,track_order
+ट्रैकिंग दिखाओ,track_order
+कब तक मिलेगा?,track_order
+मेरा पैकेज कहां है?,track_order
+डिलीवरी स्टेटस चेक करो,track_order
+खाना कहां पहुंचा?,track_order
+Mera order kaha hai?,track_order
+Track karo mera parcel,track_order
+Delivery kab tak aayegi?,track_order
+Order status batao,track_order
+Mera samaan kaha pahucha?,track_order
+Tracking dikhao please,track_order
+Kab tak milega mera order?,track_order
+Mera package kidhar hai?,track_order
+Delivery status check karo,track_order
+Khana kaha pahucha?,track_order
+Order tracking chahiye,track_order
+Kya status hai mera order ka?,track_order
+Parcel ka update do,track_order
+Delivery out ho gayi?,track_order
+Order track karna hai,track_order
+Meri delivery ka kya hua?,track_order
+Check karo order kitna door hai,track_order
+Delivery boy kaha hai?,track_order
+Rider ka location batao,track_order
+Package shipped hua ya nahi?,track_order
+ETA kya hai delivery ka?,track_order
+Food delivery kab tak?,track_order
+"20.0059, 73.7897",manage_address
+i paid,checkout
+location_shared,manage_address
+Location shared,manage_address
+rahul,use_my_details
+naresh 99999987,use_my_details
+Jajshs 883737383,use_my_details
+पाम समय चाओ,chitchat
+"📍 Location shared:
+XQCP+4JH, Chintamani Colony, Bhagirath Sankul, Nashik, Maharashtra 422009, India
+House/Flat: BE3/25/3
+Road: Sambhaji Stadium Road
+
+Coordinates: 19.970256, 73.786782",manage_address
+9923383838 akash,use_my_details
+Order pohoch gaya kya?,track_order
+Tracking number se check karo,track_order
+Live location chahiye,track_order
+Order movement dikhao,track_order
+Parcel kab pick hua?,track_order
+Dispatch ho gaya kya?,track_order
+Order assigned hai kya?,track_order
+Bhai mera order ka kya scene hai?,track_order
+Yaar check kar de delivery kab aayegi,track_order
+Please track my recent order,track_order
+Can you help me find my package,track_order
+I ordered something yesterday where is it,track_order
+My delivery is late please check,track_order
+Wheres my stuff,track_order
+Pls track,track_order
+Package kaha hai abhi?,track_order
+Mera order aa gaya?,track_order
+"19.957323841220294, 73.81272786196229",manage_address
+what is this ?,help
+ramesh 9923383838,use_my_details
+akasj 9158886329,use_my_details
+jhhhh 9988899987,use_my_details
+akash 9923596798,use_my_details
+i want you to pickup items from my friends manav and get it delivered to my home,parcel_booking
+"📍 Location shared:
+12/464/178, Sharanpur Gaothan, Nashik, Maharashtra 422002, India
+
+Coordinates: 20.000000, 73.780000",manage_address
+pickup bag from my home and deliver it to my friend akash,parcel_booking
+Can you show me my saved address,manage_address
+Ramesh,greeting
+Ramesh bhai 9923383838,use_my_details
+Order food delivery,order_food
+I am hungry,order_food
+Can I get some food,order_food
+I want pizza,order_food
+Order biryani for me,order_food
+Get me some thali,order_food
+Looking for nearby restaurants,order_food
+What can I eat?,order_food
+Food delivery please,order_food
+I need lunch,order_food
+Dinner options,order_food
+Breakfast delivery,order_food
+Order noodles,order_food
+Get me some momos,order_food
+Chinese food delivery,order_food
+South Indian food,order_food
+Tandoori chicken order,order_food
+I want dal makhani,order_food
+Order roti sabzi,order_food
+Paneer butter masala please,order_food
+I want samosa,order_food
+Get me chai,order_food
+Coffee delivery,order_food
+I want dessert,order_food
+Ice cream delivery,order_food
+Order some snacks,order_food
+Fast food delivery,order_food
+I want a burger,order_food
+Order fries,order_food
+Add 12998 to cart,search_product
+Rahul dev 9876543210,use_my_details
+badiya,chitchat
+my self,chitchat
+confrin,chitchat
+"📍 Location shared:
+Swaroop Bunglow, ME-44, Magha Sector, Shanti Nagar, Lekha Nagar, Nashik, Maharashtra 422009, India
+
+Coordinates: 19.977739, 73.775915",manage_address
+"📍 Location shared:
+ASC-43, Ashwin Nagar, Nashik, Maharashtra 422009, India
+
+Coordinates: 19.960454, 73.758762",manage_address
+Yes,greeting
+Add pizza to my cart,add_to_cart
+I want to send a package,parcel_booking
+i want to send a parcel,parcel_booking
+मुझे खाना चाहिए,order_food
+I want to send a parcel from College Road to Gangapur,parcel_booking
+I need to send a parcel,parcel_booking
+i want to send a parcel from cidco to gangapur road,parcel_booking
+i want to order food,order_food
+pizza,order_food
+i want to send a parcel from college road nashik to gangapur road nashik,parcel_booking
+i want to order biryani,order_food
+send parcel,parcel_booking
+i want biryani,order_food
+gangapur road nashik,manage_address
+i want pizza,order_food
+what can you do?,service_inquiry
+repeat my last order,repeat_order
+btn parcel,parcel_booking
+what can you do,service_inquiry
+"📍 Location shared:
+Plot No.ME-38 , Sunderban Colony, Bhujbal Farm Rd, Shanti Nagar, Cidco, Nashik, Maharashtra 422009, India
+Road: Bhujbal Farm Road
+
+Coordinates: 19.977687, 73.776268",manage_address
+food,order_food
+Add Chicken Good Chilli to cart,add_to_cart
+Add Chicken Hakka Noodles to cart,add_to_cart
+search for pizza,search_product
+i want to search for pizza,search_product
+i want to order some food,order_food
+btn food,order_food
+"📍 Location shared:
+2Q97+RFQ, Nashik Rd, D. K. Nagar, Nashik, Maharashtra 422013, India
+Road: Nashik Road
+
+Coordinates: 20.019313, 73.763671",manage_address
+Show me catogery,service_inquiry
+where is my order,track_order
+i need help,help
+show me paneer dishes,search_product
+help me,help
+cancle,cancel_order
+I need help,help
+Add Amul Pav Bhaji (2 Butter Pav) to cart,add_to_cart
+Book a cab to airport,service_inquiry
+Track my parcel delivery,track_order
+nashik road,manage_address
+"📍 Location shared:
+B-931/5, Maa Ganga Colony, Kalewadi, Pimpri-Chinchwad, Maharashtra 411017, India
+
+Coordinates: 19.970256, 73.786782",manage_address
+"📍 Location shared:
+ASC-42, Ashwin Nagar, Nashik, Maharashtra 422009, India
+
+Coordinates: 19.960545, 73.758758",manage_address
+u there,greeting
+"pickup location is my home address and drop is my friend suresh , bike would be fine",parcel_booking
+pickup items from my home and delivery it to my office,parcel_booking
+use my name and number,login
+pickup my home and drop at my frineds place,parcel_booking
+put my details on it,login
+Recipient name is Rahul and phone is 9123456789,use_my_details
+खाना मंगाना है,order_food
+"Recipient: Rahul, Phone: 9876543210",use_my_details
+my home,parcel_booking
+my name and number,use_my_details
+"hello, i want to order food",order_food
+show me restaurants near me,search_product
+hii,greeting
+"📍 Location shared:
+ASC-42, Ashwin Nagar, Nashik, Maharashtra 422009, India
+
+Coordinates: 19.960518, 73.758770",manage_address
+option-3,manage_address
+"📍 Location shared:
+ASC-42, Ashwin Nagar, Nashik, Maharashtra 422009, India
+Road: road
+
+Coordinates: 19.960518, 73.758770",manage_address
+"📍 Location shared:
+Akash Bunglow, Plot No.ME-38 , Sunderban Colony , Bhujbal farm lane, Shanti Nagar, Lekha Nagar, Nashik, Maharashtra 422009, India
+
+Coordinates: 19.977659, 73.776215",manage_address
+"📍 Location shared:
+XQCP+4JH, Chintamani Colony, Bhagirath Sankul, Nashik, Maharashtra 422009, India
+
+Coordinates: 19.970256, 73.786782",manage_address
+Akash 9923383838,use_my_details
+"📍 Location shared:
+ASC-42, Ashwin Nagar, Nashik, Maharashtra 422009, India
+House/Flat: 10
+Road: Fatehabad Road
+
+Coordinates: 19.960518, 73.758770",manage_address
+how are you today?,chitchat
+cacnecl,cancel_order
+"📍 Location shared:
+Akash Bunglow, Plot No.ME-38 , Sunderban Colony , Bhujbal farm lane, Shanti Nagar, Lekha Nagar, Nashik, Maharashtra 422009, India
+House/Flat: 10
+Road: Fatehabad Road
+
+Coordinates: 19.977659, 73.776215",manage_address
+"nashik road, near railway station",manage_address
+"college road, nashik",manage_address
+small box with documents,parcel_booking
+rahul sharma 9876543210,use_my_details
+??,greeting
+college road,manage_address
+rahul 9876543210,use_my_details
+"near cbs, nashik",search_product
+priya 9123456789,use_my_details
+"nashik road railway station, nashik",manage_address
+cbs nashik,manage_address
+nashik road railway station,manage_address
+cbs bus stand nashik,manage_address
+"old mumbai highway, nashik, maharashtra 422001",manage_address
+"near cbs bus stand opposite hdfc bank, gangapur road, nashik 422001",manage_address
+"📍 location shared:
+near cbs bus stand, gangapur road, nashik
+coordinates: 19.9834, 73.7800",manage_address
+"📍 location shared:
+nashik road railway station
+coordinates: 19.9975, 73.7898",manage_address
+"📍 location shared:
+cbs bus stand, gangapur road, nashik
+coordinates: 19.9834, 73.7800",manage_address
+"📍 location shared:
+cbs bus stand, nashik
+coordinates: 19.9834, 73.7800",manage_address
+"Sector 17, Chandigarh",manage_address
+"📍 Location shared:
+XQCP+4JH, Chintamani Colony, Bhagirath Sankul, Nashik, Maharashtra 422009, India
+House/Flat: 3
+Road: Avdumber Cidco Road
+
+Coordinates: 19.970256, 73.786782",manage_address
+"📍 Location shared:
+ASC-42, Ashwin Nagar, Nashik, Maharashtra 422009, India
+House/Flat: 3
+Road: Avdumber Cidco Road
+
+Coordinates: 19.960518, 73.758770",manage_address
+cacncel,cancel_order
+Put my name,use_my_details
+"📍 Location shared:
+Akash Bunglow, Plot No.ME-38 , Sunderban Colony , Bhujbal farm lane, Shanti Nagar, Lekha Nagar, Nashik, Maharashtra 422009, India
+House/Flat: 3
+Road: Avdumber Cidco Road
+
+Coordinates: 19.977659, 73.776215",manage_address
+whta can you do,service_inquiry
+ok do it,create_parcel_order
+https://maps.app.goo.gl/jtztDWiqAihCsFLY8 pickup,parcel_booking
+"📍 Location shared:
+WQVG+HFX, Pathardi Gaon, Pathardi Phata, Nashik, Maharashtra 422009, India
+
+Coordinates: 19.944689, 73.776456",manage_address
+"can you pickup my shoes from my home and send to office , right now",parcel_booking
+i am the rcecipt,use_my_details
+i am,greeting
+"https://maps.app.goo.gl/ihnHG6fdcVMBxfjg9 - pickup location 
+19.95061912699634, 73.80737438807638 - drop location",parcel_booking
+"📍 Location shared:
+XPHG+QVG, Ambad Satpur Link Rd, Bajrang Nagar, Medage Nagar, Nashik, Maharashtra 422010, India
+Road: Ambad Satpur Link Road
+
+Coordinates: 19.980098, 73.727259",manage_address
+whats up,chitchat
+what vechiles you have ?,service_inquiry
+"📍 Location shared:
+Plot No.ME-38 , Sunderban Colony, Bhujbal Farm Rd, Shanti Nagar, Cidco, Nashik, Maharashtra 422009, India
+Road: Bhujbal Farm Road
+
+Coordinates: 19.977704, 73.776280",manage_address
+"📍 Location shared:
+ASC-42, Ashwin Nagar, Nashik, Maharashtra 422009, India
+Road: Bhujbal Farm Road
+
+Coordinates: 19.960518, 73.758770",manage_address
+what r u good at,service_inquiry
+https://maps.app.goo.gl/QiEYWKZBWDkRqXZa7 rakesh 9934657867,manage_address
+kaise ho,greeting
+"📍 Location shared:
+11, P-11, Lekha Nagar Bypass Rd, Lekhanagar Colony, Cidco, Nashik, Maharashtra 422009, India
+House/Flat: 11
+Road: Lekha Nagar Bypass Road
+
+Coordinates: 19.973463, 73.773071",manage_address
+From Bombay ??,manage_address
+"📍 Location shared:
+P-17, Agra - Mumbai Hwy, MIDC Ambad, Nashik, Maharashtra 422010, India
+Road: Agra - Mumbai Highway
+
+Coordinates: 19.957383, 73.754381",manage_address
+भूख लगी है,order_food
+What's up,chitchat
+Complete the task,checkout
+What r u doing ??,chitchat
+Complete my profile,manage_address
+contact_support,service_inquiry
+Lets go,chitchat
+"Kya hai yeah , i didnt ask for this",complaint
+What more can you offer,service_inquiry
+Put mine,create_parcel_order
+बिरयानी लाओ,order_food
+Pickup my shoes from my friends house and get it deliverd to my home,parcel_booking
+search my phone book,contact_search
+what problem,complaint
+"📍 Location shared:
+BE3/25/3, N52/BE3/25/3, Sambhaji Stadium Rd, Sinhasta Nagar, Nashik, Maharashtra 422009, India
+House/Flat: BE3/25/3
+Road: Sambhaji Stadium Road
+
+Coordinates: 19.970256, 73.786782",manage_address
+"📍 Location shared:
+BE3/25/3, N52/BE3/25/3, Sambhaji Stadium Rd, Sinhasta Nagar, Nashik, Maharashtra 422009, India
+House/Flat: BE3/25/3
+Road: Sambhaji Stadium Road
+
+Coordinates: 19.963719, 73.759542",manage_address
+put mine,repeat_order
+पिज़्ज़ा ऑर्डर करो,order_food
+rahul 9923383838,use_my_details
+थाली भेजो,order_food
+mangwale offic on google maps,manage_address
+"📍 Location shared:
+ASC-42, Ashwin Nagar, Nashik, Maharashtra 422009, India
+House/Flat: BE3/60/4
+Road: Sihsth Nagar Road
+
+Coordinates: 19.960475, 73.758758",manage_address
+i am not raj?,chitchat
+pickup my shoes,parcel_booking
+"📍 Location shared:
+XQ5V+H8J, Gandhi Nagar Airport Area, Wadala Gaon, Nashik, Maharashtra 422006, India
+
+Coordinates: 19.959507, 73.793863",manage_address
+लंच का क्या है?,order_food
+Get my shoes picked up from my home and send it to https://maps.app.goo.gl/XPQkgjfSVZ1oQoCBA his name is ramesh 9923383838,parcel_booking
+delivery location is https://maps.app.goo.gl/XPQkgjfSVZ1oQoCBA,manage_address
+priya 9923383838,use_my_details
+डिनर मंगाना है,order_food
+what can you do more,service_inquiry
+which vechiles you have ?,service_inquiry
+चाय मंगाओ,order_food
+समोसा खाना है,order_food
+Mujhe khana chahiye,order_food
+Khana mangana hai,order_food
+Bhookh lagi hai yaar,order_food
+Biryani order karo,order_food
+Pizza lao mujhe,order_food
+Thali bhejo ghar pe,order_food
+Lunch kya hai aaj?,order_food
+Dinner mangana hai,order_food
+Chai mangao please,order_food
+Samosa khana hai,order_food
+Chole bhature order karo,order_food
+Dal chawal lao,order_food
+Roti sabzi mangao,order_food
+Paneer butter masala chahiye,order_food
+https://new.mangwale.com/payment/razorpay/103636,checkout
+कर दो कि अ क्यों कि यह काट कहां से आ गया है इसमें अ  कि यह काट कहां से आ गया है इसमें अ कर दो कि यह काट कहां से आ गया है इसमें अ,chitchat
+वासल कोडर प्लीस करना है  वासल कोडर प्लीस करना है  वासल कोडर प्लीस करना है  वासल कोडर प्लीस करना है  वासल कोडर प्लीस करना है  वासल कोडर प्लीस करना है  वासल कोडर प्लीस करना है  वासल कोडर प्लीस करना है  वासल कोडर प्लीस करना है,parcel_booking
+pay for order 103884,parcel_booking
+Chicken tikka order do,order_food
+Momos lao yaar,order_food
+Noodles khana hai,order_food
+Chinese food order karo,order_food
+South Indian khana dikhao,order_food
+Dosa mangana hai,order_food
+Idli sambhar bhejo,order_food
+Burger lao ek,order_food
+Fries chahiye,order_food
+Ice cream order karo,order_food
+Meetha kuch bhejo,order_food
+Kuch khane ko manga do,order_food
+Restaurant dikhao nearby,order_food
+"📍 Location shared:
+Plot No.ME-38 , Sunderban Colony, Bhujbal Farm Rd, Shanti Nagar, Cidco, Nashik, Maharashtra 422009, India
+Road: Bhujbal Farm Road
+
+Coordinates: 19.977705, 73.776277",manage_address
+Rahul 9876543210,use_my_details
+Food options batao,order_food
+Veg thali order do,order_food
+Non veg special chahiye,order_food
+Rajma chawal bhejo,order_food
+Aloo paratha lao,order_food
+Maggi mangao ghar pe,order_food
+Pasta order karna hai,order_food
+Sandwich lao ek,order_food
+Lassi chahiye,order_food
+Cold drink mangao,order_food
+Shake lao chocolate wala,order_food
+Juice delivery chahiye,order_food
+Snacks mangao kuch,order_food
+Book parcel delivery,parcel_booking
+Send package to my friend,parcel_booking
+I need courier service,parcel_booking
+Deliver something for me,parcel_booking
+Pickup and drop service,parcel_booking
+Book a delivery pickup,parcel_booking
+Send documents,parcel_booking
+Deliver this to another address,parcel_booking
+How to send a package?,parcel_booking
+Courier booking please,parcel_booking
+I have something to send,parcel_booking
+New parcel order,parcel_booking
+Schedule a pickup,parcel_booking
+Send to family,parcel_booking
+Deliver gift to someone,parcel_booking
+Parcel pickup needed,parcel_booking
+Express delivery booking,parcel_booking
+Same day delivery service,parcel_booking
+Send clothes to relative,parcel_booking
+Medicine delivery needed,parcel_booking
+Send electronics safely,parcel_booking
+Fragile item delivery,parcel_booking
+Heavy parcel pickup,parcel_booking
+I want to book a parcel,parcel_booking
+Urgent courier needed,parcel_booking
+Send within city,parcel_booking
+Interstate parcel delivery,parcel_booking
+Local delivery booking,parcel_booking
+Ship to another city,parcel_booking
+Bulk parcel sending,parcel_booking
+online,checkout
+"19.96081573858909, 73.73858333991693",manage_address
+error ??,help
+"📍 Location shared:
+Plot No.ME-38 , Sunderban Colony, Bhujbal Farm Rd, Shanti Nagar, Cidco, Nashik, Maharashtra 422009, India
+Road: Bhujbal Farm Road
+
+Coordinates: 19.977701, 73.776279",manage_address
+me,greeting
+i dont see any vechile,service_inquiry
+raj 9999999999,use_my_details
+पार्सल भेजना है,parcel_booking
+कुरियर बुक करो,parcel_booking
+सामान भेजना है,parcel_booking
+डिलीवरी बुक करनी है,parcel_booking
+पिकअप लगाओ,parcel_booking
+दस्तावेज भेजने हैं,parcel_booking
+पैकेज भिजवाना है,parcel_booking
+कपड़े भेजने हैं,parcel_booking
+I want to send a parcel,parcel_booking
+गिफ्ट भेजना है,parcel_booking
+जल्दी डिलीवरी चाहिए,parcel_booking
+Parcel bhejna hai,parcel_booking
+Courier book karo,parcel_booking
+Samaan bhejna hai,parcel_booking
+Delivery book karni hai,parcel_booking
+Pickup lagao ghar se,parcel_booking
+Documents bhejne hain,parcel_booking
+Package bhijwana hai,parcel_booking
+Kapde bhejne hain ghar,parcel_booking
+Gift bhejna hai friend ko,parcel_booking
+Jaldi delivery chahiye urgent,parcel_booking
+Kuch bhejwana hai,parcel_booking
+Parcel ka rate kya hai?,parcel_booking
+Delivery charges batao,parcel_booking
+Pickup schedule karo kal,parcel_booking
+Same day delivery ho sakti hai?,parcel_booking
+Express courier chahiye,parcel_booking
+Medicine bhejna hai urgent,parcel_booking
+Electronics safely bhejo,parcel_booking
+Fragile item hai handle carefully,parcel_booking
+Heavy parcel pickup karo,parcel_booking
+City ke andar delivery,parcel_booking
+Doosre sheher bhejna hai,parcel_booking
+Local delivery book karo,parcel_booking
+wjhar can tiy do,chitchat
+need to pick up some stuff from my home,parcel_booking
+Multiple parcels bhejne hain,parcel_booking
+Relative ke paas bhejna hai,parcel_booking
+Office se pickup lena hai,parcel_booking
+Home delivery book karni hai,parcel_booking
+Parcel bhijwao address pe,parcel_booking
+Rakhi bhejna hai bhai ko,parcel_booking
+Birthday gift bhejo friend ko,parcel_booking
+Books courier karni hain,parcel_booking
+Laptop send karna hai safely,parcel_booking
+Mobile phone delivery,parcel_booking
+Food parcel bhejo,parcel_booking
+Sweets bhejna hai Diwali pe,parcel_booking
+Return parcel bhejwana hai,parcel_booking
+Pickup drop service chahiye,parcel_booking
+Ek parcel book karo please,parcel_booking
+Delivery slot book karo,parcel_booking
+Aaj hi pickup ho sakti hai?,parcel_booking
+Kal subah pickup lagao,parcel_booking
+Evening me pickup ho jayegi?,parcel_booking
+Office timing me pickup,parcel_booking
+Night delivery available hai?,parcel_booking
+Sunday ko bhi pickup hoti hai?,parcel_booking
+COD parcel bhej sakte ho?,parcel_booking
+Prepaid delivery book karo,parcel_booking
+Insurance wala courier,parcel_booking
+Valuable item bhejna hai,parcel_booking
+Jewellery courier safely,parcel_booking
+cbs se satpur delivery,parcel_booking
+who made you,help
+same day delivery,service_inquiry
+urgent delivery,create_parcel_order
+parcel ka rate kya hai,service_inquiry
+khana order karna hai,order_food
+I want to order food aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa,order_food
+I want to order biryani,order_food
+this is a text message,chitchat
++917796033248,login
+https://goo.gl/maps/E5xcQJvhaj2d3fmL7,manage_address
+refund policy,help
+Do you have work from home??,chitchat
+Job che,chitchat
+For making receipt,chitchat
+I received a call in morning,chitchat
+show me chinese food,order_food
+veg paneer dishes,order_food
+chicken tikka,order_food
+cheap food under 100,order_food
+dominos pizza,order_food
+Is any vacancy for Data analyst,chitchat
+"Harshvardhan Patil
+Flat F34
+7588708810",use_my_details
+"Majithia Villa no 7, Nirman Vila Row House, Vesa Mala , Behind Big Bazaar , College Road , Nashik
+
+Ronak Majithia
+7030669699",manage_address
+Please send me your address / location for the interview,chitchat
+Pls send me location,manage_address
+No drop is different,parcel_booking
+Raj 9923383838,use_my_details
+Home-42,chitchat
+Where ?,chitchat
+Pickup address,manage_address
+Plz send me app link to join,login
+Are you understand what i am saying,chitchat
+Please send me address,create_parcel_order
+Tomorrow,greeting
+What can you do for me,browse_menu
+https://maps.app.goo.gl/bYYsCEgFQQpmiSmx9,manage_address
+https://maps.app.goo.gl/be6D9wrdY9rQbb3k8,manage_address
+https://maps.app.goo.gl/VzgYQRCk1SwBDPW78,manage_address
+https://maps.app.goo.gl/fXy5BuPxQTAvPbhD7,manage_address
+https://maps.app.goo.gl/QiEYWKZBWDkRqXZa7,manage_address
+https://maps.app.goo.gl/Jw8z7V9eU1HLbpEq7?g_st=iw,manage_address
+"[Location: 19.9776707,73.7762707]",manage_address
+"[Location: 19.972821921632,73.784683272243]",manage_address
+"[Location: 19.986089736194,73.766404017806]",manage_address
+https://maps.app.goo.gl/vkwiCq8bw9766vk79,manage_address
+📱 Pay Online (UPI/C,checkout
+💳 Pay ₹44,checkout
+Order,order_food
+What is this mangwale,help
+Payment accept karne bolo 29 nov and 6 dec k hai,complaint
+I am vegitarian,chitchat
+Bhagat tarachand,search_product
+"[respond in english] Oke, pay online.",chitchat
+[respond in english] um,chitchat
+[respond in english] مجھے کیا آپ کرسکتے ہیں؟,chitchat
+marathi yeti ka tumala ?,chitchat
+i dont want text in hindi i want it to be in english but hinglish,chitchat
+9923383838,login
+8888777766,login
+Rs 625,chitchat
+[Image received],chitchat
+"I apologize for missing your call earlier. Could you please let me know what it was regarding?
+
+Regards 
+Sneha katkule",greeting
+Isha Pal this side,greeting
+"19.941683372345228, 73.7485021489015",manage_address
+"19.960170341095154, 73.77875612544705",manage_address
+"19.951639343364793, 73.83932522617795",manage_address
+"19.951475109442427, 73.83905875318099",manage_address
+"19.94626204556546, 73.75589312113014",manage_address
+what is this?,help
+what can you do for me,help
+what can you,help
+what is this mangwale,help
+contact number,help
+give feedback,chitchat
+hindi aatihai ?,chitchat
+who is raj,chitchat
+tell me a joke,chitchat
+what's the weather,chitchat
+Hi sir send me payment details,checkout
+ih,chitchat
+1,chitchat
+123456,chitchat
+3,chitchat
+"",chitchat
+my,chitchat
+asdfghjkl,chitchat
+@#$%^&*(),chitchat
+12345,chitchat
+Please send me the address / location,manage_address
+https://new.mangwale.com/payment/razorpay/103632,checkout
+https://new.mangwale.com/payment/razorpay/103633,checkout
+https://new.mangwale.com/payment/razorpay/103634,checkout
+https://new.mangwale.com/payment/razorpay/103635,checkout
+Payment not happning,checkout
+"College Road, Nashik",manage_address
+"Gangapur Road, Nashik",manage_address
+"📍 Location shared:
+Sunder Nagar Colony, 38, New, Shanti Nagar, Lekha Nagar, Nashik, Maharashtra 422009, India
+Road: New
+
+Coordinates: 19.977685, 73.776274",manage_address
+__LOCATION__,manage_address
+option-1,chitchat
+btn-1,chitchat
+option-2,chitchat
+why,chitchat
+what is my name?,chitchat
+do you remember my name?,chitchat
+i gave you,chitchat
+my name,chitchat
+confired ?,chitchat
+i gave u,chitchat
+what is mangwale,help
+complete my profile,help
+नेशद,use_my_details
+ramesh,use_my_details
+तो था था था था था था था था था था था था था था था था था था था था था था था था था था था था था था था था था था था था था था था था था था था था था था था था था था था था था था था था था था था था था था था था था था था था था था था था था �,chitchat
+करते हुए हुए हुए हुए हुए हुए हुए हुए हुए हुए हुए हुए हुए हुए हुए हुए हुए हुए हुए हुए हुए हुए हुए हुए हुए हुए हुए हुए हुए हुए हुए हुए हुए हुए हुए हुए हुए हुए हुए हुए हुए हुए हुए हु�,chitchat
+कि शिष्ट और नाकुस और नाकुस और नाकुस और नाकुस और नाकुस और नाकुस,chitchat
+I dont know what you talking,chitchat
+mangwale,chitchat
+530 after discount,chitchat
+https://new.mangwale.com/payment/razor-pay/pay?payment id=b44085e1-7135-4136-be41-88651a0bf3f5,checkout
+कर दो हुआ है कि आप लोग हैं हुआ था,greeting
+मुझे एक पार्सल ओडर प्लेस करना है अभी  मुझे एक पार्सल ओडर प्लेस करना है अभी  मुझे एक पार्सल ओडर प्लेस करना है अभी  मुझे एक पार्सल ओडर प्लेस करना है अभी  मुझे एक पार्सल ओडर प्लेस करना है अभी  मुझे एक पार्सल ओडर प्लेस करना है अभी  मुझे एक पार्सल ओडर प्लेस करना है अभी,parcel_booking
+कोई reply नहीं आ रहा है मुझे,complaint
+use mine,use_my_details
+पारसल पिक अप नाओ,parcel_booking
+[respond in english] پارسل آرڈر پلیس کرنا ہے,parcel_booking
+मुझे परसल बेजना है ना सिक से बूमबे,parcel_booking
+"मेरा इट्रिस ले लोग गर काप, मेरा एट्रिस ले लोग गर काप, मेरा एट्रिस ले लोग गर काप, मेरा एट्रिस ले लोग गर काप, मेरा एट्रिस ले लोग गर काप, मेरा एट्रिस ले लोग गर काप, मेरा एट्रिस ले लोग गर काप, मेरा एट्रिस ले लोग गर काप",earn
+home,greeting
+what can you suggest,search_product
+burgers,order_food
+how r u,greeting
+"hi, my name is rahul",greeting
+"hello, my name is priya. how are you today?",greeting
+how are you? i am doing great!,chitchat
+मुझे खाना ऑर्डर करना है,order_food
+namaste kaise ho,greeting
+hello!,greeting
+how are you doing?,chitchat
+मुझे एक ओडर प्लेस करना है पार्सल का  मुझे एक ओडर प्लेस करना है पार्सल का  मुझे एक ओडर प्लेस करना है पार्सल का  मुझे एक ओडर प्लेस करना है पार्सल का  मुझे एक ओडर प्लेस करना है पार्सल का  मुझे एक ओडर प्लेस करना है पार्सल का,create_parcel_order
+"mere ghar se picup karna hai and deliver karna hai 19.960170341095154, 73.77875612544705",parcel_booking
+"मेरे घर से एक पार्चल पिक अप करना है, मेरे घर का एड्रेस है तुम्हारे पास।",parcel_booking
+day is going fine but i am unable to send a parcel to my friend can you hekp me,parcel_booking
+show me restaurants,order_food
+help,greeting
+order pizza,order_food
+Parcel,greeting
+use my,use_my_details
+मुझे मेरे घर से जूते मेरे फ्रेंड के हाँ भेजने हैं,parcel_booking
+Add Kolhapuri Pav Bhaji (2 Butter Pav) to cart,order_food
+what are you doing,chitchat
+"I want to place an order, I want to place an order, I want to place an order, I want to place an order,",create_parcel_order
+कैंसल,cancel_order
+कि मुझे पार्सल बेचना है एक हुआ कि मुझे पार्सल बेचना है एक,parcel_booking
+start,greeting
+इसे कैंसल करो और मुझे एक पार्सल भेजना है।,cancel_order
+कर दो,create_parcel_order
+?,greeting
+करने के लिए,login
+ok,greeting
+hi,greeting
+hello,greeting
+Hi,greeting
+pick my home,parcel_booking
+show mew saved address,manage_address
+confirm,greeting
+put my details,use_my_details
+आप कैसे हो?,chitchat
+documents,greeting
+"hello, my name is rahul",greeting
+नमस्ते,greeting
+मुझे पार्सल ओर्डर प्लेस करना है।,parcel_booking
+parcel,greeting
+near nashik road railway station,search_product
+location,greeting
+"mere ghar se shoes picup karna hai and deliver karna hai 19.960170341095154, 73.77875612544705",parcel_booking
+एक पार्सन बेजना है अर्जक्ट  एक पार्सन बेजना है अर्जक्ट  एक पार्सन बेजना है अर्जक्ट,parcel_booking
+एक पार्सल बेशना है अर्जिंट मेरे घर से  एक पार्सल बेशना है अर्जिंट मेरे घर से,parcel_booking
+raj 999999999,use_my_details
+एक पार्सल भेजना है मेरे घर से पिक अप करना है और डिलिवरी एट्रिस मैं देम का भी,parcel_booking
+raj 9923383838,use_my_details
+हाँ,greeting
+"muje college road se saaman pickup karna hai , sab se badi gadi konsi hai?",parcel_booking
+Near byk college,search_product
+"📍 Location shared:
+Plot No.ME-38 , Sunderban Colony, Bhujbal Farm Rd, Shanti Nagar, Lekha Nagar, Nashik, Maharashtra 422009, India
+Road: Bhujbal Farm Road
+
+Coordinates: 19.970256, 73.786782",manage_address
+"📍 Location shared:
+ASC-42, Ashwin Nagar, Nashik, Maharashtra 422009, India
+Road: Mohammed Ali Road
+
+Coordinates: 19.960518, 73.758770",manage_address
+"📍 Location shared:
+Sunder Nagar Colony, 38, New, Shanti Nagar, Lekha Nagar, Nashik, Maharashtra 422009, India
+Road: New
+
+Coordinates: 19.977679, 73.776267",manage_address
+कि वाइज मैं नेम राज है मैं नॉट राज मैं नेम फॉर माय अकाउंट कर दो,use_my_details
+मेरे घर से पिक अप करना है और आगे डिलिवर करना है,parcel_booking
+कर दो कि अ कर दो कर दो कर दो कर दो कर दो कर दो कर दो,repeat_order
+एक पार्सल पिक अप करना है मेरे घर से एड्रेस मेरे घर का यूज करना और ड्रॉप करने के लिए मैं आपको एड्रेस दूंगा,parcel_booking
+مجھے ایک پارسل ڈیلیوری کروانی ہے,parcel_booking
+can you show me my saved address,manage_address
+my address,manage_address
+show me my saved address ?? do you have it or not ?,manage_address
+my office,manage_address
+can you share me the status of this order,track_order
+Confirm,greeting
+payment confirmed,parcel_booking
+yes,repeat_order
+kuch saaman mangwana hai,order_food
+Add Khaman Dhokla to cart,add_to_cart
+office,greeting
+Kaise ho,chitchat
+हुआ है कि अ क्योंकि यू डू फॉर में टुड़े थे हुआ था  कर दो,order_food
+पाना सेकी,parcel_booking
+मुझे एक parcel order place करना है अभी तुरंथ,create_parcel_order
+करते हुए दिनों के लिए जाने के लिए जाने के लिए जाने के लिए.,chitchat
+[respond in english] Thank you.,thanks
+[respond in english] What can you do? تم کیا کر سکتے ہو؟,service_inquiry
+"📍 Location shared:
+Plot No.ME-38 , Sunderban Colony, Bhujbal Farm Rd, Shanti Nagar, Lekha Nagar, Nashik, Maharashtra 422009, India
+Road: Bhujbal Farm Road
+
+Coordinates: 19.977744, 73.776170",manage_address
+Show me adrress book,manage_address
+my saved address,manage_address
+"📍 Location shared:
+XQCP+4JH, Chintamani Colony, Bhagirath Sankul, Nashik, Maharashtra 422009, India
+Road: Bhujbal Farm Road
+
+Coordinates: 19.970256, 73.786782",manage_address
+Raj singh 992736282,use_my_details
+Order ID: #103884,track_order
+"📍 Location shared:
+ASC-42, Ashwin Nagar, Nashik, Maharashtra 422009, India
+
+Coordinates: 19.960461, 73.758773",manage_address
+"📍 Location shared:
+799/19, Murlidhar Vajre Nagar, Govind Nagar, Old Cidco, Nashik, Maharashtra 422009, India
+House/Flat: 809
+Road: Ring Road
+
+Coordinates: 19.986904, 73.775632",manage_address
+Rahul 9999999999,use_my_details
+मुझे एक पारसल बुक करना है जल्दी,parcel_booking
+my orders status,track_order
+show me address,manage_address
+इस पर्संखावोड़ लिएश कनना है  इस पर्संखावोड़ लिएश कनना है  इस पर्संखावोड़ लिएश कनना है  इस पर्संखावोड़ लिएश कनना है  इस पर्संखावोड़ लिएश कनना है  इस पर्संखावोड़ लिएश कनना है,parcel_booking
+put my name and number,use_my_details
+"I want to place an order. मुझे एक वाटर प्लेश करना है, अभी जल्दी.",create_parcel_order
+"मुझे पार्सल का ओर्डर करना है, फूड का नहीं।",parcel_booking
+"मुझे पासर ओर्डर प्लेश करना है मेरे घर से, मेरे सेव डेटरिस में है।",parcel_booking
+मेरे घर से मेरे शूज मनाने मुझे मेरे घर पे  मेरे घर से मेरे शूज मनाने मुझे मेरे घर पे,parcel_booking
+कि मेरे घर से समान लेकर मेरे प्रेंड के हां पार्सल पहुंचाना है  कि अ  कि अ  कि अ,parcel_booking
+मुझे एक पार्सल ओट प्रेस करना है अभी,parcel_booking
+पिक अप एट्रेस मेरे घर का ले लेना  पिक अप एट्रेस मेरे घर का ले लेना  पिक अप एट्रेस मेरे घर का ले लेना  पिक अप एट्रेस मेरे घर का ले लेना  पिक अप एट्रेस मेरे घर का ले लेना  पिक अप एट्रेस मेरे घर का ले लेना,parcel_booking
+[respond in english] پرسل آرڈر پلیس کرنا ہے,parcel_booking
+"📍 Location shared:
+BLOCK-A3, DWARKA SUNCREST SOCIETY, रामबाग कॉलनी, रहाटणी, पिंपरी चिंचवड, महाराष्ट्र 411017, India
+
+Coordinates: 19.970256, 73.786782",manage_address
+please help me cancel order number 12345,cancel_order
+cancel order 12345,cancel_order
+track my order 12345,track_order
+what payment methods do you accept,service_inquiry
+bike,greeting
+"📍 Location shared:
+Dehabhonoo Complex, Nashik Road, Nashik, Maharashtra 422006, India
+Road: Bhujbal Farm Road
+
+Coordinates: 19.972890, 73.822952",manage_address
+Priya 9923383838,use_my_details
+Order status,track_order
+Order status 103891,track_order
+103891 Order,track_order
+Hello,greeting
+what is the order status now,track_order
+is the payment done for 103892,track_order
+order 103892,repeat_order
+"📍 Location shared:
+ASC-42, Ashwin Nagar, Nashik, Maharashtra 422009, India
+House/Flat: BE3/25/3
+Road: Sambhaji Stadium Road
+
+Coordinates: 19.960518, 73.758770",manage_address
+"what can you do , can you get my shoes picked from my home and delivered to my office",parcel_booking
+helllo,greeting
+i m good n u,chitchat
+hey,greeting
+do you have my home address,manage_address
+do you have any saved address?,manage_address
+lets pick home some stuff,parcel_booking
+"📍 Location shared:
+12/464/178, Sharanpur Gaothan, Nashik, Maharashtra 422002, India
+Contact: ramesh (992338388)
+Type: home
+
+Coordinates: 20.000000, 73.780000",manage_address
+what can you do ?,service_inquiry
+Pickup from Nashik Road near train station,parcel_booking
+"Deliver to CIDCO, sector 5",manage_address
+"Its a small box, about 2kg",parcel_booking
+small box about 2kg,order_food
+"📍 Location shared:
+Nashik Road Station, Nashik
+Coordinates: 20.0063, 73.7789",manage_address
+"📍 Location shared:
+CIDCO, Sector 5, Nashik
+Coordinates: 19.9975, 73.7898",manage_address
+"small box, about 2kg",order_food
+"📍 Location shared:
+Nashik Road Station
+Coordinates: 20.0063, 73.7789",manage_address
+"📍 Location shared:
+CIDCO Nashik
+Coordinates: 19.9975, 73.7898",manage_address
+Priya 9876543210,use_my_details
+small box 2kg,parcel_booking
+"i need to quicky get my shoes pickup from my home and get it to badmintion court , rachna at gangapur road",parcel_booking
+"📍 Location shared:
+2Q84+864, Narsinha Nagar, Datey Nagar, Veer Sawarkar Nagar, Nashik, Maharashtra 422013, India
+Contact: Akash Agarwal (09158886329)
+Type: home
+
+Coordinates: 20.015720, 73.755171",manage_address
+call me akash,use_my_details
+yeah konsi basha hai ?,chitchat
+kya karsakte hai aap,search_product
+What can you do,service_inquiry
+Recheck login,login
+I want to send my shoes to my friend,parcel_booking
+"📍 Location shared:
+Sunder Nagar Colony, 38, New, Shanti Nagar, Lekha Nagar, Nashik, Maharashtra 422009, India
+Contact: Rajesh (9923383838)
+Type: home
+Road: New
+
+Coordinates: 19.977666, 73.776278",create_parcel_order
+"📍 Location shared:
+ASC-42, Ashwin Nagar, Nashik, Maharashtra 422009, India
+Contact: Akash (9158886329)
+Type: home
+Road: New
+
+Coordinates: 19.960518, 73.758770",manage_address
+I just gave it,repeat_order
+I don't see any vechile,service_inquiry
+Bike,greeting
+i want to send a parcel to my friend,create_parcel_order
+hello i want to send a parcel,create_parcel_order
+i want to send a parcel to 123 main street,create_parcel_order
+near kthm college,search_product
+continue,greeting
+bike delivery,create_parcel_order
+"cbs bus stand, nashik road, nashik",manage_address
+namaste,greeting
+namaskar,greeting
+helo,greeting
+hiiii,greeting
+good afternoon,greeting
+good evening,greeting
+sup,greeting
+yo,greeting
+kem cho,chitchat
+kya haal,chitchat
+hello ji,greeting
+hii there,greeting
+hey there,greeting
+greetings,greeting
+kya kar sakte ho,help
+options,greeting
+services,greeting
+what services do you offer,service_inquiry
+tell me about mangwale,service_inquiry
+kya kya hai,chitchat
+features,greeting
+how does this work,chitchat
+guide me,help
+parcel bhejni hai,parcel_booking
+delivery karni hai,parcel_booking
+send something,parcel_booking
+pickup and drop,parcel_booking
+genie service,service_inquiry
+courier chahiye,parcel_booking
+mujhe parcel bhejna hai,parcel_booking
+document deliver karna hai,parcel_booking
+keys bhejni hai,parcel_booking
+tiffin delivery,order_food
+bike delivery chahiye,create_parcel_order
+auto delivery,create_parcel_order
+tempo booking,create_parcel_order
+nashik me parcel,parcel_booking
+gangapur road se college road,manage_address
+good morning,greeting
+mujhe madad chahiye,help
+mujhe pizza khana hai,order_food
+pizza chahiye,order_food
+biryani mangwao,order_food
+misal pav,order_food
+hungry,greeting
+bhook lagi hai,chitchat
+dinner order,order_food
+lunch karna hai,order_food
+breakfast,greeting
+chinese food,order_food
+south indian,search_product
+thali chahiye,order_food
+burger,order_food
+sandwich,greeting
+coffee,greeting
+juice,greeting
+ice cream,order_food
+best restaurant nearby,order_food
+aap kaise ho,greeting
+what's your name,chitchat
+tumhara naam kya hai,greeting
+are you a robot,chitchat
+i'm bored,earn
+momos,order_food
+😀😀😀,chitchat
+help me now!!!,help
+stop,greeting
+cbs bus stand,manage_address
+i want to order pizza,order_food
+add coin pizza to cart,order_food
+bye,greeting
+talk to support,service_inquiry
+I have a complaint,complaint
+store timings,service_inquiry
+delivery locations,service_inquiry
+hindi mein baat karo,chitchat
+biryani,greeting
+मुझे बिरयानी चाहिए,order_food
+south indian breakfast,order_food
+something quick to eat,order_food
+healthy salads,order_food
+cold coffee,order_food
+thali combo,order_food
+samosa,order_food
+add first one to cart,add_to_cart
+🍕🍔🍟,order_food
+biryni pizzza,order_food
+no wait send parcel,create_parcel_order
+मुझे pizza चाहिए delivery ke liye,order_food
+show me biryani options,order_food
+I want to order pizza,order_food
+Hi test,greeting
+Bappas pav bhaji,order_food
+Hello sir,greeting
+Near RK,manage_address
+Location send kara na,parcel_booking
+Pls msg u r service,service_inquiry
+Sir process sanga,manage_address
+Drop Location,manage_address
+Details send krra,use_my_details
+📋 List Menu,search_product
+Donyoubhave food items ??,order_food
+Do you have c bhagat tarafhand,search_product
+From which restaurant,search_product
+Pickup a parcel from my home quickly,create_parcel_order
+Pick up cloths from my home,parcel_booking
+whats happning,chitchat
+Parcel bhejna hai urgently,parcel_booking
+Kaise sab,chitchat
+Very good,chitchat
+Share me veg restaurant near me,order_food
+I want to pickup a parcel cancel this food,cancel_order
+Pick up parcel from my home,parcel_booking
+Parcel pickup from my home,parcel_booking
+Order Food,order_food
+Send Parcel,create_parcel_order
+🏠 home - Sunder Nag,manage_address
+I don't see any catogery,service_inquiry
+📍 Pick from Map,search_product
+My,greeting
+Rahul 9999999923,use_my_details
+mai bhut badiya,order_food

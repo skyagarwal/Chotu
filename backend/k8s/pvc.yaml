@@ -1,0 +1,97 @@
+# Persistent Volume Claims for Mangwale
+---
+# Uploads storage (shared across backend pods)
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mangwale-uploads-pvc
+  namespace: mangwale
+spec:
+  accessModes:
+    - ReadWriteMany  # Shared across pods
+  storageClassName: standard
+  resources:
+    requests:
+      storage: 50Gi
+---
+# vLLM model cache (shared for model files)
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: vllm-model-cache-pvc
+  namespace: mangwale
+spec:
+  accessModes:
+    - ReadWriteMany
+  storageClassName: standard
+  resources:
+    requests:
+      storage: 200Gi  # Large for model files
+---
+# Training data storage
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: training-data-pvc
+  namespace: mangwale
+spec:
+  accessModes:
+    - ReadWriteMany
+  storageClassName: standard
+  resources:
+    requests:
+      storage: 100Gi
+---
+# Label Studio data
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: labelstudio-data-pvc
+  namespace: mangwale
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: fast-ssd
+  resources:
+    requests:
+      storage: 20Gi
+---
+# OSRM data (map files)
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: osrm-data-pvc
+  namespace: mangwale
+spec:
+  accessModes:
+    - ReadOnlyMany  # Read-only, shared
+  storageClassName: standard
+  resources:
+    requests:
+      storage: 30Gi
+---
+# Backup storage
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: backup-pvc
+  namespace: mangwale
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: standard
+  resources:
+    requests:
+      storage: 200Gi
+---
+# StorageClass for fast SSD (for databases)
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: fast-ssd
+provisioner: kubernetes.io/gce-pd  # Change for AWS/Azure
+parameters:
+  type: pd-ssd  # GCP: pd-ssd, AWS: gp3, Azure: Premium_LRS
+reclaimPolicy: Retain
+allowVolumeExpansion: true
+volumeBindingMode: WaitForFirstConsumer

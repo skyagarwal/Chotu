@@ -1,0 +1,820 @@
+# Parcel/Delivery Tracking Flow - YAML Version
+# Handles order tracking, delivery status, and rider communication
+
+name: parcel
+version: "1.0"
+description: Parcel and delivery tracking flow with real-time updates
+
+initial_state: start
+
+context:
+  orderId: null
+  trackingNumber: null
+  orderDetails: null
+  riderInfo: null
+  deliveryStatus: null
+  estimatedArrival: null
+  lastLocation: null
+
+states:
+  start:
+    type: decision
+    on_entry:
+      - action: check_active_orders
+        params:
+          userId: "{{userId}}"
+    transitions:
+      - event: has_active_orders
+        target: show_active_orders
+      - event: no_active_orders
+        target: no_orders
+      - event: single_order
+        target: show_order_status
+
+  no_orders:
+    type: input
+    on_entry:
+      - action: speak
+        params:
+          text: "You don't have any active orders right now. Would you like to place a new order or track a past delivery?"
+          text_swahili: "Huna oda yoyote inayoendelea sasa hivi. Ungependa kuweka oda mpya au kufuatilia uwasilishaji uliopita?"
+    transitions:
+      - event: new_order
+        target: redirect_to_order
+      - event: past_order
+        target: request_order_id
+      - event: input_received
+        target: parse_intent
+
+  parse_intent:
+    type: action
+    on_entry:
+      - action: classify_intent
+        params:
+          input: "{{input}}"
+    transitions:
+      - event: track_order
+        target: request_order_id
+      - event: new_order
+        target: redirect_to_order
+      - event: other
+        target: clarify_request
+
+  clarify_request:
+    type: input
+    on_entry:
+      - action: speak
+        params:
+          text: "I can help you track a delivery or place a new order. Which would you like?"
+    transitions:
+      - event: track
+        target: request_order_id
+      - event: order
+        target: redirect_to_order
+
+  redirect_to_order:
+    type: action
+    on_entry:
+      - action: start_flow
+        params:
+          flow: order
+    transitions:
+      - event: complete
+        target: end_redirect
+
+  show_active_orders:
+    type: input
+    on_entry:
+      - action: speak
+        params:
+          text: "You have {{active_orders_count}} active orders: {{orders_summary}}. Which one would you like to track?"
+          text_swahili: "Una oda {{active_orders_count}} zinazoendelea: {{orders_summary}}. Ni ipi ungependa kufuatilia?"
+    transitions:
+      - event: input_received
+        target: select_order
+      - event: all
+        target: show_all_statuses
+
+  select_order:
+    type: action
+    on_entry:
+      - action: identify_order
+        params:
+          input: "{{input}}"
+          orders: "{{active_orders}}"
+    transitions:
+      - event: found
+        target: show_order_status
+      - event: not_found
+        target: order_selection_failed
+
+  order_selection_failed:
+    type: input
+    on_entry:
+      - action: speak
+        params:
+          text: "I couldn't identify that order. Please say the order number or the restaurant name."
+    transitions:
+      - event: input_received
+        target: select_order
+
+  show_all_statuses:
+    type: message
+    on_entry:
+      - action: get_all_order_statuses
+      - action: speak
+        params:
+          text: "Here are all your active orders: {{all_statuses}}"
+    transitions:
+      - event: next
+        target: ask_specific_order
+
+  ask_specific_order:
+    type: input
+    on_entry:
+      - action: speak
+        params:
+          text: "Would you like more details about any of these orders?"
+    transitions:
+      - event: yes
+        target: show_active_orders
+      - event: no
+        target: end_tracking
+      - event: input_received
+        target: select_order
+
+  request_order_id:
+    type: input
+    on_entry:
+      - action: speak
+        params:
+          text: "Please provide your order number or tracking ID. You can find it in your confirmation SMS."
+          text_swahili: "Tafadhali toa nambari ya oda yako au kitambulisho cha ufuatiliaji. Unaweza kuipata katika SMS yako ya uthibitisho."
+    transitions:
+      - event: input_received
+        target: lookup_order
+
+  lookup_order:
+    type: action
+    on_entry:
+      - action: find_order
+        params:
+          query: "{{input}}"
+          userId: "{{userId}}"
+    transitions:
+      - event: found
+        target: show_order_status
+      - event: not_found
+        target: order_not_found
+      - event: multiple
+        target: clarify_order
+
+  clarify_order:
+    type: input
+    on_entry:
+      - action: speak
+        params:
+          text: "I found multiple orders matching that. Did you mean: {{matching_orders}}?"
+    transitions:
+      - event: input_received
+        target: lookup_order
+
+  order_not_found:
+    type: input
+    on_entry:
+      - action: speak
+        params:
+          text: "I couldn't find an order with that number. Please check and try again, or say 'help' for assistance."
+    transitions:
+      - event: input_received
+        target: lookup_order
+      - event: help
+        target: escalate_help
+
+  show_order_status:
+    type: message
+    on_entry:
+      - action: get_order_details
+        params:
+          orderId: "{{context.orderId}}"
+      - action: get_rider_location
+        params:
+          orderId: "{{context.orderId}}"
+      - action: speak
+        params:
+          text: "Order #{{context.orderId}} from {{context.orderDetails.restaurant}}: {{context.deliveryStatus}}. {{status_message}}"
+          text_swahili: "Oda #{{context.orderId}} kutoka {{context.orderDetails.restaurant}}: {{context.deliveryStatus}}. {{status_message}}"
+    transitions:
+      - event: next
+        target: status_options
+
+  status_options:
+    type: input
+    on_entry:
+      - action: speak
+        params:
+          text: "What would you like to do? You can: track live location, contact rider, update address, or report an issue."
+    transitions:
+      - event: track
+        target: live_tracking
+      - event: contact
+        target: contact_rider
+      - event: update_address
+        target: change_address
+      - event: issue
+        target: report_issue
+      - event: eta
+        target: show_eta
+      - event: cancel
+        target: cancel_order_check
+      - event: done
+        target: end_tracking
+
+  live_tracking:
+    type: message
+    on_entry:
+      - action: get_live_location
+        params:
+          orderId: "{{context.orderId}}"
+      - action: speak
+        params:
+          text: "Your rider {{context.riderInfo.name}} is currently at {{context.lastLocation.address}}, about {{context.lastLocation.distance}} away. Estimated arrival: {{context.estimatedArrival}}."
+      - action: send_tracking_link
+        params:
+          orderId: "{{context.orderId}}"
+          phone: "{{context.phoneNumber}}"
+    transitions:
+      - event: next
+        target: tracking_options
+
+  tracking_options:
+    type: input
+    on_entry:
+      - action: speak
+        params:
+          text: "I've sent you a live tracking link via SMS. Would you like to contact the rider or do something else?"
+    transitions:
+      - event: contact
+        target: contact_rider
+      - event: refresh
+        target: live_tracking
+      - event: back
+        target: status_options
+      - event: done
+        target: end_tracking
+
+  show_eta:
+    type: message
+    on_entry:
+      - action: calculate_eta
+        params:
+          orderId: "{{context.orderId}}"
+      - action: speak
+        params:
+          text: "Your order should arrive at {{context.estimatedArrival}}. The rider is {{eta_distance}} away, currently {{rider_status}}."
+    transitions:
+      - event: next
+        target: status_options
+
+  contact_rider:
+    type: decision
+    on_entry:
+      - action: check_rider_contactable
+        params:
+          orderId: "{{context.orderId}}"
+    transitions:
+      - event: can_contact
+        target: contact_options
+      - event: not_assigned
+        target: rider_not_assigned
+      - event: completed
+        target: order_already_delivered
+
+  rider_not_assigned:
+    type: message
+    on_entry:
+      - action: speak
+        params:
+          text: "A rider hasn't been assigned to your order yet. Your order is being prepared. I'll notify you when a rider picks it up."
+    transitions:
+      - event: next
+        target: status_options
+
+  contact_options:
+    type: input
+    on_entry:
+      - action: speak
+        params:
+          text: "You can call or send a message to your rider {{context.riderInfo.name}}. What would you prefer?"
+    transitions:
+      - event: call
+        target: initiate_call
+      - event: message
+        target: send_rider_message
+      - event: back
+        target: status_options
+
+  initiate_call:
+    type: action
+    on_entry:
+      - action: connect_call
+        params:
+          orderId: "{{context.orderId}}"
+          callType: "masked"  # Use masked number for privacy
+      - action: speak
+        params:
+          text: "Connecting you to your rider now. The call will be connected through a masked number for your privacy."
+    transitions:
+      - event: connected
+        target: call_connected
+      - event: failed
+        target: call_failed
+
+  call_connected:
+    type: end
+    on_entry:
+      - action: speak
+        params:
+          text: "You're now connected to {{context.riderInfo.name}}."
+
+  call_failed:
+    type: input
+    on_entry:
+      - action: speak
+        params:
+          text: "I couldn't connect the call. Would you like to try again or send a message instead?"
+    transitions:
+      - event: retry
+        target: initiate_call
+      - event: message
+        target: send_rider_message
+      - event: back
+        target: status_options
+
+  send_rider_message:
+    type: input
+    on_entry:
+      - action: speak
+        params:
+          text: "What would you like to tell the rider? For example, 'Call me when you arrive' or 'Building entrance is on the side street'."
+    transitions:
+      - event: input_received
+        target: confirm_message
+
+  confirm_message:
+    type: input
+    on_entry:
+      - action: speak
+        params:
+          text: "I'll send this message to your rider: '{{input}}'. Is that correct?"
+    transitions:
+      - event: yes
+        target: deliver_message
+      - event: no
+        target: send_rider_message
+
+  deliver_message:
+    type: action
+    on_entry:
+      - action: send_message_to_rider
+        params:
+          orderId: "{{context.orderId}}"
+          message: "{{rider_message}}"
+      - action: speak
+        params:
+          text: "Message sent! Your rider will see it shortly."
+    transitions:
+      - event: sent
+        target: message_sent
+      - event: failed
+        target: message_failed
+
+  message_sent:
+    type: message
+    on_entry:
+      - action: speak
+        params:
+          text: "Is there anything else you need help with for this order?"
+    transitions:
+      - event: next
+        target: status_options
+
+  message_failed:
+    type: message
+    on_entry:
+      - action: speak
+        params:
+          text: "Sorry, I couldn't send the message. Please try calling the rider instead."
+    transitions:
+      - event: next
+        target: contact_options
+
+  change_address:
+    type: decision
+    on_entry:
+      - action: check_address_changeable
+        params:
+          orderId: "{{context.orderId}}"
+    transitions:
+      - event: can_change
+        target: enter_new_address
+      - event: too_late
+        target: address_change_too_late
+      - event: rider_en_route
+        target: address_change_rider_notified
+
+  address_change_too_late:
+    type: message
+    on_entry:
+      - action: speak
+        params:
+          text: "Sorry, the rider is too close to change the delivery address now. You can contact them directly to guide them to a different spot."
+    transitions:
+      - event: next
+        target: contact_rider
+
+  address_change_rider_notified:
+    type: input
+    on_entry:
+      - action: speak
+        params:
+          text: "The rider is already on the way. I can notify them of the new address, but this may delay your delivery. Do you want to proceed?"
+    transitions:
+      - event: yes
+        target: enter_new_address
+      - event: no
+        target: status_options
+
+  enter_new_address:
+    type: input
+    on_entry:
+      - action: speak
+        params:
+          text: "Please provide the new delivery address."
+    transitions:
+      - event: input_received
+        target: validate_new_address
+
+  validate_new_address:
+    type: action
+    on_entry:
+      - action: geocode_address
+        params:
+          address: "{{input}}"
+    transitions:
+      - event: valid
+        target: confirm_address_change
+      - event: invalid
+        target: invalid_new_address
+      - event: out_of_range
+        target: address_out_of_range
+
+  invalid_new_address:
+    type: input
+    on_entry:
+      - action: speak
+        params:
+          text: "I couldn't find that address. Please provide a more specific location."
+    transitions:
+      - event: input_received
+        target: validate_new_address
+
+  address_out_of_range:
+    type: message
+    on_entry:
+      - action: speak
+        params:
+          text: "Sorry, the new address is outside the delivery range. The rider can't deliver to that location."
+    transitions:
+      - event: next
+        target: status_options
+
+  confirm_address_change:
+    type: input
+    on_entry:
+      - action: speak
+        params:
+          text: "Change delivery address to {{validated_address}}? Additional delivery fee may apply: {{extra_fee}}."
+    transitions:
+      - event: yes
+        target: update_address
+      - event: no
+        target: status_options
+
+  update_address:
+    type: action
+    on_entry:
+      - action: update_delivery_address
+        params:
+          orderId: "{{context.orderId}}"
+          newAddress: "{{validated_address}}"
+      - action: notify_rider_address_change
+        params:
+          orderId: "{{context.orderId}}"
+    transitions:
+      - event: success
+        target: address_updated
+      - event: failed
+        target: address_update_failed
+
+  address_updated:
+    type: message
+    on_entry:
+      - action: speak
+        params:
+          text: "Address updated! Your rider has been notified. New estimated arrival: {{new_eta}}."
+    transitions:
+      - event: next
+        target: status_options
+
+  address_update_failed:
+    type: message
+    on_entry:
+      - action: speak
+        params:
+          text: "Sorry, I couldn't update the address. Please try contacting the rider directly."
+    transitions:
+      - event: next
+        target: contact_rider
+
+  cancel_order_check:
+    type: decision
+    on_entry:
+      - action: check_cancellation_eligibility
+        params:
+          orderId: "{{context.orderId}}"
+    transitions:
+      - event: can_cancel_free
+        target: confirm_cancel_free
+      - event: can_cancel_fee
+        target: confirm_cancel_fee
+      - event: cannot_cancel
+        target: cannot_cancel
+
+  confirm_cancel_free:
+    type: input
+    on_entry:
+      - action: speak
+        params:
+          text: "Are you sure you want to cancel this order? You'll receive a full refund."
+    transitions:
+      - event: yes
+        target: process_cancellation
+      - event: no
+        target: status_options
+
+  confirm_cancel_fee:
+    type: input
+    on_entry:
+      - action: speak
+        params:
+          text: "Since your order is being prepared, a cancellation fee of {{cancellation_fee}} applies. You'll be refunded {{refund_amount}}. Do you want to proceed?"
+    transitions:
+      - event: yes
+        target: process_cancellation
+      - event: no
+        target: status_options
+
+  cannot_cancel:
+    type: message
+    on_entry:
+      - action: speak
+        params:
+          text: "Sorry, this order can't be cancelled as the rider is already on the way. You can refuse delivery, but a fee may apply."
+    transitions:
+      - event: next
+        target: status_options
+
+  process_cancellation:
+    type: action
+    on_entry:
+      - action: cancel_order
+        params:
+          orderId: "{{context.orderId}}"
+          reason: "customer_request"
+    transitions:
+      - event: success
+        target: cancellation_success
+      - event: failed
+        target: cancellation_failed
+
+  cancellation_success:
+    type: end
+    on_entry:
+      - action: speak
+        params:
+          text: "Your order has been cancelled. Refund of {{refund_amount}} will be processed within 24 hours."
+      - action: emit
+        params:
+          event: order_cancelled
+          data:
+            orderId: "{{context.orderId}}"
+
+  cancellation_failed:
+    type: message
+    on_entry:
+      - action: speak
+        params:
+          text: "I couldn't cancel the order. Please contact support for assistance."
+    transitions:
+      - event: next
+        target: escalate_help
+
+  report_issue:
+    type: input
+    on_entry:
+      - action: speak
+        params:
+          text: "I'm sorry you're having an issue. What's the problem? Late delivery, wrong items, rider issue, or something else?"
+    transitions:
+      - event: late
+        target: late_delivery_issue
+      - event: wrong_items
+        target: wrong_items_issue
+      - event: rider
+        target: rider_issue
+      - event: input_received
+        target: classify_issue
+
+  classify_issue:
+    type: action
+    on_entry:
+      - action: classify_delivery_issue
+        params:
+          input: "{{input}}"
+    transitions:
+      - event: late_delivery
+        target: late_delivery_issue
+      - event: wrong_items
+        target: wrong_items_issue
+      - event: rider_behavior
+        target: rider_issue
+      - event: other
+        target: general_issue
+
+  late_delivery_issue:
+    type: action
+    on_entry:
+      - action: check_delivery_delay
+        params:
+          orderId: "{{context.orderId}}"
+    transitions:
+      - event: significantly_delayed
+        target: significant_delay_response
+      - event: minor_delay
+        target: minor_delay_response
+      - event: on_time
+        target: not_delayed_response
+
+  significant_delay_response:
+    type: message
+    on_entry:
+      - action: apply_delay_compensation
+        params:
+          orderId: "{{context.orderId}}"
+      - action: speak
+        params:
+          text: "I apologize for the significant delay. I've added {{compensation_amount}} credit to your account. Your order should arrive in {{updated_eta}}."
+    transitions:
+      - event: next
+        target: issue_follow_up
+
+  minor_delay_response:
+    type: message
+    on_entry:
+      - action: speak
+        params:
+          text: "I see there's a slight delay. Your rider is {{rider_status}} and should arrive in {{updated_eta}}. I apologize for the wait."
+    transitions:
+      - event: next
+        target: issue_follow_up
+
+  not_delayed_response:
+    type: message
+    on_entry:
+      - action: speak
+        params:
+          text: "Your order is still within the estimated delivery window. It should arrive by {{context.estimatedArrival}}. Would you like to track the rider's location?"
+    transitions:
+      - event: yes
+        target: live_tracking
+      - event: no
+        target: status_options
+
+  wrong_items_issue:
+    type: message
+    on_entry:
+      - action: speak
+        params:
+          text: "I'm sorry about the wrong items. Please complete your delivery and contact us through the complaints flow for a refund or replacement."
+      - action: flag_order_issue
+        params:
+          orderId: "{{context.orderId}}"
+          issueType: "wrong_items"
+    transitions:
+      - event: next
+        target: redirect_to_complaints
+
+  rider_issue:
+    type: input
+    on_entry:
+      - action: speak
+        params:
+          text: "I'm sorry to hear about the issue with your rider. Can you describe what happened?"
+    transitions:
+      - event: input_received
+        target: log_rider_issue
+
+  log_rider_issue:
+    type: action
+    on_entry:
+      - action: log_rider_complaint
+        params:
+          orderId: "{{context.orderId}}"
+          riderId: "{{context.riderInfo.id}}"
+          description: "{{input}}"
+    transitions:
+      - event: logged
+        target: rider_issue_logged
+
+  rider_issue_logged:
+    type: message
+    on_entry:
+      - action: speak
+        params:
+          text: "I've logged this issue. Our team will review it and take appropriate action. Is there anything else you need help with?"
+    transitions:
+      - event: next
+        target: issue_follow_up
+
+  general_issue:
+    type: action
+    on_entry:
+      - action: log_general_issue
+        params:
+          orderId: "{{context.orderId}}"
+          description: "{{input}}"
+    transitions:
+      - event: logged
+        target: redirect_to_complaints
+
+  redirect_to_complaints:
+    type: action
+    on_entry:
+      - action: start_flow
+        params:
+          flow: complaints
+          context:
+            orderId: "{{context.orderId}}"
+            complaintType: "delivery_issue"
+    transitions:
+      - event: complete
+        target: end_tracking
+
+  issue_follow_up:
+    type: input
+    on_entry:
+      - action: speak
+        params:
+          text: "Is there anything else you need help with for this delivery?"
+    transitions:
+      - event: yes
+        target: status_options
+      - event: no
+        target: end_tracking
+
+  order_already_delivered:
+    type: message
+    on_entry:
+      - action: speak
+        params:
+          text: "This order has already been delivered. If you have an issue with it, I can help you report it."
+    transitions:
+      - event: issue
+        target: report_issue
+      - event: next
+        target: end_tracking
+
+  escalate_help:
+    type: action
+    on_entry:
+      - action: start_flow
+        params:
+          flow: complaints
+          context:
+            source: "parcel_tracking"
+            orderId: "{{context.orderId}}"
+    transitions:
+      - event: complete
+        target: end_tracking
+
+  end_tracking:
+    type: end
+    on_entry:
+      - action: speak
+        params:
+          text: "Thank you! Enjoy your meal when it arrives. Feel free to come back if you need anything else."
+          text_swahili: "Asante! Furahia chakula chako kitakapofika. Rudi tena ukihitaji msaada."
+
+  end_redirect:
+    type: end

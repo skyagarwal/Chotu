@@ -1,0 +1,150 @@
+version: '3.8'
+
+services:
+  dashboard:
+    image: node:20-alpine
+    container_name: mangwale-dashboard
+    working_dir: /app
+    command: sh -c "npm install --include=dev && npm run build && npm start"
+    volumes:
+      - .:/app
+      - /app/node_modules
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    environment:
+      # - NODE_ENV=production # Removed to allow devDependencies install
+      - NEXT_TELEMETRY_DISABLED=1
+      # WebSocket connects to AI backend on host
+      - NEXT_PUBLIC_WS_URL=wss://admin.mangwale.ai
+      - NEXT_PUBLIC_MANGWALE_AI_URL=/api
+      - NEXT_PUBLIC_ADMIN_BACKEND_URL=/api
+      # API Gateway for Authentication (proxied through Traefik)
+      - NEXT_PUBLIC_API_URL=/api-gateway/api
+      - BACKEND_INTERNAL_URL=http://mangwale_ai_service:3200
+      - IMAGE_AI_INTERNAL_URL=http://imageai-image-ai-api-1:3000
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    networks:
+      - traefik-public
+      - search_network
+      - unified_network
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=search_search-network"
+      
+      # mangwale.ai - Landing page (root domain)
+      - "traefik.http.routers.landing.rule=Host(`mangwale.ai`)"
+      - "traefik.http.routers.landing.entrypoints=websecure"
+      - "traefik.http.routers.landing.tls=true"
+      - "traefik.http.routers.landing.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.landing.service=dashboard"
+      - "traefik.http.routers.landing.priority=1"
+      
+      # chat.mangwale.ai - Public chat interface
+      - "traefik.http.routers.chat.rule=Host(`chat.mangwale.ai`)"
+      - "traefik.http.routers.chat.entrypoints=websecure"
+      - "traefik.http.routers.chat.tls=true"
+      - "traefik.http.routers.chat.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.chat.service=dashboard"
+      - "traefik.http.routers.chat.priority=2"
+      
+      # admin.mangwale.ai - Admin dashboard
+      - "traefik.http.routers.admin.rule=Host(`admin.mangwale.ai`)"
+      - "traefik.http.routers.admin.entrypoints=websecure"
+      - "traefik.http.routers.admin.tls=true"
+      - "traefik.http.routers.admin.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.admin.service=dashboard"
+      - "traefik.http.routers.admin.priority=2"
+      
+      # admin.mangwale.ai/api/vision - Vision API routes (higher priority to override backend)
+      - "traefik.http.routers.admin-vision-api.rule=Host(`admin.mangwale.ai`) && PathPrefix(`/api/vision`)"
+      - "traefik.http.routers.admin-vision-api.entrypoints=websecure"
+      - "traefik.http.routers.admin-vision-api.tls=true"
+      - "traefik.http.routers.admin-vision-api.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.admin-vision-api.service=dashboard"
+      - "traefik.http.routers.admin-vision-api.priority=20"
+      
+      # admin.mangwale.ai/api/settings - Settings API routes (higher priority to override backend)
+      - "traefik.http.routers.admin-settings-api.rule=Host(`admin.mangwale.ai`) && PathPrefix(`/api/settings`)"
+      - "traefik.http.routers.admin-settings-api.entrypoints=websecure"
+      - "traefik.http.routers.admin-settings-api.tls=true"
+      - "traefik.http.routers.admin-settings-api.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.admin-settings-api.service=dashboard"
+      - "traefik.http.routers.admin-settings-api.priority=20"
+      
+      # admin.mangwale.ai/api/zones - Zones API routes 
+      - "traefik.http.routers.admin-zones-api.rule=Host(`admin.mangwale.ai`) && PathPrefix(`/api/zones`)"
+      - "traefik.http.routers.admin-zones-api.entrypoints=websecure"
+      - "traefik.http.routers.admin-zones-api.tls=true"
+      - "traefik.http.routers.admin-zones-api.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.admin-zones-api.service=dashboard"
+      - "traefik.http.routers.admin-zones-api.priority=20"
+      
+      # admin.mangwale.ai/api/models - Models API routes 
+      - "traefik.http.routers.admin-models-api.rule=Host(`admin.mangwale.ai`) && PathPrefix(`/api/models`)"
+      - "traefik.http.routers.admin-models-api.entrypoints=websecure"
+      - "traefik.http.routers.admin-models-api.tls=true"
+      - "traefik.http.routers.admin-models-api.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.admin-models-api.service=dashboard"
+      - "traefik.http.routers.admin-models-api.priority=20"
+      
+      # admin.mangwale.ai/api/asr - ASR API routes 
+      - "traefik.http.routers.admin-asr-api.rule=Host(`admin.mangwale.ai`) && PathPrefix(`/api/asr`)"
+      - "traefik.http.routers.admin-asr-api.entrypoints=websecure"
+      - "traefik.http.routers.admin-asr-api.tls=true"
+      - "traefik.http.routers.admin-asr-api.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.admin-asr-api.service=dashboard"
+      - "traefik.http.routers.admin-asr-api.priority=20"
+      
+      # admin.mangwale.ai/api/tts - TTS API routes 
+      - "traefik.http.routers.admin-tts-api.rule=Host(`admin.mangwale.ai`) && PathPrefix(`/api/tts`)"
+      - "traefik.http.routers.admin-tts-api.entrypoints=websecure"
+      - "traefik.http.routers.admin-tts-api.tls=true"
+      - "traefik.http.routers.admin-tts-api.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.admin-tts-api.service=dashboard"
+      - "traefik.http.routers.admin-tts-api.priority=20"
+      
+      # admin.mangwale.ai/api/docker - Docker API routes 
+      - "traefik.http.routers.admin-docker-api.rule=Host(`admin.mangwale.ai`) && PathPrefix(`/api/docker`)"
+      - "traefik.http.routers.admin-docker-api.entrypoints=websecure"
+      - "traefik.http.routers.admin-docker-api.tls=true"
+      - "traefik.http.routers.admin-docker-api.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.admin-docker-api.service=dashboard"
+      - "traefik.http.routers.admin-docker-api.priority=20"
+      
+      # HTTP to HTTPS redirect for mangwale.ai
+      - "traefik.http.routers.landing-http.rule=Host(`mangwale.ai`)"
+      - "traefik.http.routers.landing-http.entrypoints=web"
+      - "traefik.http.routers.landing-http.middlewares=redirect-to-https"
+      
+      # HTTP to HTTPS redirect for chat.mangwale.ai
+      - "traefik.http.routers.chat-http.rule=Host(`chat.mangwale.ai`)"
+      - "traefik.http.routers.chat-http.entrypoints=web"
+      - "traefik.http.routers.chat-http.middlewares=redirect-to-https"
+      
+      # HTTP to HTTPS redirect for admin.mangwale.ai
+      - "traefik.http.routers.admin-http.rule=Host(`admin.mangwale.ai`)"
+      - "traefik.http.routers.admin-http.entrypoints=web"
+      - "traefik.http.routers.admin-http.middlewares=redirect-to-https"
+      
+      # Service definition
+      - "traefik.http.services.dashboard.loadbalancer.server.port=3005"
+      
+      # Middleware definition
+      - "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"
+
+  # REMOVED: This nginx proxy is no longer needed
+  # WebSocket now goes through api.mangwale.ai directly to AI service
+  # backend-proxy:
+  #   image: nginx:alpine
+  #   container_name: mangwale-backend-proxy
+
+networks:
+  traefik-public:
+    external: true
+    name: traefik_default
+  search_network:
+    external: true
+    name: search_search-network
+  unified_network:
+    external: true
+    name: mangwale_unified_network
