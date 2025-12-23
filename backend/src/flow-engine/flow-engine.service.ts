@@ -109,6 +109,11 @@ export class FlowEngineService {
       context.data.lastLocationUpdate = session.data.lastLocationUpdate;
       this.logger.log(`📍 Injected location into flow context: ${JSON.stringify(session.data.location)}`);
     }
+    // Also inject _user_location for address executor
+    if (session?.data?._user_location) {
+      context.data._user_location = session.data._user_location;
+      this.logger.log(`📍 Injected _user_location into flow context: ${JSON.stringify(session.data._user_location)}`);
+    }
 
     // 🏠 INJECT USER DATA FROM SESSION (INCLUDING AUTH)
     // CRITICAL: Load ALL auth-related data so flows can check authentication properly
@@ -294,6 +299,11 @@ export class FlowEngineService {
     if (session?.data?.location) {
       context.data.location = session.data.location;
       context.data.lastLocationUpdate = session.data.lastLocationUpdate;
+    }
+    // Also refresh _user_location for address executor
+    if (session?.data?._user_location) {
+      context.data._user_location = session.data._user_location;
+      this.logger.log(`📍 Refreshed _user_location in context: ${JSON.stringify(session.data._user_location)}`);
     }
     
     // 🔐 REFRESH AUTH DATA FROM SESSION (critical for flows that check authentication)

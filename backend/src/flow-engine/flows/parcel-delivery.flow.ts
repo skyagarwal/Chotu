@@ -191,9 +191,9 @@ export const parcelDeliveryFlow: FlowDefinition = {
 
     // Collect recipient details (Name & Phone)
     collect_recipient_details: {
-      type: 'action',
+      type: 'wait',  // Changed to wait - ask then wait for user input
       description: 'Ask for recipient name and phone number',
-      actions: [
+      onEntry: [
         {
           id: 'ask_recipient_details',
           executor: 'llm',
@@ -206,6 +206,7 @@ export const parcelDeliveryFlow: FlowDefinition = {
           output: '_last_response',
         },
       ],
+      actions: [],
       transitions: {
         user_message: 'extract_recipient_details',
       },

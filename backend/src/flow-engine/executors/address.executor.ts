@@ -51,16 +51,21 @@ export class AddressExecutor implements ActionExecutor {
         // For location messages, check if coordinates are different
         // Otherwise location-based deliveries would be blocked
         if (userMessage === '__LOCATION__') {
-          const newLocation = context.data._user_location;
+          // Re-fetch session to get the LATEST location (just saved by chat gateway)
+          const freshSession = await this.sessionService.getSession(context._system.sessionId);
+          const newLocation = freshSession?.data?._user_location || context.data._user_location;
           const pickupLat = pickup.latitude || pickup.lat;
           const pickupLng = pickup.longitude || pickup.lng;
           
+          this.logger.log(`📍 Checking delivery location: new=(${newLocation?.latitude}, ${newLocation?.longitude}) vs pickup=(${pickupLat}, ${pickupLng})`);
+          
           // If we have a new location with different coordinates, it's a valid delivery location
           if (newLocation && (newLocation.latitude !== pickupLat || newLocation.longitude !== pickupLng)) {
-            this.logger.log('New delivery location received (different from pickup)');
+            this.logger.log('✅ New delivery location received (different from pickup)');
             // Continue processing - don't block
-          } else if (newLocation && newLocation.latitude === pickupLat && newLocation.longitude === pickupLng) {
-            this.logger.log('Same location as pickup - asking for different delivery location...');
+          } else if (newLocation && Math.abs(newLocation.latitude - pickupLat) < 0.0001 && Math.abs(newLocation.longitude - pickupLng) < 0.0001) {
+            // Use small threshold for floating point comparison
+            this.logger.log('⚠️ Same location as pickup - asking for different delivery location...');
             context.data._last_response = `📍 Please share a different delivery location:\n\n[BTN|📍 Share Location|__LOCATION__]\n\nThe delivery location should be different from pickup.`;
             return {
               success: true,

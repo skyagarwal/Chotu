@@ -23,9 +23,10 @@ interface MessagePayload {
   sessionId: string;
   platform?: string;
   module?: string;
-  type?: 'text' | 'button_click' | 'quick_reply';
+  type?: 'text' | 'button_click' | 'quick_reply' | 'location';
   action?: string; // For button clicks: action to execute
   metadata?: Record<string, any>; // Additional context
+  location?: { latitude: number; longitude: number }; // For location messages
 }
 
 @WebSocketGateway({
@@ -250,6 +251,18 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
         
         processedMessage = this.convertButtonActionToMessage(payload.action, payload.metadata);
         this.logger.log(`✨ Converted to message: "${processedMessage}"`);
+      }
+      
+      // 📍 Handle location messages - save location to session for flow engine
+      if (payload.type === 'location' && payload.location) {
+        this.logger.log(`📍 Location message received: (${payload.location.latitude}, ${payload.location.longitude})`);
+        await this.sessionService.setData(sessionId, {
+          location: { lat: payload.location.latitude, lng: payload.location.longitude },
+          lastLocationUpdate: Date.now(),
+          // Also store as _user_location for address executor
+          _user_location: payload.location,
+        });
+        this.logger.log(`📍 Location saved to session`);
       }
       
       // 🔐 Use SessionIdentifierService to properly resolve phone number from session
