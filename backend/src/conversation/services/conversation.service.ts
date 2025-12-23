@@ -178,6 +178,20 @@ export class ConversationService {
         return;
       }
 
+      // 🚀 FLOW ENGINE PRIORITY: If there's an active flow, bypass legacy steps
+      // This ensures the flow engine handles messages during checkout/auth flows
+      const activeFlowRunId = session?.data?.flowContext?.flowRunId;
+      const legacyAuthSteps = ['login_method', 'awaiting_phone_number', 'registration_choice', 
+        'awaiting_registration_otp', 'phone_check', 'awaiting_otp', 'awaiting_name', 
+        'awaiting_email', 'facebook_login'];
+      
+      if (activeFlowRunId && legacyAuthSteps.includes(session.currentStep)) {
+        this.logger.log(`🚀 Active flow detected (${activeFlowRunId}) - bypassing legacy step "${session.currentStep}" to flow engine`);
+        // Clear the legacy step so it goes to default case (flow engine)
+        session.currentStep = null;
+        await this.sessionService.saveSession(phoneNumber, session);
+      }
+
       // Handle messages based on current step
       switch (session.currentStep) {
         case 'welcome':

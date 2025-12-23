@@ -1,0 +1,672 @@
+{
+	"info": {
+		"_postman_id": "order-tracking-by-order-id-collection",
+		"name": "Order Tracking API - By Order ID (track.mangwale.in/api)",
+		"description": "Complete API collection for tracking orders by order_id. Includes user tracking, live tracking, enhanced tracking, location history, status flow, and all tracking-related endpoints. Base URL: track.mangwale.in/api",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "order-tracking-api"
+	},
+	"item": [
+		{
+			"name": "1. User Tracking (Public)",
+			"item": [
+				{
+					"name": "Track Order by Order ID + Phone",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/orders/:orderId/:d_contact/user-track",
+							"host": ["{{base_url}}"],
+							"path": ["orders", ":orderId", ":d_contact", "user-track"],
+							"variable": [
+								{
+									"key": "orderId",
+									"value": "MW-000001",
+									"description": "Order ID (e.g., MW-000001, MD0001)"
+								},
+								{
+									"key": "d_contact",
+									"value": "+919876543210",
+									"description": "Drop contact phone number (must match order)"
+								}
+							]
+						},
+						"description": "Public user tracking endpoint. Requires order_id and drop contact phone number for authentication.\n\n**Returns:**\n- Complete order details\n- Current status\n- Rider information (name, phone, vehicle)\n- Location tracker (array of location updates)\n- Flow (status history)\n- Route data (pickup/drop addresses)\n- Pickup and drop coordinates"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "2. Basic Tracking",
+			"item": [
+				{
+					"name": "Track Order by CRN (Manual Trigger)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/track-order/:crn",
+							"host": ["{{base_url}}"],
+							"path": ["track-order", ":crn"],
+							"variable": [
+								{
+									"key": "crn",
+									"value": "CRN123456",
+									"description": "CRN number (tracking number)"
+								}
+							]
+						},
+						"description": "Manually trigger one-off tracking update from provider (Porter/Mangwale/LoadShare).\n\n**What happens:**\n- Fetches latest status from provider\n- Updates order status in database\n- Updates location tracker\n- Updates flow (status history)\n- Calculates ETA if applicable\n\n**Returns:**\n- `{ ok: true, status: 'assigned' }` on success\n- `{ skipped: true }` if order is completed/cancelled\n- `{ skipped: true, reason: 'rate_limited' }` if provider rate limited"
+					},
+					"response": []
+				},
+				{
+					"name": "Track CRN and Get Order",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/orders/crn/:orderId/track",
+							"host": ["{{base_url}}"],
+							"path": ["orders", "crn", ":orderId", "track"],
+							"variable": [
+								{
+									"key": "orderId",
+									"value": "CRN123456",
+									"description": "CRN number or order ID"
+								}
+							]
+						},
+						"description": "Track order from provider AND return complete order details in one call.\n\n**What happens:**\n1. Triggers manual tracking update\n2. Returns merged order data with rider info\n\n**Returns:**\n- Complete order object\n- Rider information (joined from raider table)\n- Parsed flow and location_tracker arrays\n- Current location (last location update)"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "3. Live Tracking",
+			"item": [
+				{
+					"name": "Get Live Tracking Data",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/live-track/:crn",
+							"host": ["{{base_url}}"],
+							"path": ["live-track", ":crn"],
+							"variable": [
+								{
+									"key": "crn",
+									"value": "CRN123456",
+									"description": "CRN number"
+								}
+							]
+						},
+						"description": "Get real-time live tracking data with current location and status.\n\n**Returns:**\n```json\n{\n  \"success\": true,\n  \"data\": {\n    \"order\": { ... },\n    \"current_location\": { lat, lng, timestamp },\n    \"rider\": { name, phone, vehicle_number },\n    \"eta_minutes\": 15,\n    \"location_history\": [ ... ],\n    \"status_flow\": [ ... ]\n  },\n  \"timestamp\": \"2025-01-11T12:00:00.000Z\"\n}\n```"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Live Status Only",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/live-status/:crn",
+							"host": ["{{base_url}}"],
+							"path": ["live-status", ":crn"],
+							"variable": [
+								{
+									"key": "crn",
+									"value": "CRN123456",
+									"description": "CRN number"
+								}
+							]
+						},
+						"description": "Get current live status and location only (lightweight endpoint).\n\n**Returns:**\n```json\n{\n  \"success\": true,\n  \"data\": {\n    \"crn_number\": \"CRN123456\",\n    \"status\": \"out_for_delivery\",\n    \"current_location\": { lat, lng },\n    \"rider\": { name, phone },\n    \"eta_minutes\": 15,\n    \"updated_at\": \"2025-01-11T12:00:00.000Z\"\n  }\n}\n```"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Enhanced Tracking (with Path Analytics)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/live-tracking/:orderId/enhanced",
+							"host": ["{{base_url}}"],
+							"path": ["live-tracking", ":orderId", "enhanced"],
+							"variable": [
+								{
+									"key": "orderId",
+									"value": "MW-000001",
+									"description": "Order ID"
+								}
+							]
+						},
+						"description": "Get enhanced tracking data with location history and path analytics.\n\n**Returns:**\n- Order info with is_live flag\n- Pickup and drop locations\n- Current location\n- Location history array\n- Status flow array\n- Path statistics (distance, duration, speed, efficiency)\n- Real-time data (last update, locations today, is_moving)"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Path Statistics",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/live-tracking/:orderId/path-stats",
+							"host": ["{{base_url}}"],
+							"path": ["live-tracking", ":orderId", "path-stats"],
+							"variable": [
+								{
+									"key": "orderId",
+									"value": "MW-000001",
+									"description": "Order ID"
+								}
+							]
+						},
+						"description": "Get path statistics for a specific order.\n\n**Returns:**\n```json\n{\n  \"success\": true,\n  \"data\": {\n    \"totalDistance\": 5.2,\n    \"duration\": 25,\n    \"averageSpeed\": 12.5,\n    \"maxSpeed\": 35.0,\n    \"pointsCount\": 45\n  }\n}\n```"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "4. Enhanced Tracking Service",
+			"item": [
+				{
+					"name": "Get Enhanced Tracking Data",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/enhanced-tracking/:crnNumber",
+							"host": ["{{base_url}}"],
+							"path": ["enhanced-tracking", ":crnNumber"],
+							"variable": [
+								{
+									"key": "crnNumber",
+									"value": "CRN123456",
+									"description": "CRN number"
+								}
+							]
+						},
+						"description": "Get comprehensive enhanced tracking data including location history, status flow, path statistics, and auto-detected status.\n\n**Returns:**\n- Order details\n- Location history\n- Status flow data\n- Path statistics\n- Current rider location\n- Auto-detected status (if applicable)\n- Last update timestamp"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Location History",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/enhanced-tracking/:crnNumber/location-history",
+							"host": ["{{base_url}}"],
+							"path": ["enhanced-tracking", ":crnNumber", "location-history"],
+							"variable": [
+								{
+									"key": "crnNumber",
+									"value": "CRN123456",
+									"description": "CRN number"
+								}
+							]
+						},
+						"description": "Get complete location history for an order.\n\n**Returns:**\nArray of location updates:\n```json\n[\n  {\n    \"lat\": 19.0760,\n    \"long\": 72.8777,\n    \"update_time\": \"2025-01-11T12:00:00.000Z\",\n    \"speed_kmph\": 25.5,\n    \"heading_deg\": 45,\n    \"accuracy_meters\": 10\n  }\n]\n```"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Status Flow Data",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/enhanced-tracking/:crnNumber/status-flow",
+							"host": ["{{base_url}}"],
+							"path": ["enhanced-tracking", ":crnNumber", "status-flow"],
+							"variable": [
+								{
+									"key": "crnNumber",
+									"value": "CRN123456",
+									"description": "CRN number"
+								}
+							]
+						},
+						"description": "Get complete status flow (status change history) for an order.\n\n**Returns:**\nArray of status changes:\n```json\n[\n  {\n    \"status\": \"created\",\n    \"timestamp\": \"2025-01-11T10:00:00.000Z\",\n    \"location\": { \"lat\": 19.0760, \"lng\": 72.8777 },\n    \"rider_id\": \"rider123\",\n    \"notes\": \"manual\"\n  }\n]\n```"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Current Rider Location",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/enhanced-tracking/:crnNumber/current-location",
+							"host": ["{{base_url}}"],
+							"path": ["enhanced-tracking", ":crnNumber", "current-location"],
+							"variable": [
+								{
+									"key": "crnNumber",
+									"value": "CRN123456",
+									"description": "CRN number"
+								}
+							]
+						},
+						"description": "Get current rider location for an order.\n\n**Returns:**\n```json\n{\n  \"success\": true,\n  \"data\": {\n    \"lat\": 19.0760,\n    \"lng\": 72.8777,\n    \"update_time\": \"2025-01-11T12:00:00.000Z\",\n    \"speed_kmph\": 25.5,\n    \"heading_deg\": 45\n  }\n}\n```"
+					},
+					"response": []
+				},
+				{
+					"name": "Update Rider Location",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"lat\": 19.0760,\n    \"long\": 72.8777,\n    \"update_time\": \"2025-01-11T12:00:00.000Z\",\n    \"speed_kmph\": 25.5,\n    \"heading_deg\": 45,\n    \"accuracy_meters\": 10\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/enhanced-tracking/:crnNumber/location",
+							"host": ["{{base_url}}"],
+							"path": ["enhanced-tracking", ":crnNumber", "location"],
+							"variable": [
+								{
+									"key": "crnNumber",
+									"value": "CRN123456",
+									"description": "CRN number"
+								}
+							]
+						},
+						"description": "Update rider location for an order. Triggers automatic status detection based on proximity to pickup/drop locations.\n\n**Request Body:**\n- `lat` (required): Latitude\n- `long` (required): Longitude\n- `update_time` (optional): ISO timestamp (defaults to now)\n- `speed_kmph` (optional): Speed in km/h\n- `heading_deg` (optional): Heading in degrees\n- `accuracy_meters` (optional): GPS accuracy in meters"
+					},
+					"response": []
+				},
+				{
+					"name": "Update Order Status",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"status\": \"picked_up\",\n    \"lat\": 19.0760,\n    \"lng\": 72.8777,\n    \"rider_id\": \"rider123\",\n    \"notes\": \"Parcel collected from restaurant\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/enhanced-tracking/:crnNumber/status",
+							"host": ["{{base_url}}"],
+							"path": ["enhanced-tracking", ":crnNumber", "status"],
+							"variable": [
+								{
+									"key": "crnNumber",
+									"value": "CRN123456",
+									"description": "CRN number"
+								}
+							]
+						},
+						"description": "Update order status with flow management. Valid statuses: created, searching_rider, rider_assigned, on_way_to_pickup, reached_pickup, at_pickup, pickup_done, out_for_delivery, reached_delivery, at_delivery, delivered, cancelled, rto_initiated, rto_delivered.\n\n**Request Body:**\n- `status` (required): New status\n- `lat` (optional): Latitude at status change\n- `lng` (optional): Longitude at status change\n- `rider_id` (optional): Rider ID\n- `notes` (optional): Additional notes"
+					},
+					"response": []
+				},
+				{
+					"name": "Bulk Location Update",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"rider_id\": \"rider123\",\n    \"orders\": [\n        {\n            \"order_id\": \"MW-000001\",\n            \"location\": {\n                \"lat\": 19.0760,\n                \"long\": 72.8777,\n                \"update_time\": \"2025-01-11T12:00:00.000Z\",\n                \"speed_kmph\": 25.5,\n                \"heading_deg\": 45,\n                \"accuracy_meters\": 10\n            }\n        },\n        {\n            \"order_id\": \"MW-000002\",\n            \"location\": {\n                \"lat\": 19.0770,\n                \"long\": 72.8787,\n                \"update_time\": \"2025-01-11T12:01:00.000Z\",\n                \"speed_kmph\": 30.0,\n                \"heading_deg\": 50,\n                \"accuracy_meters\": 10\n            }\n        }\n    ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/enhanced-tracking/bulk-location-update",
+							"host": ["{{base_url}}"],
+							"path": ["enhanced-tracking", "bulk-location-update"]
+						},
+						"description": "Bulk location update for multiple orders (for rider apps). Updates location for multiple orders in a single request.\n\n**Request Body:**\n- `rider_id` (required): Rider ID\n- `orders` (required): Array of order location updates\n  - `order_id`: Order ID\n  - `location`: Location object (same as single update)"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Tracking Statuses",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/enhanced-tracking/constants/tracking-statuses",
+							"host": ["{{base_url}}"],
+							"path": ["enhanced-tracking", "constants", "tracking-statuses"]
+						},
+						"description": "Get available tracking statuses and status flow.\n\n**Returns:**\n```json\n{\n  \"success\": true,\n  \"data\": {\n    \"statuses\": [\"created\", \"searching_rider\", ...],\n    \"statusFlow\": [\"created\", \"searching_rider\", \"rider_assigned\", ...]\n  }\n}\n```"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "5. Order Details by CRN",
+			"item": [
+				{
+					"name": "Get Order Details by CRN",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/orders/crn/:crnNumber",
+							"host": ["{{base_url}}"],
+							"path": ["orders", "crn", ":crnNumber"],
+							"variable": [
+								{
+									"key": "crnNumber",
+									"value": "CRN123456",
+									"description": "CRN number"
+								}
+							]
+						},
+						"description": "Get order details by CRN number with statistics.\n\n**Returns:**\n- Complete order object\n- Rider information (if assigned)\n- Parsed flow and location_tracker\n- Pickup and drop details extracted from route_data"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "6. Mangwale Webhook Tracking",
+			"item": [
+				{
+					"name": "Get Live Tracking (Webhook)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/webhooks/mangwale/track/:crnNumber",
+							"host": ["{{base_url}}"],
+							"path": ["webhooks", "mangwale", "track", ":crnNumber"],
+							"variable": [
+								{
+									"key": "crnNumber",
+									"value": "CRN123456",
+									"description": "CRN number"
+								}
+							]
+						},
+						"description": "Get live tracking data via Mangwale webhook endpoint.\n\n**Returns:**\nSame as `/live-track/:crn` endpoint"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Order Status (Webhook)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/webhooks/mangwale/status/:crnNumber",
+							"host": ["{{base_url}}"],
+							"path": ["webhooks", "mangwale", "status", ":crnNumber"],
+							"variable": [
+								{
+									"key": "crnNumber",
+									"value": "CRN123456",
+									"description": "CRN number"
+								}
+							]
+						},
+						"description": "Get order status via Mangwale webhook endpoint.\n\n**Returns:**\nSame as `/live-status/:crn` endpoint"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Location History (Webhook)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/webhooks/mangwale/location/:crnNumber",
+							"host": ["{{base_url}}"],
+							"path": ["webhooks", "mangwale", "location", ":crnNumber"],
+							"variable": [
+								{
+									"key": "crnNumber",
+									"value": "CRN123456",
+									"description": "CRN number"
+								}
+							]
+						},
+						"description": "Get location history via Mangwale webhook endpoint.\n\n**Returns:**\n```json\n{\n  \"success\": true,\n  \"data\": {\n    \"crn_number\": \"CRN123456\",\n    \"current_location\": { ... },\n    \"eta_minutes\": 15,\n    \"rider\": { ... },\n    \"location_history\": [ ... ]\n  }\n}\n```"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Complete History (Webhook)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/webhooks/mangwale/history/:crnNumber",
+							"host": ["{{base_url}}"],
+							"path": ["webhooks", "mangwale", "history", ":crnNumber"],
+							"variable": [
+								{
+									"key": "crnNumber",
+									"value": "CRN123456",
+									"description": "CRN number"
+								}
+							]
+						},
+						"description": "Get complete tracking history via Mangwale webhook endpoint.\n\n**Returns:**\n```json\n{\n  \"success\": true,\n  \"data\": {\n    \"crn_number\": \"CRN123456\",\n    \"location_history\": [ ... ],\n    \"status_flow\": [ ... ],\n    \"pickup\": { address, lat, lng },\n    \"delivery\": { address, lat, lng },\n    \"current_location\": { ... },\n    \"rider\": { ... },\n    \"proof_data\": { ... }\n  }\n}\n```"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Enhanced Tracking (Webhook)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/webhooks/mangwale/track/:crnNumber/enhanced",
+							"host": ["{{base_url}}"],
+							"path": ["webhooks", "mangwale", "track", ":crnNumber", "enhanced"],
+							"variable": [
+								{
+									"key": "crnNumber",
+									"value": "CRN123456",
+									"description": "CRN number"
+								}
+							],
+							"query": [
+								{
+									"key": "limit",
+									"value": "50",
+									"description": "Limit number of locations returned",
+									"disabled": true
+								},
+								{
+									"key": "since",
+									"value": "2025-01-11T10:00:00.000Z",
+									"description": "Get locations since timestamp (ISO string)",
+									"disabled": true
+								}
+							]
+						},
+						"description": "Get enhanced tracking data with path analytics via Mangwale webhook endpoint.\n\n**Query Parameters:**\n- `limit` (optional): Limit number of locations returned\n- `since` (optional): Get locations since timestamp (ISO string)\n\n**Returns:**\nEnhanced tracking data with path statistics and real-time analytics"
+					},
+					"response": []
+				},
+				{
+					"name": "Post Location Update (Webhook)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"shipment_id\": \"MW-000001\",\n    \"dispatcher_order_id\": \"123\",\n    \"rider_id\": \"rider123\",\n    \"lat\": 19.0760,\n    \"lng\": 72.8777,\n    \"accuracy_m\": 10,\n    \"speed_kmph\": 25.5,\n    \"heading_deg\": 45,\n    \"at\": \"2025-01-11T12:00:00.000Z\",\n    \"status\": \"out_for_delivery\",\n    \"current_address\": \"123 Main Street, Mumbai\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/webhooks/mangwale/location",
+							"host": ["{{base_url}}"],
+							"path": ["webhooks", "mangwale", "location"]
+						},
+						"description": "Post location update via Mangwale webhook. Accepts shipment_id or dispatcher_order_id.\n\n**Request Body:**\n- `shipment_id` or `dispatcher_order_id` (required): Order identifier\n- `rider_id` (optional): Rider ID\n- `lat`, `lng` (required): Location coordinates\n- `accuracy_m` (optional): GPS accuracy\n- `speed_kmph` (optional): Speed\n- `heading_deg` (optional): Heading\n- `at` (optional): Timestamp (defaults to now)\n- `status` (optional): Current status\n- `current_address` (optional): Current address"
+					},
+					"response": []
+				},
+				{
+					"name": "Post Status Update (Webhook)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"shipment_id\": \"MW-000001\",\n    \"dispatcher_order_id\": \"123\",\n    \"rider_id\": \"rider123\",\n    \"status\": \"picked_up\",\n    \"at\": \"2025-01-11T12:00:00.000Z\",\n    \"lat\": 19.0760,\n    \"lng\": 72.8777,\n    \"proof_data\": {\n        \"image_url\": \"https://example.com/proof.jpg\",\n        \"signature\": \"base64...\"\n    },\n    \"rider_info\": {\n        \"name\": \"John Doe\",\n        \"phone\": \"+919876543210\"\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/webhooks/mangwale/status",
+							"host": ["{{base_url}}"],
+							"path": ["webhooks", "mangwale", "status"]
+						},
+						"description": "Post status update via Mangwale webhook. Accepts shipment_id or dispatcher_order_id.\n\n**Request Body:**\n- `shipment_id` or `dispatcher_order_id` (required): Order identifier\n- `rider_id` (optional): Rider ID\n- `status` (required): New status\n- `at` (optional): Timestamp (defaults to now)\n- `lat`, `lng` (optional): Location at status change\n- `proof_data` (optional): Proof data (images, signatures)\n- `rider_info` (optional): Rider information"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "7. Additional Order Endpoints",
+			"item": [
+				{
+					"name": "Get Remote Order Status",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/orders/:id/remote-status",
+							"host": ["{{base_url}}"],
+							"path": ["orders", ":id", "remote-status"],
+							"variable": [
+								{
+									"key": "id",
+									"value": "123",
+									"description": "Order ID (numeric)"
+								}
+							]
+						},
+						"description": "Fetch remote (mirrored DB) order status for a local order id.\n\n**Returns:**\n```json\n{\n  \"remoteStatus\": \"confirmed\"\n}\n```"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Remote Order Details",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/remote/order-details/:orderNumber",
+							"host": ["{{base_url}}"],
+							"path": ["remote", "order-details", ":orderNumber"],
+							"variable": [
+								{
+									"key": "orderNumber",
+									"value": "MW-000001",
+									"description": "Order number"
+								}
+							]
+						},
+						"description": "Fetch normalized order details from mirrored admin DB.\n\n**Returns:**\nNormalized order details response"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Shipment Orders",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/orders/shipment/:orderId",
+							"host": ["{{base_url}}"],
+							"path": ["orders", "shipment", ":orderId"],
+							"variable": [
+								{
+									"key": "orderId",
+									"value": "MW-000001",
+									"description": "Order ID"
+								}
+							]
+						},
+						"description": "Get all orders for a specific shipment across providers.\n\n**Returns:**\nArray of orders associated with the shipment"
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "https://track.mangwale.in/api",
+			"type": "string"
+		}
+	]
+}
+
