@@ -218,6 +218,9 @@ export class EntityExtractorService {
   private extractRestaurantName(text: string): string | null {
     const lowerText = text.toLowerCase();
     
+    // Common words to skip (not restaurant names)
+    const skipWords = ['mujhe', 'ghar', 'abhi', 'jaldi', 'aur', 'and', 'the', 'a', 'an', 'is', 'are', 'from', 'to'];
+    
     // Pattern 1: Look for "NAME cafe/hotel/restaurant se" 
     // The NAME should be a single word NOT in our food list
     // e.g., "inayat cafe se" -> "inayat cafe"
@@ -229,7 +232,7 @@ export class EntityExtractorService {
         const name = match[1].trim();
         // Skip if name is a known food item or common word
         if (!this.FOOD_ITEMS.includes(name) && 
-            !['mujhe', 'ghar', 'abhi', 'jaldi', 'aur', 'and'].includes(name) &&
+            !skipWords.includes(name) &&
             name.length > 2) {
           return `${name} ${venue}`;
         }
@@ -248,8 +251,28 @@ export class EntityExtractorService {
         }
       }
     }
+    
+    // Pattern 3: "NAME se khana/mangwana/order/bhej" - name before "se" + action verb
+    // e.g., "inayat se khana mangwana hai" -> "inayat"
+    // e.g., "momo magic se order karna hai" -> "momo magic"
+    const seKhanaMatch = lowerText.match(/(\w+(?:\s+\w+)?)\s+se\s+(?:khana|khaana|mangwana|mangana|order|bhej|lana|lena|lao)/i);
+    if (seKhanaMatch && seKhanaMatch[1]) {
+      let name = seKhanaMatch[1].trim();
+      // Remove any leading skip words like "mujhe", "ghar" etc.
+      const nameWords = name.split(/\s+/);
+      const filteredWords = nameWords.filter(word => 
+        !skipWords.includes(word.toLowerCase()) && 
+        !this.FOOD_ITEMS.includes(word.toLowerCase())
+      );
+      name = filteredWords.join(' ').trim();
+      
+      // Only return if we have a meaningful name left
+      if (name.length > 2 && filteredWords.length > 0) {
+        return name;
+      }
+    }
 
-    // Pattern 3: "from NAME NAME" at end - multi-word restaurant name (case insensitive)
+    // Pattern 4: "from NAME NAME" at end - multi-word restaurant name (case insensitive)
     // e.g., "from bhagat tarachand" or "from Bhagat Tarachand"
     const fromEndMatch = text.match(/from\s+([a-z]+(?:\s+[a-z]+)+)\s*$/i);
     if (fromEndMatch && fromEndMatch[1]) {
@@ -260,7 +283,19 @@ export class EntityExtractorService {
       }
     }
     
-    // Pattern 4: Capitalized proper noun "NAME se bhej/order" 
+    // Pattern 5: "from NAME" anywhere (single word or multi-word)
+    // e.g., "paneer tikka from inayat" -> "inayat"
+    const fromMatch = text.match(/from\s+([a-z]+(?:\s+[a-z]+)?)/i);
+    if (fromMatch && fromMatch[1]) {
+      const name = fromMatch[1].trim();
+      if (!this.FOOD_ITEMS.includes(name.toLowerCase()) && 
+          !skipWords.includes(name.toLowerCase()) &&
+          name.length > 2) {
+        return name;
+      }
+    }
+    
+    // Pattern 6: Capitalized proper noun "NAME se bhej/order" 
     const capitalMatch = text.match(/([A-Z][a-z]+(?:\s+[A-Z][a-z]+)*)\s+se\s+(?:bhej|order|manga)/);
     if (capitalMatch && capitalMatch[1]) {
       const name = capitalMatch[1].trim();

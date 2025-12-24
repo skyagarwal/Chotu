@@ -49,6 +49,7 @@ export class SearchExecutor implements ActionExecutor {
       const lat = config.lat;
       const lng = config.lng;
       const radius = config.radius || '10km';
+      const useIntentSearch = config.useIntentSearch || config.intentSearch || false;
 
       // Log filters for debugging
       if (filters.length > 0) {
@@ -60,6 +61,28 @@ export class SearchExecutor implements ActionExecutor {
           success: false,
           error: 'Search query is required',
         };
+      }
+
+      // If useIntentSearch is enabled, use the Search API v2 which handles
+      // queries like "pizza from Inayat" automatically
+      if (useIntentSearch) {
+        this.logger.log(`🧠 Using intent-aware search for: "${query}"`);
+        
+        // Extract store_id from filters if present
+        const storeFilter = filters.find((f: any) => f.field === 'store_id' || f.field === 'store_name');
+        const storeId = storeFilter?.value;
+        
+        const results = await this.searchService.searchWithIntent(query, {
+          module_id: index.includes('food') ? 4 : undefined,
+          store_id: typeof storeId === 'number' ? storeId : undefined,
+          lat: typeof lat === 'string' ? parseFloat(lat) : lat,
+          lng: typeof lng === 'string' ? parseFloat(lng) : lng,
+          radius_km: parseFloat(radius) || 10,
+          size: limit,
+          semantic: true,
+        });
+
+        return this.formatSearchResults(results, limit);
       }
 
       // Add geo-location filter if coordinates provided
@@ -172,5 +195,72 @@ export class SearchExecutor implements ActionExecutor {
   validate(config: Record<string, any>): boolean {
     if (config.type === 'categories') return true;
     return !!(config.query || config.queryPath);
+  }
+
+  /**
+   * Format search results into the standard output format with UI cards
+   */
+  private formatSearchResults(results: any, limit: number): ActionExecutionResult {
+    // S3 base URL for images (CDN has SSL issues)
+    const S3_BASE = 'https://s3.ap-south-1.amazonaws.com/mangwale/product';
+
+    // Helper to get proper image URL
+    const getImageUrl = (item: any): string | undefined => {
+      let imageUrl = item.image_full_url || item.image_fallback_url || item.image || item.images?.[0];
+      if (!imageUrl) return undefined;
+      if (!imageUrl.startsWith('http')) {
+        return `${S3_BASE}/${imageUrl}`;
+      }
+      if (imageUrl.includes('storage.mangwale.ai')) {
+        return imageUrl.replace('https://storage.mangwale.ai/mangwale/product', S3_BASE);
+      }
+      return imageUrl;
+    };
+
+    // Flatten results
+    const flattenedItems = (results.results || []).map((item: any) => ({
+      id: item.id,
+      ...(item.source || item),
+    }));
+
+    const output: any = {
+      items: flattenedItems,
+      total: results.total || 0,
+      hasResults: flattenedItems.length > 0,
+    };
+
+    // Generate UI cards
+    if (output.hasResults) {
+      output.cards = flattenedItems.slice(0, limit).map((item: any) => ({
+        id: item.id,
+        name: item.title || item.name,
+        description: item.description || item.category,
+        price: item.mrp ? `₹${item.mrp}` : (item.price ? `₹${item.price}` : undefined),
+        rawPrice: item.mrp || item.price,
+        image: getImageUrl(item),
+        rating: item.rating || item.avg_rating || '0.0',
+        deliveryTime: item.delivery_time || '30-45 min',
+        brand: item.brand,
+        category: item.category || item.category_name,
+        storeName: item.store_name,
+        storeId: item.store_id,
+        moduleId: item.module_id,
+        storeLat: item.store_location?.lat || item.store_latitude,
+        storeLng: item.store_location?.lon || item.store_longitude,
+        veg: item.veg,
+        action: {
+          label: 'Add +',
+          value: `Add ${item.title || item.name} to cart`
+        }
+      }));
+    }
+
+    const event = output.hasResults ? 'items_found' : 'no_items';
+
+    return {
+      success: true,
+      output,
+      event,
+    };
   }
 }

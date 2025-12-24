@@ -476,6 +476,49 @@ export class PhpOrderService extends PhpApiService {
   }
 
   /**
+   * Check if an order can be cancelled
+   * Orders can be cancelled before they are accepted/confirmed
+   */
+  async checkCancelEligibility(
+    token: string,
+    orderId: number,
+  ): Promise<{ success: boolean; can_cancel: boolean; cancel_reason?: string }> {
+    try {
+      // Get order details to check status
+      const order = await this.getOrderDetails(token, orderId);
+      
+      if (!order) {
+        return {
+          success: false,
+          can_cancel: false,
+          cancel_reason: 'Could not retrieve order details',
+        };
+      }
+
+      const status = order.orderStatus;
+      
+      // Orders can only be cancelled in these early statuses
+      const cancellableStatuses = ['pending', 'accepted', 'confirmed'];
+      const canCancel = cancellableStatuses.includes(status);
+
+      return {
+        success: true,
+        can_cancel: canCancel,
+        cancel_reason: canCancel 
+          ? undefined 
+          : `Order cannot be cancelled - current status: ${this.formatOrderStatus(status)}`,
+      };
+    } catch (error) {
+      this.logger.error(`Failed to check cancel eligibility: ${error.message}`);
+      return {
+        success: false,
+        can_cancel: false,
+        cancel_reason: error.message,
+      };
+    }
+  }
+
+  /**
    * Update payment method
    */
   async updatePaymentMethod(

@@ -208,10 +208,17 @@ export class YamlV2FlowLoaderService implements OnModuleInit {
 
     // Handle 'action' property (single action format in nodes)
     if (raw.action && !raw.actions) {
+      // If action contains '_' (like 'get_customer_orders'), route to php_api executor
+      const usePhpApi = raw.action.includes('_') && raw.action !== 'php_api';
+      const baseConfig = raw.params || raw.config || {};
+      
       const singleAction: FlowAction = {
         id: raw.action,
-        executor: raw.action.includes('_') ? 'php_api' : raw.action,
-        config: raw.params || raw.config || {},
+        executor: raw.action === 'php_api' ? 'php_api' : (usePhpApi ? 'php_api' : raw.action),
+        // CRITICAL: If routing to php_api, ensure action is set in config
+        config: usePhpApi && !baseConfig.action 
+          ? { ...baseConfig, action: raw.action }
+          : baseConfig,
         output: raw.outputs,
       };
       state.actions = [singleAction];

@@ -139,8 +139,9 @@ services:
       # PHP Backend (if needed)
       - PHP_API_BASE_URL=${PHP_API_BASE_URL:-http://host.docker.internal:8000}
       
-      # OpenSearch (external)
+      # OpenSearch and Search API (external containers on search_search-network)
       - OPENSEARCH_URL=http://search-opensearch:9200
+      - SEARCH_API_URL=http://search-api:3100
       
       # Session
       - SESSION_TTL=86400

@@ -130,7 +130,8 @@ export class OrderExecutor implements ActionExecutor {
     const deliveryAddress = config.delivery_address || context.data.delivery_address;
     // Default to digital_payment to avoid COD restrictions at stores
     const paymentMethod = config.payment_method || context.data.payment_method || 'digital_payment';
-    const orderNote = config.order_note || context.data.order_note;
+    // Check order_note from config, context data, or extracted_food special_instructions
+    const orderNote = config.order_note || context.data.order_note || context.data.extracted_food?.special_instructions;
 
     if (!items || items.length === 0) {
       return {

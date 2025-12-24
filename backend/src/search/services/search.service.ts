@@ -392,4 +392,150 @@ export class SearchService {
 
     return texts.join(' ');
   }
+
+  /**
+   * Intent-aware search via Search API v2
+   * Handles queries like "pizza from Inayat cafe" by:
+   * 1. Parsing intent (specific_item_specific_store, store_first, generic)
+   * 2. Finding the store first using fuzzy matching
+   * 3. Then searching items within that store
+   * 
+   * @param query - Search query (can include restaurant/store names)
+   * @param options - Search options (module_id, store_id, lat/lng, etc.)
+   */
+  async searchWithIntent(
+    query: string,
+    options: {
+      module_id?: number;
+      store_id?: number;
+      category_id?: number;
+      lat?: number;
+      lng?: number;
+      radius_km?: number;
+      veg?: string;
+      size?: number;
+      semantic?: boolean;
+    } = {}
+  ): Promise<SearchResultDto> {
+    const startTime = Date.now();
+
+    try {
+      // Build query params
+      const params: Record<string, any> = { q: query };
+      
+      if (options.module_id) params.module_id = options.module_id;
+      if (options.store_id) params.store_id = options.store_id;
+      if (options.category_id) params.category_id = options.category_id;
+      if (options.lat) params.lat = options.lat;
+      if (options.lng) params.lon = options.lng; // Note: API uses 'lon' not 'lng'
+      if (options.radius_km) params.radius_km = options.radius_km;
+      if (options.veg) params.veg = options.veg;
+      if (options.size) params.size = options.size;
+      if (options.semantic) params.semantic = '1';
+
+      this.logger.log(`🔍 Intent-aware search: "${query}" with params:`, params);
+
+      const response = await firstValueFrom(
+        this.httpService.get(`${this.searchApiUrl}/v2/search/items`, {
+          params,
+          timeout: 10000,
+        }),
+      );
+
+      // Parse response
+      let items = response.data.items || response.data.results || response.data || [];
+      if (!Array.isArray(items)) {
+        items = [];
+      }
+
+      // Map to SearchResultDto format
+      const results: SearchHit[] = items.map((item: any) => ({
+        id: String(item.id),
+        index: 'food_items',
+        score: item.score || item._score || 1.0,
+        source: {
+          name: item.name || item.title,
+          title: item.name || item.title,
+          description: item.description,
+          price: item.price || item.mrp,
+          mrp: item.price || item.mrp,
+          image: item.image || item.image_full_url,
+          store_id: item.store_id,
+          store_name: item.store_name,
+          module_id: item.module_id,
+          category: item.category || item.category_name,
+          category_name: item.category || item.category_name,
+          veg: item.veg,
+          rating: item.rating || item.avg_rating,
+          delivery_time: item.delivery_time,
+          store_latitude: item.store_latitude || item.store_location?.lat,
+          store_longitude: item.store_longitude || item.store_location?.lon,
+        },
+      }));
+
+      this.logger.log(`✅ Intent search found ${results.length} items in ${Date.now() - startTime}ms`);
+
+      return {
+        results,
+        total: response.data.meta?.total || results.length,
+        took: Date.now() - startTime,
+        searchType: 'intent',
+        query,
+      };
+    } catch (error) {
+      this.logger.error(`Intent search failed: ${error.message}`, error.stack);
+      
+      // Fallback to regular hybrid search
+      this.logger.warn(`⚠️ Falling back to hybrid search for: "${query}"`);
+      return this.search({
+        query,
+        index: 'food_items',
+        limit: options.size || 10,
+        filters: options.store_id ? [{ field: 'store_id', operator: 'eq', value: options.store_id }] : [],
+      });
+    }
+  }
+
+  /**
+   * Find store by name using Search API
+   * Uses fuzzy matching to handle misspellings (e.g., "inyat" → "Inayat Cafe")
+   */
+  async findStoreByName(
+    query: string,
+    options: { module_id?: number; lat?: number; lng?: number; radius_km?: number } = {}
+  ): Promise<{ storeId: number | null; storeName?: string; score?: number }> {
+    try {
+      const params: Record<string, any> = { q: query, size: 1 };
+      if (options.module_id) params.module_id = options.module_id;
+      if (options.lat) params.lat = options.lat;
+      if (options.lng) params.lon = options.lng;
+      if (options.radius_km) params.radius_km = options.radius_km;
+
+      this.logger.log(`🏪 Finding store: "${query}"`);
+
+      const response = await firstValueFrom(
+        this.httpService.get(`${this.searchApiUrl}/v2/search/stores`, {
+          params,
+          timeout: 5000,
+        }),
+      );
+
+      const stores = response.data.stores || response.data.results || [];
+      if (stores.length > 0) {
+        const store = stores[0];
+        this.logger.log(`✅ Found store: ${store.name} (ID: ${store.id}, score: ${store.score || store._score})`);
+        return {
+          storeId: Number(store.id),
+          storeName: store.name,
+          score: store.score || store._score,
+        };
+      }
+
+      this.logger.log(`❌ Store not found for: "${query}"`);
+      return { storeId: null };
+    } catch (error) {
+      this.logger.error(`Store lookup failed: ${error.message}`);
+      return { storeId: null };
+    }
+  }
 }

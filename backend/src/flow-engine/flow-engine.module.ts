@@ -30,6 +30,7 @@ import { GroupOrderSearchExecutor } from './executors/group-order-search.executo
 import { ValuePropositionExecutor } from './executors/value-proposition.executor';
 import { AutoCartExecutor } from './executors/auto-cart.executor';
 import { AdaptiveExecutor } from './executors/adaptive.executor';
+import { CartManagerExecutor } from './executors/cart-manager.executor';
 // Game executors disabled - Prisma schema mismatch
 // import { GameScorerExecutor } from './executors/game-scorer.executor';
 // import { RewardPointsExecutor } from './executors/reward-points.executor';
@@ -107,6 +108,7 @@ import { AuthModule } from '../auth/auth.module';
     ValuePropositionExecutor,
     AutoCartExecutor,
     AdaptiveExecutor,
+    CartManagerExecutor,
     // GameScorerExecutor, // Disabled - Prisma schema mismatch
     // RewardPointsExecutor, // Disabled - Prisma schema mismatch
   ],
@@ -146,6 +148,7 @@ export class FlowEngineModule {
     private readonly valuePropositionExecutor: ValuePropositionExecutor,
     private readonly autoCartExecutor: AutoCartExecutor,
     private readonly adaptiveExecutor: AdaptiveExecutor,
+    private readonly cartManagerExecutor: CartManagerExecutor,
     // private readonly gameScorerExecutor: GameScorerExecutor, // Disabled
     // private readonly rewardPointsExecutor: RewardPointsExecutor, // Disabled
   ) {
@@ -173,6 +176,7 @@ export class FlowEngineModule {
     this.executorRegistry.register(valuePropositionExecutor);
     this.executorRegistry.register(autoCartExecutor);
     this.executorRegistry.register(adaptiveExecutor);
+    this.executorRegistry.register(cartManagerExecutor);
     // this.executorRegistry.register(gameScorerExecutor); // Disabled
     // this.executorRegistry.register(rewardPointsExecutor); // Disabled
   }

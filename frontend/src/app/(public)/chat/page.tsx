@@ -396,6 +396,32 @@ function ChatContent() {
       'btn_parcel',
       'btn_shop',
       'btn_help',
+      // Location flow buttons
+      'skip_location',
+      'share_location',
+      '__location__',
+      '__request_location__',
+      // Track order buttons
+      'track_order',
+      'view_orders',
+      'order_status',
+      // Checkout buttons
+      'checkout',
+      'proceed_checkout',
+      'confirm_order',
+      'place_order',
+      // Auth buttons
+      '__login__',
+      '__authenticate__',
+      // General action buttons
+      'yes',
+      'no',
+      'ok',
+      'confirm',
+      'back',
+      'skip',
+      'continue',
+      'retry',
     ]
     if (internalActions.includes(lowerText)) return true
     
@@ -404,7 +430,13 @@ function ChatContent() {
     if (lowerText.startsWith('add ') && lowerText.includes(' to cart')) return true
     if (lowerText.startsWith('select_')) return true
     if (lowerText.startsWith('btn_')) return true
+    if (lowerText.startsWith('btn ')) return true  // "btn skip" etc
     if (lowerText.startsWith('action_')) return true
+    if (lowerText.startsWith('skip_')) return true
+    if (lowerText.startsWith('confirm_')) return true
+    if (lowerText.startsWith('view_')) return true
+    if (lowerText.startsWith('track_')) return true
+    if (lowerText.startsWith('__') && lowerText.endsWith('__')) return true  // Any __action__ format
     
     return false
   }

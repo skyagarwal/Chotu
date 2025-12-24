@@ -218,7 +218,7 @@ export const foodOrderFlow: FlowDefinition = {
           id: 'extract_food_details',
           executor: 'llm',
           config: {
-            systemPrompt: 'You are a JSON extractor. Extract food order details including quantities. Return JSON only, no explanations.',
+            systemPrompt: 'You are a JSON extractor. Extract food order details including quantities and special instructions. Return JSON only, no explanations.',
             // 💾 Use original_food_query if available (preserved before location request), otherwise use current message
             prompt: `User message: "{{#if original_food_query}}{{original_food_query}}{{else}}{{user_message}}{{/if}}"
 
@@ -226,7 +226,8 @@ Extract into JSON:
 {
   "items": [{"name": "food item", "quantity": 1}],  // Array of items with quantities
   "restaurant": "restaurant/cafe name if mentioned (e.g., 'from Inayat Cafe'), otherwise null",
-  "search_query": "ONLY the food items to search for, WITHOUT restaurant name or quantities"
+  "search_query": "ONLY the food items to search for, WITHOUT restaurant name or quantities",
+  "special_instructions": "any special requests like 'not oily', 'extra spicy', 'jaldi chahiye', 'less salt', etc. or null"
 }
 
 IMPORTANT: 
@@ -237,15 +238,25 @@ IMPORTANT:
 - Restaurant/cafe names like "Inayat Cafe", "McDonald's", "Dominos" go in "restaurant" field
 
 Examples:
-- "2 paneer tikka from inayat cafe" → {"items":[{"name":"paneer tikka","quantity":2}],"restaurant":"Inayat Cafe","search_query":"paneer tikka"}
-- "I want 3 pizzas and 2 burgers" → {"items":[{"name":"pizza","quantity":3},{"name":"burger","quantity":2}],"restaurant":null,"search_query":"pizza burger"}
-- "order biryani" → {"items":[{"name":"biryani","quantity":1}],"restaurant":null,"search_query":"biryani"}
-- "do butter naan aur ek paneer tikka" → {"items":[{"name":"butter naan","quantity":2},{"name":"paneer tikka","quantity":1}],"restaurant":null,"search_query":"butter naan paneer tikka"}
-- "teen plate momos" → {"items":[{"name":"momos","quantity":3}],"restaurant":null,"search_query":"momos"}
+- "2 paneer tikka from inayat cafe" → {"items":[{"name":"paneer tikka","quantity":2}],"restaurant":"Inayat Cafe","search_query":"paneer tikka","special_instructions":null}
+- "I want 3 pizzas and 2 burgers" → {"items":[{"name":"pizza","quantity":3},{"name":"burger","quantity":2}],"restaurant":null,"search_query":"pizza burger","special_instructions":null}
+- "order biryani" → {"items":[{"name":"biryani","quantity":1}],"restaurant":null,"search_query":"biryani","special_instructions":null}
+- "do butter naan aur ek paneer tikka" → {"items":[{"name":"butter naan","quantity":2},{"name":"paneer tikka","quantity":1}],"restaurant":null,"search_query":"butter naan paneer tikka","special_instructions":null}
+- "teen plate momos" → {"items":[{"name":"momos","quantity":3}],"restaurant":null,"search_query":"momos","special_instructions":null}
+- "mujhe inyat se khana mangwana hai" → {"items":[],"restaurant":"inyat","search_query":"","special_instructions":null}
+- "inyat cafe se pizza order karna hai" → {"items":[{"name":"pizza","quantity":1}],"restaurant":"inyat cafe","search_query":"pizza","special_instructions":null}
+- "dominos se 2 burger chahiye" → {"items":[{"name":"burger","quantity":2}],"restaurant":"dominos","search_query":"burger","special_instructions":null}
+- "McDonald's se order karo" → {"items":[],"restaurant":"McDonald's","search_query":"","special_instructions":null}
+- "paneer tikka from inayat, not oily please" → {"items":[{"name":"paneer tikka","quantity":1}],"restaurant":"inayat","search_query":"paneer tikka","special_instructions":"not oily"}
+- "2 biryani jaldi chahiye, kam masala" → {"items":[{"name":"biryani","quantity":2}],"restaurant":null,"search_query":"biryani","special_instructions":"jaldi chahiye, kam masala"}
+- "pizza with extra cheese, need it fast" → {"items":[{"name":"pizza","quantity":1}],"restaurant":null,"search_query":"pizza","special_instructions":"extra cheese, need it fast"}
+
+HINDI RESTAURANT PATTERNS: "[name] se khana/order/mangwana" means ordering from that restaurant
+SPECIAL INSTRUCTIONS: Extract phrases like "not oily", "less spicy", "extra cheese", "jaldi chahiye", "kam masala", "need it fast"
 
 JSON:`,
             temperature: 0.1,
-            maxTokens: 200,
+            maxTokens: 250,
             parseJson: true
           },
           output: 'extracted_food',
@@ -292,7 +303,8 @@ JSON:`,
           executor: 'search',
           config: {
             index: 'food_items',  // Use v3 index with 768-dim item_vector embeddings
-            query: '{{extracted_food.search_query}}',
+            // If no specific items requested, use "popular food" as fallback to get general results from that restaurant
+            query: '{{#if extracted_food.search_query}}{{extracted_food.search_query}}{{else}}popular food items menu{{/if}}',
             size: 20,  // Get more results when filtering by restaurant
             fields: ['name', 'category_name', 'description', 'store_name'],
             formatForUi: true,
@@ -308,8 +320,30 @@ JSON:`,
       ],
       transitions: {
         items_found: 'show_results',
-        no_items: 'search_food',  // Fallback to unfiltered search if restaurant not found
-        error: 'search_food',
+        no_items: 'show_restaurant_not_found',  // Show helpful message instead of generic fallback
+        error: 'show_restaurant_not_found',
+      },
+    },
+
+    // New state: Restaurant not found
+    show_restaurant_not_found: {
+      type: 'action',
+      description: 'Tell user restaurant was not found and suggest searching',
+      actions: [
+        {
+          id: 'restaurant_not_found_msg',
+          executor: 'response',
+          config: {
+            message: '😕 I couldn\'t find "{{extracted_food.restaurant}}" in our network. Maybe try a different spelling or tell me what food you\'d like and I\'ll find it for you!',
+            buttons: [
+              { id: 'btn_browse', label: '🍽️ Browse Food', value: 'show me popular food items' },
+              { id: 'btn_search', label: '🔍 Search Again', value: 'search for food' },
+            ],
+          },
+        },
+      ],
+      transitions: {
+        user_message: 'understand_request',
       },
     },
 

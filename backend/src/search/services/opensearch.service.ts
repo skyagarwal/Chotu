@@ -223,9 +223,17 @@ export class OpenSearchService {
         case 'equals':
           return { term: { [filter.field]: filter.value } };
         case 'contains':
-          // Use match_phrase for exact phrase matching (e.g., store names)
-          // This prevents partial word matches like "Cafe" matching all cafes
-          return { match_phrase: { [filter.field]: filter.value } };
+          // Use fuzzy match for partial/misspelled matching of store names
+          // This allows "inyat" to match "Inayat Cafe" (handles typos + case-insensitive)
+          const searchValue = String(filter.value);
+          return { 
+            match: { 
+              [filter.field]: {
+                query: searchValue,
+                fuzziness: 'AUTO'  // Allows 1-2 character differences based on word length
+              }
+            } 
+          };
         case 'range':
           return { range: { [filter.field]: filter.value } };
         case 'geo_distance':
