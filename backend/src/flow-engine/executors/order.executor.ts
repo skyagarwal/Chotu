@@ -90,7 +90,8 @@ export class OrderExecutor implements ActionExecutor {
     const parcelDetails = resolve(config.detailsPath, 'parcel_details');
     
     const parcelCategoryId = config.parcel_category_id || context.data.parcel_category_id || 5;
-    const paymentMethod = config.payment_method || context.data.payment_method || 'cash_on_delivery';
+    // Default to digital_payment since COD is disabled in PHP config
+    const paymentMethod = config.payment_method || context.data.payment_method || 'digital_payment';
 
     // Map recipient details if available
     const receiverName = recipientDetails?.name || deliveryAddress?.contact_person_name;
@@ -127,7 +128,8 @@ export class OrderExecutor implements ActionExecutor {
   ): Promise<any> {
     const items = config.items || context.data.selected_items;
     const deliveryAddress = config.delivery_address || context.data.delivery_address;
-    const paymentMethod = config.payment_method || context.data.payment_method || 'cash_on_delivery';
+    // Default to digital_payment to avoid COD restrictions at stores
+    const paymentMethod = config.payment_method || context.data.payment_method || 'digital_payment';
     const orderNote = config.order_note || context.data.order_note;
 
     if (!items || items.length === 0) {
@@ -169,7 +171,8 @@ export class OrderExecutor implements ActionExecutor {
   ): Promise<any> {
     const items = config.items || context.data.selected_items || context.data.cart_items;
     const deliveryAddress = config.delivery_address || context.data.delivery_address;
-    const paymentMethod = config.payment_method || context.data.payment_method || 'cash_on_delivery';
+    // Default to digital_payment since COD is disabled in PHP config
+    const paymentMethod = config.payment_method || context.data.payment_method || 'digital_payment';
     const orderNote = config.order_note || context.data.order_note;
 
     if (!items || items.length === 0) {

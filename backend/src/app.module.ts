@@ -2,6 +2,8 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { HttpModule } from '@nestjs/axios';
 import { ScheduleModule } from '@nestjs/schedule';
+import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler';
+import { APP_GUARD } from '@nestjs/core';
 import configuration from './config/configuration';
 import { DatabaseModule } from './database/database.module';
 import { WhatsAppModule } from './whatsapp/whatsapp.module';
@@ -53,6 +55,25 @@ import { ProfilesModule } from './profiles/profiles.module'; // ✨ Enhanced Pro
       load: [configuration],
       envFilePath: '.env',
     }),
+
+    // 🛡️ Rate Limiting - Prevent abuse
+    ThrottlerModule.forRoot([
+      {
+        name: 'short',
+        ttl: 1000,    // 1 second
+        limit: 3,     // 3 requests per second per IP
+      },
+      {
+        name: 'medium',
+        ttl: 10000,   // 10 seconds
+        limit: 20,    // 20 requests per 10 seconds
+      },
+      {
+        name: 'long',
+        ttl: 60000,   // 1 minute
+        limit: 100,   // 100 requests per minute
+      },
+    ]),
 
     // Database
     DatabaseModule,
@@ -110,6 +131,13 @@ import { ProfilesModule } from './profiles/profiles.module'; // ✨ Enhanced Pro
     TelegramModule, // Telegram channel (inbound minimal)
     // WebChatModule, // Future: Web chat channel
     TestingModule, // Lightweight chat endpoints for testing AI flows
+  ],
+  providers: [
+    // 🛡️ Global rate limiting guard
+    {
+      provide: APP_GUARD,
+      useClass: ThrottlerGuard,
+    },
   ],
 })
 export class AppModule {}

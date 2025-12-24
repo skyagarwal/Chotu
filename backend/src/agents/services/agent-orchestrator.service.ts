@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger, Inject, forwardRef } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
 import { ConfigService } from '@nestjs/config';
 import { firstValueFrom } from 'rxjs';
@@ -18,6 +18,7 @@ import { FlowEngineService } from '../../flow-engine/flow-engine.service';
 import { AuthTriggerService } from '../../auth/auth-trigger.service';
 import { GameOrchestratorService } from '../../gamification/services/game-orchestrator.service';
 import { UserPreferenceService } from '../../personalization/user-preference.service';
+import { SentryService } from '../../monitoring/sentry.service';
 import { UserSyncService } from '../../user/services/user-sync.service';
 import { SettingsService } from '../../settings/settings.service';
 import { VoiceCharactersService } from '../../voice-characters/voice-characters.service';
@@ -89,6 +90,7 @@ export class AgentOrchestratorService {
     private phpStoreService: PhpStoreService,
     private voiceCharactersService: VoiceCharactersService,
     private settingsService: SettingsService,
+    @Inject(forwardRef(() => SentryService)) private sentryService: SentryService,
   ) {
     this.logger = new Logger(AgentOrchestratorService.name);
     this.adminBackendUrl = this.configService.get<string>('ADMIN_BACKEND_URL') || 'http://localhost:3002';
@@ -207,6 +209,17 @@ export class AgentOrchestratorService {
     const startTime = Date.now();
 
     try {
+      // 🛡️ CONTENT FILTER - Block harmful/off-topic content early
+      const contentFilterResult = this.filterHarmfulContent(message);
+      if (contentFilterResult.blocked) {
+        this.logger.warn(`🚫 Content blocked: ${contentFilterResult.reason} - "${message.substring(0, 50)}..."`);
+        return {
+          response: contentFilterResult.response,
+          executionTime: Date.now() - startTime,
+          metadata: { content_blocked: true, reason: contentFilterResult.reason },
+        };
+      }
+
       // 1. Get or create session (or use test session)
       const session = testSession || await this.sessionService.getSession(phoneNumber);
 
@@ -770,6 +783,14 @@ export class AgentOrchestratorService {
       this.logger.error('Error stack:', error?.stack);
       this.logger.error(`Error occurred while processing: phoneNumber=${phoneNumber}, message="${message}", module=${module}`);
 
+      // 🔴 Report to Sentry
+      this.sentryService?.captureException(error, {
+        phoneNumber,
+        message,
+        platform: module,
+        extra: { module, messageLength: message?.length },
+      });
+
       return {
         response:
           'I apologize, but I encountered an error. Please try again or contact support.',
@@ -1262,26 +1283,50 @@ export class AgentOrchestratorService {
       }
     }
 
-    const defaultSystemPrompt = `You are Mangwale AI, the smart assistant for the Mangwale hyperlocal delivery platform in Nashik.
+    const defaultSystemPrompt = `You are Mangwale AI, the smart assistant for the Mangwale hyperlocal delivery platform in Nashik, India.
 
-User Context:
-- Name: {{userName}}
-- Platform: {{platform}}
-- Time: {{time}}
-- Authenticated: {{isAuthenticated}}
-- Wallet Balance: {{walletBalance}}
-- Recent Orders: {{recentOrders}}
+== USER CONTEXT ==
+Name: {{userName}}
+Platform: {{platform}}
+Time: {{time}}
+Authenticated: {{isAuthenticated}}
+Wallet Balance: {{walletBalance}}
+Recent Orders: {{recentOrders}}
 
-Business Context:
-- Services: Food Delivery, Parcel/Courier, E-commerce, Local Services.
-- Location: Nashik, India.
+== OUR SERVICES (Nashik only) ==
+1. Food Delivery - Order from local restaurants
+2. Parcel/Courier - Send packages within Nashik
+3. E-commerce - Shop local products
+4. Local Services - Household services
 
-Guidelines:
-- Be concise, direct, and helpful. Avoid long paragraphs.
-- If the user is logged in, occasionally address them by name (e.g., "Sure, {{userName}}").
-- If the user asks about services, briefly list them.
-- Tone: Professional, friendly, and efficient.
-- Do not hallucinate services we don't offer.`;
+== CONVERSATION GUIDELINES ==
+- Be concise (2-3 sentences max per response)
+- Use Hinglish naturally when user speaks Hindi
+- Address logged-in users by name occasionally
+- Guide users toward our services
+- Never invent services, prices, or restaurants we don't have
+
+== STRICT BOUNDARIES ==
+❌ DO NOT discuss:
+- Politics, religion, controversial topics
+- Adult content, violence, illegal activities
+- Medical/legal advice
+- Competitors (Zomato, Swiggy) unless comparing value
+- Topics outside food, delivery, shopping
+
+❌ DO NOT:
+- Pretend to be human
+- Share personal opinions on sensitive topics
+- Make promises about delivery times without system data
+- Provide specific prices without checking inventory
+
+✅ IF USER ASKS OFF-TOPIC:
+Reply: "Main sirf Mangwale delivery services mein help kar sakta hoon! 😊 Food order karein ya parcel bhejein?"
+
+== RESPONSE FORMAT ==
+- Keep responses under 50 words when possible
+- Use emojis sparingly (1-2 per message)
+- End with a clear call-to-action when appropriate`;
 
     // Fetch dynamic system prompt from settings (or use default)
     let systemPrompt = await this.settingsService.getSetting('system-prompt', defaultSystemPrompt);
@@ -2907,10 +2952,115 @@ ${systemPrompt}`;
   }
 
   /**
-   * Generate clarification menu
+   * Generate clarification menu - Tightened for public use
    */
   private generateClarificationMenu(message: string): string {
-    return 'I am not sure what you mean. Can you please clarify? You can ask to order food, book a parcel, or search for products.';
+    return `Main samajh nahi paaya 🤔
+
+Aap mujhse yeh services le sakte ho:
+🍕 "Order food" - Khana order karein
+📦 "Send parcel" - Courier bhejein
+🛒 "Shop" - Local products khareedein
+📍 "Track order" - Order ka status dekhein
+
+Kya chahiye aapko?`;
+  }
+
+  /**
+   * 🛡️ Content Filter - Block harmful/off-topic messages
+   * For public deployment safety
+   */
+  private filterHarmfulContent(message: string): { blocked: boolean; reason?: string; response?: string } {
+    if (!message || message.length < 2) {
+      return { blocked: false };
+    }
+
+    const lowerMsg = message.toLowerCase();
+
+    // 1. Profanity/Abuse filter (Hindi + English)
+    const profanityPatterns = [
+      /\b(fuck|shit|bitch|asshole|bastard|dick|pussy|cunt)\b/i,
+      /\b(bhenchod|madarchod|chutiya|gandu|bhosdike|lavda|lund|randi)\b/i,
+      /\b(mc|bc|bkl|bsdk)\b/i,
+    ];
+    
+    for (const pattern of profanityPatterns) {
+      if (pattern.test(lowerMsg)) {
+        return {
+          blocked: true,
+          reason: 'profanity',
+          response: 'Please use respectful language. Main aapki kaise madad kar sakta hoon? 🙏',
+        };
+      }
+    }
+
+    // 2. Adult/Sexual content filter
+    const adultPatterns = [
+      /\b(sex|porn|xxx|nude|naked|boob|penis|vagina)\b/i,
+      /\b(sexy|horny|escort|prostitute|girlfriend.*service)\b/i,
+    ];
+    
+    for (const pattern of adultPatterns) {
+      if (pattern.test(lowerMsg)) {
+        return {
+          blocked: true,
+          reason: 'adult_content',
+          response: 'Main sirf delivery services mein help karta hoon. Food order karein ya parcel bhejein? 📦',
+        };
+      }
+    }
+
+    // 3. Violence/Illegal content filter
+    const violencePatterns = [
+      /\b(kill|murder|bomb|attack|weapon|gun|knife|terrorist)\b/i,
+      /\b(drugs|cocaine|heroin|weed|marijuana|ganja)\b/i,
+      /\b(hack|steal|cheat|fraud|scam)\b/i,
+    ];
+    
+    for (const pattern of violencePatterns) {
+      if (pattern.test(lowerMsg)) {
+        return {
+          blocked: true,
+          reason: 'harmful_content',
+          response: 'Main is topic par help nahi kar sakta. Food order ya parcel delivery mein madad chahiye? 🍕',
+        };
+      }
+    }
+
+    // 4. Off-topic detection (politics, religion, controversial)
+    const offTopicPatterns = [
+      /\b(modi|rahul|bjp|congress|aap|election|vote|politician)\b/i,
+      /\b(hindu|muslim|christian|sikh|religion|temple|mosque|church)\b/i,
+      /\b(pakistan|china|war|army|military)\b/i,
+    ];
+    
+    for (const pattern of offTopicPatterns) {
+      if (pattern.test(lowerMsg)) {
+        return {
+          blocked: true,
+          reason: 'off_topic',
+          response: 'Main sirf Mangwale delivery services mein help karta hoon! 😊 Food order karein ya parcel bhejein?',
+        };
+      }
+    }
+
+    // 5. Spam/Gibberish detection (too many repeated chars or very long without spaces)
+    if (message.length > 200 && !message.includes(' ')) {
+      return {
+        blocked: true,
+        reason: 'spam',
+        response: 'Kya aap food order karna chahte ho ya parcel bhejein? 📦',
+      };
+    }
+
+    // 6. Competitor mentions (gentle redirect, not blocked)
+    // NOT blocking - just logging for analytics
+    if (/\b(zomato|swiggy|uber\s*eats|dunzo)\b/i.test(lowerMsg)) {
+      this.logger.log(`📊 Competitor mentioned: ${message.substring(0, 50)}`);
+      // Don't block - let the LLM handle it with its boundary instructions
+    }
+
+    return { blocked: false };
   }
 
   /**

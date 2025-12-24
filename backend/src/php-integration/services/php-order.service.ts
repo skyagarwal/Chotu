@@ -229,13 +229,42 @@ export class PhpOrderService extends PhpApiService {
 
       // 4. Place Order
       this.logger.debug('Placing final order');
+      
+      // Get store coordinates to calculate distance
+      const storeItem = orderData.items[0];
+      const storeLat = storeItem.storeLat || storeItem.store_lat || 0;
+      const storeLng = storeItem.storeLng || storeItem.store_lng || 0;
+      const userLat = orderData.deliveryAddress?.latitude || 0;
+      const userLng = orderData.deliveryAddress?.longitude || 0;
+      
+      // Calculate distance in km using Haversine formula
+      const R = 6371; // Earth's radius in km
+      const dLat = (storeLat - userLat) * Math.PI / 180;
+      const dLon = (storeLng - userLng) * Math.PI / 180;
+      const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+                Math.cos(userLat * Math.PI / 180) * Math.cos(storeLat * Math.PI / 180) *
+                Math.sin(dLon/2) * Math.sin(dLon/2);
+      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+      const distance = R * c;
+      
+      // Force digital_payment for now as many stores don't support COD
+      // TODO: Check store payment methods and use appropriate method
+      const effectivePaymentMethod = 'digital_payment';
+      
       const payload = {
         store_id: storeId,
         delivery_address_id: addressId,
-        payment_method: orderData.paymentMethod || 'cash_on_delivery',
+        payment_method: effectivePaymentMethod,
         delivery_instruction: orderData.orderNote || '',
-        order_type: 'delivery'
+        order_type: 'delivery',
+        // Required fields for delivery orders
+        distance: distance.toFixed(2),
+        address: orderData.deliveryAddress?.address || 'Delivery Address',
+        latitude: userLat,
+        longitude: userLng,
       };
+
+      this.logger.debug('Order payload:', JSON.stringify(payload));
 
       const response = await this.authenticatedRequest(
         'post',

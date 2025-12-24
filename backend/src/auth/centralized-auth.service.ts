@@ -1,9 +1,10 @@
-import { Injectable, Logger, Inject, forwardRef } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import Redis from 'ioredis';
 import { PhpAuthService } from '../php-integration/services/php-auth.service';
 import { normalizePhoneNumber } from '../common/utils/helpers';
-import { PrismaClient } from '@prisma/client';
+import { PrismaService } from '../database/prisma.service';
+import { UserProfileEnrichmentService } from '../personalization/user-profile-enrichment.service';
 
 export interface AuthenticatedUser {
   userId: number;
@@ -43,12 +44,13 @@ export interface AuthEvent {
 export class CentralizedAuthService {
   private readonly logger = new Logger(CentralizedAuthService.name);
   private readonly redis: Redis;
-  private readonly prisma: PrismaClient;
   private readonly authTtl: number = 7 * 24 * 60 * 60; // 7 days
 
   constructor(
     private readonly configService: ConfigService,
     private readonly phpAuthService: PhpAuthService,
+    private readonly prisma: PrismaService,
+    private readonly profileEnrichment: UserProfileEnrichmentService,
   ) {
     const redisConfig = {
       host: this.configService.get('redis.host'),
@@ -58,8 +60,7 @@ export class CentralizedAuthService {
     };
 
     this.redis = new Redis(redisConfig);
-    this.prisma = new PrismaClient();
-    this.logger.log('✅ Centralized Auth Service initialized with PostgreSQL sync');
+    this.logger.log('✅ Centralized Auth Service initialized with PostgreSQL sync & profile enrichment');
   }
 
   /**
@@ -198,6 +199,20 @@ export class CentralizedAuthService {
           preferredLanguage: 'en',
           lastActiveAt: new Date(),
         },
+      });
+
+      // 📊 CRITICAL: Enrich user profile with order history from MySQL
+      // This runs async to not block login, but builds comprehensive profile
+      this.profileEnrichment.enrichUserProfile({
+        userId: userData.userId,
+        phone,
+        firstName: userData.firstName,
+        lastName: userData.lastName,
+        email: userData.email,
+      }).then(() => {
+        this.logger.log(`📊 Profile enrichment started for user ${userData.userId}`);
+      }).catch(err => {
+        this.logger.error(`Profile enrichment failed: ${err.message}`);
       });
 
       return aiUser;

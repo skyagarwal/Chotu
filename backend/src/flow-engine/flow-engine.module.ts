@@ -28,6 +28,8 @@ import { SelectionExecutor } from './executors/selection.executor';
 import { ComplexOrderParserExecutor } from './executors/complex-order-parser.executor';
 import { GroupOrderSearchExecutor } from './executors/group-order-search.executor';
 import { ValuePropositionExecutor } from './executors/value-proposition.executor';
+import { AutoCartExecutor } from './executors/auto-cart.executor';
+import { AdaptiveExecutor } from './executors/adaptive.executor';
 // Game executors disabled - Prisma schema mismatch
 // import { GameScorerExecutor } from './executors/game-scorer.executor';
 // import { RewardPointsExecutor } from './executors/reward-points.executor';
@@ -51,6 +53,7 @@ import { PersonalizationModule } from '../personalization/personalization.module
 import { OrderModule } from '../order/order.module';
 import { PricingModule } from '../pricing/pricing.module';
 import { ProfilesModule } from '../profiles/profiles.module';
+import { AuthModule } from '../auth/auth.module';
 
 @Module({
   imports: [
@@ -65,6 +68,7 @@ import { ProfilesModule } from '../profiles/profiles.module';
     OrderModule,
     PricingModule,
     ProfilesModule,
+    AuthModule, // For CentralizedAuthService in AuthExecutor
     forwardRef(() => AgentsModule), // Use forwardRef to avoid circular dependency
   ],
   controllers: [FlowBuilderController, FlowsController],
@@ -101,6 +105,8 @@ import { ProfilesModule } from '../profiles/profiles.module';
     ComplexOrderParserExecutor,
     GroupOrderSearchExecutor,
     ValuePropositionExecutor,
+    AutoCartExecutor,
+    AdaptiveExecutor,
     // GameScorerExecutor, // Disabled - Prisma schema mismatch
     // RewardPointsExecutor, // Disabled - Prisma schema mismatch
   ],
@@ -138,6 +144,8 @@ export class FlowEngineModule {
     private readonly complexOrderParserExecutor: ComplexOrderParserExecutor,
     private readonly groupOrderSearchExecutor: GroupOrderSearchExecutor,
     private readonly valuePropositionExecutor: ValuePropositionExecutor,
+    private readonly autoCartExecutor: AutoCartExecutor,
+    private readonly adaptiveExecutor: AdaptiveExecutor,
     // private readonly gameScorerExecutor: GameScorerExecutor, // Disabled
     // private readonly rewardPointsExecutor: RewardPointsExecutor, // Disabled
   ) {
@@ -163,6 +171,8 @@ export class FlowEngineModule {
     this.executorRegistry.register(complexOrderParserExecutor);
     this.executorRegistry.register(groupOrderSearchExecutor);
     this.executorRegistry.register(valuePropositionExecutor);
+    this.executorRegistry.register(autoCartExecutor);
+    this.executorRegistry.register(adaptiveExecutor);
     // this.executorRegistry.register(gameScorerExecutor); // Disabled
     // this.executorRegistry.register(rewardPointsExecutor); // Disabled
   }

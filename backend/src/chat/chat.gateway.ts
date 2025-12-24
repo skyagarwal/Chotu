@@ -364,7 +364,7 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
             phone: authData.phone,
           });
           // Mark auth as emitted to avoid duplicate events
-          await this.sessionService.updateSessionData(sessionId, { authEmitted: true });
+          await this.sessionService.setData(sessionId, { authEmitted: true });
         }
         try {
           await this.conversationLogger.logBotMessage({

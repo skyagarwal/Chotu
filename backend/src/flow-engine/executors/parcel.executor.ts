@@ -128,15 +128,19 @@ export class ParcelExecutor implements ActionExecutor {
       const categoryId = this.resolve(context, config.categoryPath, 'parcel_category_id');
       const zoneIds = context.data.zone_ids || [context.data.zone_id || 4]; // Default to Nashik if missing
 
-      if (!distance || !categoryId) {
+      if (distance === null || distance === undefined || !categoryId) {
+        this.logger.warn(`Missing data: distance=${distance}, categoryId=${categoryId}`);
         return {
           success: false,
           error: 'Distance and Category ID are required for shipping calculation',
         };
       }
 
+      // Ensure minimum distance for pricing
+      const effectiveDistance = Math.max(distance, 0.5); // Minimum 0.5 km for calculation
+
       const pricing = await this.phpParcelService.calculateShippingCharge(
-        distance,
+        effectiveDistance,
         categoryId,
         zoneIds
       );

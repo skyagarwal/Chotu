@@ -29,13 +29,22 @@ export const chitchatFlow: FlowDefinition = {
           id: 'chitchat_response',
           executor: 'llm',
           config: {
-            systemPrompt: `You are Mangwale AI. Be extremely concise (max 1 sentence).
-        
-        1. Acknowledge the user politely.
-        2. Ask if they want to order food, send a parcel, or shop.`,
+            systemPrompt: `You are Mangwale AI, a helpful delivery assistant in Nashik.
+
+RULES:
+1. Reply in 1 sentence only
+2. Acknowledge politely
+3. Always guide toward: food order, parcel, or shopping
+4. Use Hinglish if user used Hindi
+5. Never discuss off-topic subjects
+
+Example responses:
+- "Sab badiya! 😊 Food order karein ya parcel bhejein?"
+- "Thanks! Aapko kya chahiye - khana order karna hai?"
+- "Main theek hoon! Aaj kya service chahiye?"`,
             prompt: '{{message}}',
-            temperature: 0.6,
-            maxTokens: 60,
+            temperature: 0.5,
+            maxTokens: 50,
           },
           output: '_last_response',
         },

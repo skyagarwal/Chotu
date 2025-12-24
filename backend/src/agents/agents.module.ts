@@ -42,6 +42,7 @@ import { ComplaintsAgent } from './agents/complaints.agent';
 import { BookingAgent } from './agents/booking.agent';
 import { AgentsService } from './services/agents.service';
 import { EnhancedAgentToolsService } from './services/enhanced-agent-tools.service'; // ✨ Enhanced tools
+import { LlmToolsService } from './services/llm-tools.service'; // ✨ LLM Tools for search, recommendations, compare prices
 
 /**
  * Agents Module
@@ -105,6 +106,7 @@ import { EnhancedAgentToolsService } from './services/enhanced-agent-tools.servi
     AgentsService, // ✨ Agent statistics and management
     AgentHandoffService, // ✨ Agent-to-agent handoff mechanism
     EnhancedAgentToolsService, // ✨ Google Places, Reviews, Self-learning tools
+    LlmToolsService, // ✨ LLM Tools for search, recommendations, compare prices
     // Agent implementations
     FAQAgent,
     SearchAgent,
@@ -120,6 +122,7 @@ import { EnhancedAgentToolsService } from './services/enhanced-agent-tools.servi
     AddressExtractionService, // ✨ Export for use in FlowEngine
     AgentHandoffService, // ✨ Export for agent handoff capability
     EnhancedAgentToolsService, // ✨ Export enhanced tools
+    LlmToolsService, // ✨ Export LLM tools for other modules
   ],
 })
 export class AgentsModule {}

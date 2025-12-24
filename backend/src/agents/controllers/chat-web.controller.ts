@@ -1,4 +1,5 @@
 import { Controller, Post, Get, Body, Param, Logger } from '@nestjs/common';
+import { Throttle, SkipThrottle } from '@nestjs/throttler';
 import { ConversationService } from '../../conversation/services/conversation.service';
 import { SessionService } from '../../session/session.service';
 
@@ -30,8 +31,11 @@ export class ChatWebController {
    * 
    * POST /chat/send
    * Body: { recipientId: string, text?: string, location?: { lat: number; lng: number }, type?: 'text' | 'location' }
+   * 
+   * Rate limited: 30 requests per minute per IP (chat-specific)
    */
   @Post('send')
+  @Throttle({ default: { limit: 30, ttl: 60000 } }) // 30 messages per minute per IP
   async sendMessage(@Body() body: { recipientId?: string; sessionId?: string; message?: string; text?: string; location?: { lat: number; lng: number }; type?: 'text' | 'location' }) {
     // Support both recipientId and sessionId for backwards compatibility
     const recipientId = body.recipientId || body.sessionId;

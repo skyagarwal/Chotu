@@ -218,30 +218,34 @@ export const foodOrderFlow: FlowDefinition = {
           id: 'extract_food_details',
           executor: 'llm',
           config: {
-            systemPrompt: 'You are a JSON extractor. Extract food order details. Return JSON only, no explanations.',
+            systemPrompt: 'You are a JSON extractor. Extract food order details including quantities. Return JSON only, no explanations.',
             // 💾 Use original_food_query if available (preserved before location request), otherwise use current message
             prompt: `User message: "{{#if original_food_query}}{{original_food_query}}{{else}}{{user_message}}{{/if}}"
 
 Extract into JSON:
 {
-  "item": "primary food item(s) user wants",
-  "restaurant": "restaurant/cafe name if user mentioned one (e.g., 'from Inayat Cafe'), otherwise null",
-  "search_query": "ONLY the food items to search for, WITHOUT restaurant name"
+  "items": [{"name": "food item", "quantity": 1}],  // Array of items with quantities
+  "restaurant": "restaurant/cafe name if mentioned (e.g., 'from Inayat Cafe'), otherwise null",
+  "search_query": "ONLY the food items to search for, WITHOUT restaurant name or quantities"
 }
 
 IMPORTANT: 
-- search_query should NOT include "from [restaurant]" - only food items!
+- Extract QUANTITY from patterns like "2 pizza", "two paneer", "ek biryani", "do butter naan"
+- Hindi numbers: ek=1, do=2, teen=3, char=4, paanch=5
+- Default quantity is 1 if not specified
+- search_query should NOT include quantities or "from [restaurant]"
 - Restaurant/cafe names like "Inayat Cafe", "McDonald's", "Dominos" go in "restaurant" field
 
 Examples:
-- "paneer tikka from inayat cafe" → {"item":"paneer tikka","restaurant":"Inayat Cafe","search_query":"paneer tikka"}
-- "pizza and burger from dominos" → {"item":"pizza, burger","restaurant":"Dominos","search_query":"pizza burger"}
-- "order biryani" → {"item":"biryani","restaurant":null,"search_query":"biryani"}
-- "paneer tikka, butter naan and chicken tikka from inayat cafe" → {"item":"paneer tikka, butter naan, chicken tikka","restaurant":"Inayat Cafe","search_query":"paneer tikka butter naan chicken tikka"}
+- "2 paneer tikka from inayat cafe" → {"items":[{"name":"paneer tikka","quantity":2}],"restaurant":"Inayat Cafe","search_query":"paneer tikka"}
+- "I want 3 pizzas and 2 burgers" → {"items":[{"name":"pizza","quantity":3},{"name":"burger","quantity":2}],"restaurant":null,"search_query":"pizza burger"}
+- "order biryani" → {"items":[{"name":"biryani","quantity":1}],"restaurant":null,"search_query":"biryani"}
+- "do butter naan aur ek paneer tikka" → {"items":[{"name":"butter naan","quantity":2},{"name":"paneer tikka","quantity":1}],"restaurant":null,"search_query":"butter naan paneer tikka"}
+- "teen plate momos" → {"items":[{"name":"momos","quantity":3}],"restaurant":null,"search_query":"momos"}
 
 JSON:`,
             temperature: 0.1,
-            maxTokens: 150,
+            maxTokens: 200,
             parseJson: true
           },
           output: 'extracted_food',
@@ -330,9 +334,103 @@ JSON:`,
         },
       ],
       transitions: {
-        items_found: 'show_results',
+        items_found: 'check_auto_select',  // Check if we should auto-select based on extracted quantities
         no_items: 'analyze_no_results',
         error: 'analyze_no_results', // Handle search errors gracefully
+      },
+    },
+
+    // 🆕 Check if user specified quantities that we should auto-select
+    check_auto_select: {
+      type: 'decision',
+      description: 'Check if extracted_food has items with quantities > 1 or multiple items to auto-add',
+      conditions: [
+        {
+          // If extracted_food.items exists and has items with quantity specified
+          expression: 'context.extracted_food?.items && context.extracted_food.items.length > 0 && (context.extracted_food.items.length > 1 || context.extracted_food.items[0]?.quantity > 1)',
+          event: 'auto_select',
+        }
+      ],
+      transitions: {
+        auto_select: 'auto_match_items',
+        default: 'show_results',  // No quantities specified, show results normally
+      },
+    },
+
+    // 🆕 Auto-match extracted items with search results and add to cart
+    auto_match_items: {
+      type: 'action',
+      description: 'Match extracted items with quantities against search results and add to cart',
+      actions: [
+        {
+          id: 'match_and_add',
+          executor: 'auto_cart',  // New executor that matches items and sets cart
+          config: {
+            extractedItemsPath: 'extracted_food.items',
+            searchResultsPath: 'search_results.cards',
+          },
+          output: 'auto_cart_result',
+        },
+      ],
+      transitions: {
+        all_matched: 'confirm_auto_cart',      // All items matched - show confirmation
+        partial_match: 'confirm_auto_cart',    // Some matched - show what we found
+        no_match: 'show_results',              // Nothing matched - show results for manual selection
+        error: 'show_results',
+      },
+    },
+
+    // 🆕 Show auto-matched cart and ask for confirmation
+    confirm_auto_cart: {
+      type: 'wait',
+      description: 'Show auto-added items and ask for confirmation',
+      onEntry: [
+        {
+          id: 'show_cart_confirmation',
+          executor: 'response',
+          config: {
+            message: '{{auto_cart_result.message}}',
+            buttons: [
+              { id: 'btn_confirm', label: '✅ Proceed to Checkout', value: 'checkout' },
+              { id: 'btn_add_more', label: '➕ Add More Items', value: 'add_more' },
+              { id: 'btn_modify', label: '✏️ Modify Cart', value: 'modify' }
+            ],
+            saveToContext: {
+              cart_items: '{{auto_cart_result.selectedItems}}',
+              selected_items: '{{auto_cart_result.selectedItems}}',
+            },
+          },
+          output: '_last_response',
+        },
+      ],
+      transitions: {
+        user_message: 'handle_auto_cart_response',
+      },
+    },
+
+    // 🆕 Handle response to auto-cart
+    handle_auto_cart_response: {
+      type: 'decision',
+      description: 'Check user response to auto-cart',
+      conditions: [
+        {
+          expression: 'context._user_message?.toLowerCase().includes("checkout") || context._user_message?.toLowerCase().includes("proceed") || context._user_message?.toLowerCase().includes("confirm")',
+          event: 'checkout',
+        },
+        {
+          expression: 'context._user_message?.toLowerCase().includes("add") || context._user_message?.toLowerCase().includes("more")',
+          event: 'add_more',
+        },
+        {
+          expression: 'context._user_message?.toLowerCase().includes("modify") || context._user_message?.toLowerCase().includes("change") || context._user_message?.toLowerCase().includes("remove")',
+          event: 'modify',
+        }
+      ],
+      transitions: {
+        checkout: 'check_auth_for_checkout',
+        add_more: 'show_results',
+        modify: 'show_results',
+        default: 'check_auth_for_checkout',  // Default to checkout if unclear
       },
     },
 
@@ -755,15 +853,6 @@ Ask: "Would you like me to send a rider to pick it up for you?"`,
       description: 'Search for specific items user requested that were not in current results',
       actions: [
         {
-          id: 'update_query',
-          executor: 'response',
-          config: {
-            save_to_context: {
-              'extracted_food.search_query': '{{selection_result.searchSuggestion}}',
-            },
-          },
-        },
-        {
           id: 'search_items',
           executor: 'search',
           config: {
@@ -951,18 +1040,17 @@ Ask: "Would you like me to send a rider to pick it up for you?"`,
       },
     },
 
-    // OTP retry
+    // OTP retry - MUST be wait type to capture next user input
     otp_retry: {
-      type: 'action',
+      type: 'wait',
       description: 'Ask user to re-enter OTP',
       actions: [
         {
-          id: 'otp_retry_message',
           executor: 'response',
           config: {
             message: 'That OTP doesn\'t seem right. Please try again or type "resend" to get a new OTP.',
           },
-          output: '_last_response',
+          output: '_retry_response',
         },
       ],
       transitions: {

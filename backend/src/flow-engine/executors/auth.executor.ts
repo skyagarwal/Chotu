@@ -3,6 +3,7 @@ import { ActionExecutor, ActionExecutionResult, FlowContext } from '../types/flo
 import { PhpAuthService } from '../../php-integration/services/php-auth.service';
 import { SessionService } from '../../session/session.service';
 import { SessionIdentifierService } from '../../session/session-identifier.service';
+import { CentralizedAuthService } from '../../auth/centralized-auth.service';
 import { normalizePhoneNumber } from '../../common/utils/helpers';
 
 /**
@@ -30,6 +31,7 @@ export class AuthExecutor implements ActionExecutor {
     private readonly phpAuthService: PhpAuthService,
     private readonly sessionService: SessionService,
     private readonly sessionIdentifierService: SessionIdentifierService,
+    private readonly centralizedAuthService: CentralizedAuthService,
   ) {}
 
   async execute(
@@ -312,6 +314,26 @@ export class AuthExecutor implements ActionExecutor {
         });
         
         this.logger.log(`🔗 Session ${sessionId} linked to verified phone ${phone}`);
+
+        // 📊 CRITICAL: Sync to PostgreSQL and enrich profile with order history
+        // This triggers profile building from MySQL order history for personalization
+        if (userProfile) {
+          this.centralizedAuthService.authenticateUser(
+            phone,
+            result.data.token,
+            {
+              userId: userProfile.id,
+              firstName: userProfile.firstName,
+              lastName: userProfile.lastName,
+              email: userProfile.email,
+            },
+            'web',
+          ).then(() => {
+            this.logger.log(`✅ User ${userProfile.firstName} synced to PostgreSQL with profile enrichment`);
+          }).catch(err => {
+            this.logger.error(`Failed to sync user to PostgreSQL: ${err.message}`);
+          });
+        }
 
         return {
           success: true,
