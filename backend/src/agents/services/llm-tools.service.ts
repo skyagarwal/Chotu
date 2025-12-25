@@ -1,8 +1,10 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { PhpStoreService } from '../../php-integration/services/php-store.service';
+import { PhpAddressService } from '../../php-integration/services/php-address.service';
 import { SearchOrchestrator, NLUOutput } from '../../orchestrator/search.orchestrator';
 import { SessionService } from '../../session/session.service';
 import { LlmService } from '../../llm/services/llm.service';
+import { AddressExtractionService } from './address-extraction.service';
 
 /**
  * Tool definition for LLM function calling
@@ -48,9 +50,11 @@ export class LlmToolsService {
 
   constructor(
     private readonly phpStoreService: PhpStoreService,
+    private readonly phpAddressService: PhpAddressService,
     private readonly searchOrchestrator: SearchOrchestrator,
     private readonly sessionService: SessionService,
     private readonly llmService: LlmService,
+    private readonly addressExtractionService: AddressExtractionService,
   ) {
     this.registerTools();
     this.logger.log('🔧 LLM Tools Service initialized with tools:', Array.from(this.tools.keys()));
@@ -182,6 +186,59 @@ export class LlmToolsService {
         required: [],
       },
     });
+
+    // 6. Extract Address / Location Tool
+    this.tools.set('extract_address', {
+      name: 'extract_address',
+      description: 'Extract location/address from user input. Supports: Google Maps URLs (short links like maps.app.goo.gl/xxx, full URLs), raw coordinates (lat,lng), text addresses, area names. Use when user shares a Google Maps link, coordinates, or location text.',
+      parameters: {
+        type: 'object',
+        properties: {
+          input: {
+            type: 'string',
+            description: 'User input containing location - can be Google Maps URL, coordinates like "19.96, 73.75", or text address like "Nashik Road, near station"',
+          },
+          city: {
+            type: 'string',
+            description: 'City context for geocoding (default: Nashik)',
+          },
+        },
+        required: ['input'],
+      },
+    });
+
+    // 7. Save Address Tool
+    this.tools.set('save_user_address', {
+      name: 'save_user_address',
+      description: 'Save a location/address for the user. Use when user wants to save an address as home, office, or other. Requires coordinates (latitude, longitude) and address type.',
+      parameters: {
+        type: 'object',
+        properties: {
+          latitude: {
+            type: 'number',
+            description: 'Latitude coordinate of the address',
+          },
+          longitude: {
+            type: 'number',
+            description: 'Longitude coordinate of the address',
+          },
+          address_type: {
+            type: 'string',
+            enum: ['home', 'office', 'other'],
+            description: 'Type of address - home, office, or other',
+          },
+          address_text: {
+            type: 'string',
+            description: 'Human-readable address text (optional - will be reverse geocoded if not provided)',
+          },
+          landmark: {
+            type: 'string',
+            description: 'Nearby landmark for easier identification',
+          },
+        },
+        required: ['latitude', 'longitude', 'address_type'],
+      },
+    });
   }
 
   /**
@@ -222,6 +279,12 @@ export class LlmToolsService {
 
         case 'get_popular_items':
           return this.getPopularItems(params, zoneId);
+
+        case 'extract_address':
+          return this.extractAddress(params, sessionId);
+
+        case 'save_user_address':
+          return this.saveUserAddress(params, sessionId, session);
 
         default:
           return {
@@ -764,8 +827,158 @@ export class LlmToolsService {
         if (/\b(burger)\b/i.test(message)) params.category = 'burger';
         if (/\b(dessert|sweet)\b/i.test(message)) params.category = 'desserts';
         break;
+
+      case 'extract_address':
+        params.input = message;
+        params.city = 'Nashik';
+        break;
     }
 
     return params;
+  }
+
+  /**
+   * Extract address/location from user input
+   * Supports: Google Maps URLs, coordinates, text addresses
+   */
+  private async extractAddress(
+    params: Record<string, any>,
+    sessionId: string,
+  ): Promise<ToolResult> {
+    const { input, city } = params;
+    
+    this.logger.log(`📍 Extracting address from: "${input?.substring(0, 100)}..."`);
+
+    try {
+      const result = await this.addressExtractionService.extractAddress(input, { city });
+
+      if (result.success && result.address) {
+        // Save to session for later use
+        if (result.address.latitude && result.address.longitude) {
+          await this.sessionService.setData(sessionId, {
+            location: {
+              lat: result.address.latitude,
+              lng: result.address.longitude,
+            },
+            location_address: result.address.address,
+            lastLocationUpdate: Date.now(),
+          });
+        }
+
+        return {
+          success: true,
+          data: {
+            address: result.address.address,
+            latitude: result.address.latitude,
+            longitude: result.address.longitude,
+            source: result.address.source,
+            confidence: result.address.confidence || 1.0,
+          },
+          formatted: `📍 Location: ${result.address.address}\nCoordinates: ${result.address.latitude}, ${result.address.longitude}`,
+        };
+      }
+
+      return {
+        success: false,
+        error: result.error || 'Could not extract address',
+        formatted: result.clarificationPrompt || 'Please share a valid location - you can paste a Google Maps link, type coordinates, or describe the area.',
+      };
+    } catch (error) {
+      this.logger.error('Address extraction failed:', error);
+      return {
+        success: false,
+        error: error.message,
+      };
+    }
+  }
+
+  /**
+   * Save user address to their account
+   * Requires authentication
+   */
+  private async saveUserAddress(
+    params: Record<string, any>,
+    sessionId: string,
+    session: any,
+  ): Promise<ToolResult> {
+    const { latitude, longitude, address_type, address_text, landmark } = params;
+    
+    this.logger.log(`📍 Saving address: type=${address_type}, lat=${latitude}, lng=${longitude}`);
+
+    // Check authentication
+    if (!session?.authenticated || !session?.auth_token) {
+      return {
+        success: false,
+        error: 'User not authenticated',
+        formatted: '🔐 Please login first to save addresses. Would you like to login now?',
+      };
+    }
+
+    // Validate coordinates
+    if (!latitude || !longitude) {
+      return {
+        success: false,
+        error: 'Missing coordinates',
+        formatted: '📍 I need your exact location to save the address. Please share your location or paste a Google Maps link.',
+      };
+    }
+
+    try {
+      // Get address text via reverse geocoding if not provided
+      let finalAddressText = address_text;
+      if (!finalAddressText) {
+        try {
+          const response = await fetch(
+            `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&zoom=18`,
+            { headers: { 'User-Agent': 'MangwaleAI/1.0' } }
+          );
+          const data = await response.json();
+          finalAddressText = data.display_name || `Location at ${latitude}, ${longitude}`;
+        } catch (e) {
+          finalAddressText = `Location at ${latitude}, ${longitude}`;
+        }
+      }
+
+      // Get user info for contact details
+      const userInfo = session?.data?.user_info || {};
+      const contactName = userInfo.f_name || 'User';
+      const contactPhone = session?.data?.phone || sessionId.replace('web-', '') || '';
+
+      const result = await this.phpAddressService.addAddress(session.auth_token, {
+        contactPersonName: contactName,
+        contactPersonNumber: contactPhone,
+        addressType: address_type || 'other',
+        address: finalAddressText,
+        latitude: String(latitude),
+        longitude: String(longitude),
+        landmark: landmark || '',
+      });
+
+      if (result.success) {
+        const typeEmoji = address_type === 'home' ? '🏠' : address_type === 'office' ? '🏢' : '📍';
+        return {
+          success: true,
+          data: {
+            addressId: result.addressId,
+            addressType: address_type,
+            address: finalAddressText,
+          },
+          formatted: `${typeEmoji} **Address saved as "${address_type || 'other'}"!**\n\n📍 ${finalAddressText}\n\nYou can use this address for future orders.`,
+        };
+      }
+
+      return {
+        success: false,
+        error: result.message || 'Failed to save address',
+        formatted: 'Sorry, I couldn\'t save the address. Please try again.',
+      };
+    } catch (error) {
+      this.logger.error('Save address failed:', error);
+      return {
+        success: false,
+        error: error.message,
+        formatted: 'I had trouble saving the address. Please try again later.',
+      };
+    }
   }
 }

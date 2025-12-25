@@ -258,7 +258,7 @@ export class SelfLearningService {
         approved_at = NOW(),
         intent = COALESCE(${correctedIntent}, intent),
         entities = COALESCE(${correctedEntities ? JSON.stringify(correctedEntities) : null}::jsonb, entities)
-      WHERE id = ${exampleId}::uuid
+      WHERE id = ${exampleId}
     `;
     
     this.logger.log(`Example ${exampleId} approved by ${adminId}`);
@@ -271,7 +271,7 @@ export class SelfLearningService {
     await this.prisma.$executeRaw`
       UPDATE nlu_training_data 
       SET status = 'rejected', rejected_by = ${adminId}, rejection_reason = ${reason}, rejected_at = NOW()
-      WHERE id = ${exampleId}::uuid
+      WHERE id = ${exampleId}
     `;
     
     this.logger.log(`Example ${exampleId} rejected by ${adminId}`);
@@ -398,17 +398,17 @@ export class SelfLearningService {
   }> {
     const stats = await this.prisma.$queryRaw<any[]>`
       SELECT 
-        COUNT(*) as total,
-        COUNT(*) FILTER (WHERE status = 'auto_approved') as auto_approved,
-        COUNT(*) FILTER (WHERE status = 'approved') as human_approved,
-        COUNT(*) FILTER (WHERE status = 'pending_review') as pending_review,
-        COUNT(*) FILTER (WHERE status = 'rejected') as rejected,
-        AVG(confidence) as avg_confidence
+        COUNT(*)::int as total,
+        COUNT(*) FILTER (WHERE status = 'auto_approved')::int as auto_approved,
+        COUNT(*) FILTER (WHERE status = 'approved')::int as human_approved,
+        COUNT(*) FILTER (WHERE status = 'pending_review')::int as pending_review,
+        COUNT(*) FILTER (WHERE status = 'rejected')::int as rejected,
+        COALESCE(AVG(confidence), 0)::float as avg_confidence
       FROM nlu_training_data
     `;
 
     const topIntents = await this.prisma.$queryRaw<any[]>`
-      SELECT intent, COUNT(*) as count
+      SELECT intent, COUNT(*)::int as count
       FROM nlu_training_data
       WHERE status IN ('auto_approved', 'approved')
       GROUP BY intent
@@ -417,13 +417,13 @@ export class SelfLearningService {
     `;
 
     return {
-      totalExamples: parseInt(stats[0].total),
-      autoApproved: parseInt(stats[0].auto_approved),
-      humanApproved: parseInt(stats[0].human_approved),
-      pendingReview: parseInt(stats[0].pending_review),
-      rejected: parseInt(stats[0].rejected),
-      avgConfidence: parseFloat(stats[0].avg_confidence) || 0,
-      topIntents
+      totalExamples: stats[0].total || 0,
+      autoApproved: stats[0].auto_approved || 0,
+      humanApproved: stats[0].human_approved || 0,
+      pendingReview: stats[0].pending_review || 0,
+      rejected: stats[0].rejected || 0,
+      avgConfidence: stats[0].avg_confidence || 0,
+      topIntents: topIntents.map(t => ({ intent: t.intent, count: t.count }))
     };
   }
 
@@ -453,10 +453,10 @@ export class SelfLearningService {
       SELECT COUNT(*) as pattern_count
       FROM v_mistake_patterns
       WHERE occurrence_count >= 3
-      AND first_occurrence > NOW() - INTERVAL '7 days'
+      AND first_seen > NOW() - INTERVAL '7 days'
     `;
 
-    const failedPatterns = parseInt(patterns[0].pattern_count);
+    const failedPatterns = parseInt(patterns[0]?.pattern_count || '0');
 
     if (newCount >= 100 || failedPatterns >= 5) {
       return {

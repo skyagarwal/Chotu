@@ -40,6 +40,6 @@ export class SearchDto {
 
 export interface SearchFilter {
   field: string;
-  operator: 'equals' | 'contains' | 'range' | 'geo_distance';
+  operator: 'equals' | 'contains' | 'range' | 'geo_distance' | 'eq';
   value: any;
 }

@@ -46,6 +46,7 @@ import { PricingModule } from './pricing/pricing.module'; // ✨ Value Propositi
 import { ContextModule } from './context/context.module'; // ✨ User Context (Weather, Preferences, City Knowledge)
 import { OrderModule } from './order/order.module'; // ✨ Complex Order Parsing & Group Orders
 import { ProfilesModule } from './profiles/profiles.module'; // ✨ Enhanced Profiles (Stores, Vendors, Riders, Users)
+import { VoiceModule } from './voice/voice.module'; // ✨ Voice IVR Channel (Twilio/Exotel)
 
 @Module({
   imports: [
@@ -125,6 +126,7 @@ import { ProfilesModule } from './profiles/profiles.module'; // ✨ Enhanced Pro
     ContextModule, // ✨ User Context (Weather, Preferences, City Knowledge)
     OrderModule, // ✨ Complex Order Parsing & Group Orders
     ProfilesModule, // ✨ Enhanced Profiles (Stores, Vendors, Riders, Users)
+    VoiceModule, // ✨ Voice IVR Channel (Twilio/Exotel)
 
     // Channel implementation modules
     WhatsAppModule, // WhatsApp channel

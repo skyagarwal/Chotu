@@ -32,8 +32,10 @@ export class LlmIntentExtractorService {
   ): Promise<LlmIntentExtractionResult> {
     this.logger.log(`LLM fallback for: "${text}"`);
 
-    // Quick pattern-based check for Hinglish chitchat before LLM (saves tokens)
-    const hinglishChitchatPatterns = [
+    // Quick pattern-based check for chitchat before LLM (saves tokens)
+    // Includes: Hinglish, seasonal greetings, pleasantries, follow-up responses
+    const chitchatPatterns = [
+      // Hinglish patterns
       /kaise\s*(hai|ho)/i,       // kaise hai, kaise ho
       /kya\s*(haal|chal)/i,      // kya haal, kya chal
       /kaisa\s*hai/i,            // kaisa hai
@@ -43,11 +45,25 @@ export class LlmIntentExtractorService {
       /\bchotu\b/i,              // chotu (bot name)
       /\bre\s+chotu\b/i,         // re chotu
       /\bhey\s+chotu\b/i,        // hey chotu
+      // Seasonal/festival greetings (respond as chitchat, not new greeting)
+      /merry\s*christmas/i,      // merry christmas
+      /happy\s*(new\s*year|diwali|holi|eid|rakhi|navratri)/i, // festivals
+      /shubh\s*(diwali|holi|navratri)/i, // Hindi festivals
+      // Pleasantries and thank-you
+      /thank\s*(you|u)|thanks/i,  // thank you, thanks
+      /good\s*(job|work|one)/i,   // good job
+      /nice|cool|awesome|great|amazing|wonderful/i, // positive feedback
+      /same\s*to\s*(you|u)/i,     // same to you
+      /you\s*too/i,               // you too
+      // Social questions
+      /how\s*are\s*(you|u)/i,     // how are you
+      /what'?s\s*up/i,            // what's up
+      /wassup|sup\b/i,            // casual greetings
     ];
 
-    for (const pattern of hinglishChitchatPatterns) {
+    for (const pattern of chitchatPatterns) {
       if (pattern.test(text)) {
-        this.logger.log(`Matched Hinglish chitchat pattern: ${pattern}`);
+        this.logger.log(`Matched chitchat pattern: ${pattern}`);
         return {
           intent: 'chitchat',
           confidence: 0.92,
@@ -55,7 +71,7 @@ export class LlmIntentExtractorService {
           tone: 'friendly',
           sentiment: 'positive',
           urgency: 0.1,
-          reasoning: 'Hinglish chitchat/greeting pattern detected',
+          reasoning: 'Chitchat/pleasantry pattern detected',
         };
       }
     }
@@ -89,9 +105,9 @@ export class LlmIntentExtractorService {
         'help': 'User needs help/support',
         'complaint': 'User complaining about service/product (wrong item, damaged, refund)',
         'greeting': 'User greeting (hi, hello, hey, namaste)',
-        'chitchat': 'Casual conversation or small talk: "how are you", "kaise hai", "kya haal", "what\'s up", "thanks", "chotu" (bot name)',
+        'chitchat': 'Casual conversation, small talk, or pleasantries: "how are you", "kaise hai", "merry christmas", "happy diwali", "thank you", "same to you", "what\'s up", "chotu" (bot name). Use for follow-up social responses after initial greeting.',
         'login': 'User wants to login, sign in, register, or check authentication status',
-        'manage_address': 'User wants to add, view, or manage saved addresses ("add address", "show my addresses")',
+        'manage_address': 'User wants to add, save, view, or manage saved addresses. INCLUDES: "save this address as home", "add address", "show my addresses", "save this location as office", or when user shares location with request to save it.',
         'service_inquiry': 'User asking about available services, vehicles, categories, or pricing ("what vehicles do you have", "show categories")',
         'unknown': 'Message unclear or doesn\'t fit other intents'
       };
@@ -117,6 +133,10 @@ Rules:
 - Match queries like "I want pizza" → order_food (high confidence 0.85+)
 - Match "where is my order" → track_order (high confidence 0.9+)
 - Do NOT classify "Cash on Delivery", "COD", or "Pay via Cash" as parcel_booking. These are payment methods. Use "unknown" if no other intent matches.
+- CRITICAL: If user shares a Google Maps link or location WITH a request to "save", "add", or label it as "home"/"office" → manage_address (0.9+)
+  - Example: "maps.app.goo.gl/xxx save this as my home" → manage_address
+  - Example: "save this address as office" → manage_address
+  - Extract entities: address_type (home/office/other), has_location (true if maps link present)
 - CRITICAL DISTINCTION: 
   - "Order food" / "I want pizza" = order_food (Restaurant -> User)
   - "Send food to friend" / "Pickup food from home" = parcel_booking (User -> User)

@@ -64,7 +64,7 @@ export class IntentClassifierService {
         this.logger.debug(`IndicBERT confidence ${result.confidence} below threshold ${this.confidenceThreshold}, trying LLM fallback`);
         try {
           const availableIntents = [
-            'greeting', 'track_order', 'parcel_booking', 'search_product', 
+            'greeting', 'chitchat', 'track_order', 'parcel_booking', 'search_product', 
             'cancel_order', 'help', 'complaint', 'unknown', 'order_food', 'login'
           ];
           const llmResult = await this.llmIntentExtractor.extractIntent(text, language, availableIntents);
@@ -98,8 +98,27 @@ export class IntentClassifierService {
     this.logger.debug(`Heuristic check for: "${lowerText}"`);
 
     // Intent patterns (expandable)
+    // NOTE: Order matters! More specific patterns should come first
     const patterns: Record<string, RegExp[]> = {
-      greeting: [/^(hi|hello|hey|namaste|good morning|good afternoon)/i],
+      // Chitchat patterns - seasonal greetings, pleasantries (NOT initial greetings)
+      chitchat: [
+        /merry\s*christmas/i,
+        /happy\s*(new\s*year|diwali|holi|eid|rakhi|navratri)/i,
+        /shubh\s*(diwali|holi|navratri)/i,
+        /thank\s*(you|u)|thanks/i,
+        /same\s*to\s*(you|u)/i,
+        /you\s*too/i,
+        /how\s*are\s*(you|u)/i,
+        /what'?s\s*up/i,
+        /wassup|sup\b/i,
+        /kaise\s*(hai|ho)/i,
+        /kya\s*(haal|chal)/i,
+        /good\s*(job|work|one)/i,
+        /nice|cool|awesome|great|amazing|wonderful/i,
+        /chotu/i, // bot name
+      ],
+      // Initial greeting - only very short greetings
+      greeting: [/^(hi|hello|hey|namaste|good morning|good afternoon|good evening)$/i],
       track_order: [
         /track.*order/i,
         /where.*order/i,
@@ -124,9 +143,12 @@ export class IntentClassifierService {
       if (regexes.some((regex) => regex.test(lowerText))) {
         this.logger.debug(`Heuristic match found: ${intent}`);
         // Boost confidence for specific keywords to ensure they override LLM
-        let confidence = 0.7;
+        let confidence = 0.8;
         if (intent === 'order_food' && (lowerText.includes('paneer') || lowerText.includes('biryani') || lowerText.includes('pizza'))) {
             confidence = 0.95;
+        }
+        if (intent === 'chitchat') {
+            confidence = 0.9; // High confidence for chitchat patterns
         }
         
         return {

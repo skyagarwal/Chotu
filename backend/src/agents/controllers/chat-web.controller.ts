@@ -100,16 +100,22 @@ export class ChatWebController {
       let responseText = 'Message received. Processing...';
       
       if (botMessages && botMessages.length > 0) {
-        const latestMessage = botMessages[botMessages.length - 1];
+        // Combine ALL bot messages into a single response
+        // This ensures welcome messages + flow prompts are both included
+        const allMessages: string[] = [];
         
-        // Extract message from wrapper object
-        if (typeof latestMessage === 'object' && latestMessage.message) {
-          responseText = latestMessage.message;
-        } else if (typeof latestMessage === 'string') {
-          responseText = latestMessage;
-        } else {
-          responseText = JSON.stringify(latestMessage);
+        for (const msg of botMessages) {
+          if (typeof msg === 'object' && msg.message) {
+            allMessages.push(msg.message);
+          } else if (typeof msg === 'string') {
+            allMessages.push(msg);
+          } else {
+            allMessages.push(JSON.stringify(msg));
+          }
         }
+        
+        // Join with double newline for readability
+        responseText = allMessages.join('\n\n');
       }
       
       // Store bot response in local message store for polling

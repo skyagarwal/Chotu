@@ -197,7 +197,9 @@ export function ProductCard({ card, onAction, index = 0, compact = false, direct
         {/* Content */}
         <h4 className="font-semibold text-[11px] sm:text-xs text-gray-900 truncate mb-0.5 leading-tight">{card.name}</h4>
         {card.storeName && (
-          <p className="text-[9px] sm:text-[10px] text-gray-500 truncate mb-0.5">📍 {card.storeName}</p>
+          <p className="text-[9px] sm:text-[10px] text-gray-500 truncate mb-0.5">
+            📍 {card.storeName}{card.distance && ` • ${card.distance}`}
+          </p>
         )}
         {card.rating !== undefined && card.rating > 0 && (
           <div className="flex items-center gap-0.5 sm:gap-1 mb-0.5 sm:mb-1">
@@ -239,7 +241,7 @@ export function ProductCard({ card, onAction, index = 0, compact = false, direct
           
           {card.storeName && (
             <p className="text-xs sm:text-sm text-gray-500 mb-1 sm:mb-1.5 truncate">
-              📍 {card.storeName}
+              📍 {card.storeName}{card.distance && ` • ${card.distance}`}
             </p>
           )}
           

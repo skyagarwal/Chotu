@@ -97,7 +97,8 @@ export const EnhancedVoiceInput: React.FC<EnhancedVoiceInputProps> = ({
 
   // WebSocket streaming for real-time transcription
   const startStreamingASR = useCallback(async (stream: MediaStream) => {
-    const wsUrl = process.env.NEXT_PUBLIC_VOICE_STREAMING_URL || 'ws://192.168.0.151:7200/ws/asr';
+    // Mercury ASR WebSocket endpoint - port 7001 for ASR service
+    const wsUrl = process.env.NEXT_PUBLIC_VOICE_STREAMING_URL || 'ws://192.168.0.151:7001/ws/asr';
     
     setConnectionStatus('connecting');
     websocketRef.current = new WebSocket(wsUrl);
@@ -140,10 +141,10 @@ export const EnhancedVoiceInput: React.FC<EnhancedVoiceInputProps> = ({
     };
 
     websocketRef.current.onerror = (error) => {
-      console.error('WebSocket error:', error);
-      setError('Connection error. Falling back to upload mode.');
+      console.warn('WebSocket streaming not available, using upload mode');
       setIsStreaming(false);
       setConnectionStatus('disconnected');
+      // Don't show error - silently fall back to upload mode
     };
 
     websocketRef.current.onclose = () => {
@@ -175,27 +176,40 @@ export const EnhancedVoiceInput: React.FC<EnhancedVoiceInputProps> = ({
   const uploadForTranscription = useCallback(async () => {
     setIsProcessing(true);
     setError(null);
+    console.log('🎤 Starting transcription upload, chunks:', chunksRef.current.length);
 
     try {
       const audioBlob = new Blob(chunksRef.current, { type: 'audio/webm' });
+      console.log('🎤 Audio blob size:', audioBlob.size, 'bytes');
+      
+      if (audioBlob.size < 1000) {
+        console.warn('🎤 Audio too short, skipping');
+        setError('Recording too short - please speak longer');
+        return;
+      }
+      
       const formData = new FormData();
       formData.append('audio', audioBlob, 'recording.webm');
       formData.append('language', settings.language);
 
+      console.log('🎤 Uploading to /api/asr/transcribe/upload...');
       const response = await fetch('/api/asr/transcribe/upload', {
         method: 'POST',
         body: formData,
       });
 
       const result = await response.json();
+      console.log('🎤 Transcription result:', result);
 
       if (result.success && result.text) {
+        console.log('✅ Transcribed text:', result.text);
         onTranscription(result.text);
       } else {
+        console.error('❌ Transcription failed:', result);
         setError(result.error || 'Transcription failed');
       }
     } catch (error) {
-      console.error('Error uploading audio:', error);
+      console.error('❌ Error uploading audio:', error);
       setError('Failed to process audio');
     } finally {
       setIsProcessing(false);
@@ -205,6 +219,7 @@ export const EnhancedVoiceInput: React.FC<EnhancedVoiceInputProps> = ({
 
   const startRecording = useCallback(async () => {
     setError(null);
+    console.log('🎤 Starting recording...');
     
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ 
@@ -216,12 +231,14 @@ export const EnhancedVoiceInput: React.FC<EnhancedVoiceInputProps> = ({
         } 
       });
 
+      console.log('🎤 Microphone access granted');
       streamRef.current = stream;
       startAudioVisualization(stream);
 
       // Try streaming first if enabled
       if (enableStreaming) {
         try {
+          console.log('🎤 Trying streaming ASR...');
           await startStreamingASR(stream);
           setIsRecording(true);
           return;
@@ -231,6 +248,7 @@ export const EnhancedVoiceInput: React.FC<EnhancedVoiceInputProps> = ({
       }
 
       // Fall back to MediaRecorder
+      console.log('🎤 Using MediaRecorder upload mode');
       const mediaRecorder = new MediaRecorder(stream, {
         mimeType: 'audio/webm;codecs=opus',
       });
@@ -240,10 +258,12 @@ export const EnhancedVoiceInput: React.FC<EnhancedVoiceInputProps> = ({
       mediaRecorder.ondataavailable = (event) => {
         if (event.data.size > 0) {
           chunksRef.current.push(event.data);
+          console.log('🎤 Audio chunk received:', event.data.size, 'bytes, total chunks:', chunksRef.current.length);
         }
       };
 
       mediaRecorder.onstop = async () => {
+        console.log('🎤 Recording stopped, uploading...');
         await uploadForTranscription();
         stream.getTracks().forEach((track) => track.stop());
       };
@@ -252,30 +272,16 @@ export const EnhancedVoiceInput: React.FC<EnhancedVoiceInputProps> = ({
       mediaRecorderRef.current = mediaRecorder;
       setIsRecording(true);
 
-      // VAD-based auto-stop
-      if (settings.enableVAD) {
-        const checkSilence = () => {
-          if (audioLevel < 0.02) {
-            silenceTimerRef.current = setTimeout(() => {
-              if (audioLevel < 0.02 && isRecording) {
-                stopRecording();
-              }
-            }, settings.silenceTimeout);
-          } else if (silenceTimerRef.current) {
-            clearTimeout(silenceTimerRef.current);
-          }
-        };
-        
-        const silenceInterval = setInterval(checkSilence, 500);
-        return () => clearInterval(silenceInterval);
-      }
+      // Note: VAD auto-stop is disabled for now - user must click to stop
+      // This is more reliable than automatic silence detection
     } catch (error) {
       console.error('Error accessing microphone:', error);
       setError('Microphone access denied');
     }
-  }, [enableStreaming, settings, startAudioVisualization, startStreamingASR, uploadForTranscription, audioLevel, isRecording]);
+  }, [enableStreaming, settings, startAudioVisualization, startStreamingASR, uploadForTranscription]);
 
   const stopRecording = useCallback(() => {
+    console.log('🎤 Stopping recording...');
     setIsRecording(false);
     setAudioLevel(0);
     setInterimText('');
@@ -289,12 +295,16 @@ export const EnhancedVoiceInput: React.FC<EnhancedVoiceInputProps> = ({
     }
 
     if (websocketRef.current) {
-      websocketRef.current.send(JSON.stringify({ type: 'end' }));
+      // Avoid InvalidStateError when the socket is still CONNECTING/CLOSING
+      if (websocketRef.current.readyState === WebSocket.OPEN) {
+        websocketRef.current.send(JSON.stringify({ type: 'end' }));
+      }
       websocketRef.current.close();
       websocketRef.current = null;
     }
 
     if (mediaRecorderRef.current && mediaRecorderRef.current.state !== 'inactive') {
+      console.log('🎤 Stopping MediaRecorder...');
       mediaRecorderRef.current.stop();
       mediaRecorderRef.current = null;
     }
@@ -326,28 +336,34 @@ export const EnhancedVoiceInput: React.FC<EnhancedVoiceInputProps> = ({
         disabled={isProcessing}
         className={`relative p-2 rounded-full transition-all duration-200 ${className} ${
           isRecording 
-            ? 'bg-red-500 text-white animate-pulse' 
-            : 'text-gray-400 hover:text-gray-600 hover:bg-gray-100'
-        } ${isProcessing ? 'opacity-50 cursor-not-allowed' : ''}`}
-        title={isRecording ? 'Stop recording' : 'Start voice input'}
+            ? 'bg-red-500 text-white scale-110 shadow-lg shadow-red-500/50' 
+            : isProcessing
+            ? 'bg-orange-500 text-white'
+            : 'text-gray-400 hover:text-orange-500 hover:bg-orange-50'
+        } ${isProcessing ? 'cursor-wait' : ''}`}
+        title={isProcessing ? 'Processing...' : isRecording ? 'Tap to stop' : 'Tap to speak'}
         type="button"
       >
         {isProcessing ? (
           <Loader2 className="w-5 h-5 animate-spin" />
         ) : isRecording ? (
-          <MicOff className="w-5 h-5" />
+          <>
+            <Mic className="w-5 h-5 animate-pulse" />
+            {/* Pulsing rings */}
+            <span className="absolute inset-0 rounded-full border-2 border-red-400 animate-ping opacity-50" />
+            <span className="absolute -inset-1 rounded-full border border-red-300 animate-pulse opacity-30" />
+          </>
         ) : (
           <Mic className="w-5 h-5" />
         )}
-        
-        {/* Audio level indicator */}
-        {isRecording && (
-          <span 
-            className="absolute inset-0 rounded-full bg-red-400 animate-ping opacity-25"
-            style={{ transform: `scale(${1 + audioLevel * 0.5})` }}
-          />
-        )}
       </button>
+
+      {/* Recording status text */}
+      {(isRecording || isProcessing) && (
+        <span className={`ml-2 text-xs font-medium ${isRecording ? 'text-red-500' : 'text-orange-500'}`}>
+          {isProcessing ? '🔄 Sending...' : '🎤 Recording - tap to send'}
+        </span>
+      )}
 
       {/* Streaming indicator */}
       {isStreaming && (

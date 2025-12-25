@@ -60,18 +60,32 @@ export class MessagingService {
   }
 
   /**
+   * Extract text message from response (handles both string and object formats)
+   */
+  private extractMessageText(input: any): string {
+    if (!input) return '';
+    if (typeof input === 'string') return input;
+    if (typeof input === 'object' && input.message) return input.message;
+    // Last resort: stringify if it's an unknown object
+    return JSON.stringify(input);
+  }
+
+  /**
    * Send text message
    */
-  async sendTextMessage(platform: Platform, recipientId: string, text: string): Promise<boolean> {
+  async sendTextMessage(platform: Platform, recipientId: string, text: string | any): Promise<boolean> {
     const resolved = await this.resolvePlatform(recipientId, platform);
     const isWebPlatform = recipientId.startsWith('web-');
+    
+    // Extract message text if input is an object
+    const messageText = this.extractMessageText(text);
     
     // For web platform, only store in Redis (no external provider call)
     if (isWebPlatform) {
       this.logger.log(`[web] Storing text message for ${recipientId}`);
       try {
-        if (text) {
-          await this.sessionService.storeBotMessage(recipientId, text);
+        if (messageText) {
+          await this.sessionService.storeBotMessage(recipientId, messageText);
           this.logger.log(`💾 Stored bot message for ${recipientId} in Redis`);
         }
         return true; // Success - message stored for WebSocket retrieval
@@ -83,13 +97,13 @@ export class MessagingService {
     
     // For other platforms (WhatsApp, Telegram, etc), send via provider
     this.logger.log(`[${resolved}] Sending text message to ${recipientId}`);
-    const ok = await this.getProvider(resolved).sendTextMessage(recipientId, text);
+    const ok = await this.getProvider(resolved).sendTextMessage(recipientId, messageText);
     
     // Store messages for test mode
     try {
       const testMode = this.configService.get('app.testMode') === true || this.configService.get('app.testMode') === 'true';
-      if (testMode && text) {
-        await this.sessionService.storeBotMessage(recipientId, text);
+      if (testMode && messageText) {
+        await this.sessionService.storeBotMessage(recipientId, messageText);
         this.logger.log(`💾 Stored bot message for ${recipientId} in Redis (test mode)`);
       }
     } catch (error) {

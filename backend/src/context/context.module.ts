@@ -14,6 +14,7 @@ import { HttpModule } from '@nestjs/axios';
 import { ConfigModule } from '@nestjs/config';
 import { ScheduleModule } from '@nestjs/schedule';
 import { UserContextService } from './services/user-context.service';
+import { ContextController } from './controllers/context.controller';
 import { DatabaseModule } from '../database/database.module';
 
 @Module({
@@ -25,6 +26,9 @@ import { DatabaseModule } from '../database/database.module';
     ConfigModule,
     ScheduleModule.forRoot(),
     DatabaseModule,
+  ],
+  controllers: [
+    ContextController,
   ],
   providers: [
     UserContextService,

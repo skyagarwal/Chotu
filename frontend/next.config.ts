@@ -52,6 +52,10 @@ const nextConfig: NextConfig = {
   allowedDevOrigins: [
     'chat.mangwale.ai',
     'admin.mangwale.ai',
+    '192.168.0.156',
+    '192.168.0.156:3005',
+    'localhost',
+    'localhost:3005',
   ],
   
   // Domain-based routing with rewrites

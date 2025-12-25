@@ -5,23 +5,26 @@
  */
 
 import { Pool } from 'pg';
-import { createClient, RedisClientType } from 'redis';
 import { Logger } from 'winston';
 import { ZomatoScraper } from '../scrapers/zomato.scraper';
 import { SwiggyScraper } from '../scrapers/swiggy.scraper';
 
+// Use any for Redis client to avoid type conflicts between versions
+type RedisClient = any;
+
 export interface ScrapeJob {
   id: string;
   source: 'zomato' | 'swiggy' | 'both';
+  url?: string;
   storeId?: string;
-  storeName: string;
+  storeName?: string;
   storeAddress?: string;
   lat?: number;
   lng?: number;
   priority: 'high' | 'normal' | 'low';
   status: 'pending' | 'processing' | 'completed' | 'failed';
   attempts: number;
-  maxAttempts: number;
+  maxAttempts?: number;
   createdAt: Date;
   completedAt?: Date;
   error?: string;
@@ -41,7 +44,7 @@ export class ScraperQueue {
 
   constructor(
     private readonly pool: Pool,
-    private readonly redis: RedisClientType,
+    private readonly redis: RedisClient,
     private readonly logger: Logger,
     private readonly zomatoScraper: ZomatoScraper,
     private readonly swiggyScraper: SwiggyScraper

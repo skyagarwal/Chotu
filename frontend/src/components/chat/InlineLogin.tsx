@@ -72,16 +72,27 @@ export function InlineLogin({ onClose, onSuccess }: InlineLoginProps) {
       // Backend will normalize phone number
       const response = await api.auth.verifyOtp(phone, otp)
       const { token, user } = response.data
+      
+      console.log('📱 OTP verified, user data:', { 
+        id: user?.id, 
+        f_name: user?.f_name, 
+        l_name: user?.l_name, 
+        is_personal_info: user?.is_personal_info,
+        phone: user?.phone 
+      })
 
       // Check if user needs to complete registration
       if (user.is_personal_info === 0) {
+        console.log('👤 New user - needs registration')
         setStep('register')
       } else {
         // Login successful - save to store
+        console.log('✅ Existing user - logging in')
         setAuth(user, token)
         onSuccess()
       }
     } catch (err: unknown) {
+      console.error('❌ OTP verification failed:', err)
       setError(getErrorMessage(err, 'Invalid OTP. Please try again.'))
     } finally {
       setLoading(false)
@@ -94,22 +105,41 @@ export function InlineLogin({ onClose, onSuccess }: InlineLoginProps) {
       return
     }
 
+    // Validate email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    if (!emailRegex.test(email)) {
+      setError('Please enter a valid email address')
+      return
+    }
+
     setLoading(true)
     setError('')
 
     try {
+      console.log('📝 Registering user:', { phone, firstName, lastName, email })
+      
       // Call update-info endpoint - backend will normalize phone
       const response = await api.auth.updateUserInfo({
         phone: phone,
-        f_name: firstName,
-        l_name: lastName || '',
-        email
+        f_name: firstName.trim(),
+        l_name: lastName?.trim() || '',
+        email: email.trim()
       })
 
       const { token, user } = response.data
+      
+      console.log('✅ Registration complete, user:', {
+        id: user?.id,
+        f_name: user?.f_name,
+        l_name: user?.l_name,
+        email: user?.email,
+        phone: user?.phone
+      })
+      
       setAuth(user, token)
       onSuccess()
     } catch (err: unknown) {
+      console.error('❌ Registration failed:', err)
       setError(
         getErrorMessage(
           err,

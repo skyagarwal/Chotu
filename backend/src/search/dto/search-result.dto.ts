@@ -2,7 +2,7 @@ export class SearchResultDto {
   results: SearchHit[];
   total: number;
   took: number; // ms
-  searchType: 'keyword' | 'semantic' | 'hybrid' | 'fallback';
+  searchType: 'keyword' | 'semantic' | 'hybrid' | 'fallback' | 'intent';
   query: string;
 }
 

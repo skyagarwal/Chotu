@@ -1,10 +1,11 @@
-import { Injectable, Logger, NotFoundException } from '@nestjs/common';
+import { Injectable, Logger, NotFoundException, Inject, Optional } from '@nestjs/common';
 import { PrismaService } from '../database/prisma.service';
 import { SessionService } from '../session/session.service';
 import { SessionIdentifierService } from '../session/session-identifier.service';
 import { FlowContextService } from './flow-context.service';
 import { StateMachineEngine } from './state-machine.engine';
 import { ExecutorRegistryService } from './executor-registry.service';
+import { ContextEnhancerService } from './services/context-enhancer.service';
 import {
   FlowDefinition,
   FlowExecutionOptions,
@@ -17,6 +18,8 @@ import {
  * Flow Engine Service
  * 
  * Main service for flow management and execution
+ * 
+ * ✨ NEW: Injects enhanced context (weather, festivals, meal time) into flows
  * 
  * IMPORTANT: Uses SessionIdentifierService to properly resolve phone numbers
  * from session IDs (critical for web chat where sessionId != phoneNumber)
@@ -35,6 +38,7 @@ export class FlowEngineService {
     private readonly contextService: FlowContextService,
     private readonly stateMachine: StateMachineEngine,
     private readonly executorRegistry: ExecutorRegistryService,
+    @Optional() private readonly contextEnhancer?: ContextEnhancerService,
   ) {
     this.logger.log('🔄 Flow Engine initialized');
   }
@@ -143,6 +147,30 @@ export class FlowEngineService {
       const userMessage = context.data.user_message || context.data.message;
       if (userMessage) {
         this.contextService.set(context, '_user_message', userMessage);
+      }
+    }
+
+    // 🌤️ INJECT ENHANCED CONTEXT (Weather, Festivals, Meal Time, Local Knowledge)
+    // This makes Chotu's responses contextual and personalized!
+    if (this.contextEnhancer) {
+      try {
+        const lat = context.data.location?.latitude;
+        const lng = context.data.location?.longitude;
+        const userId = context.data.user_id?.toString();
+        
+        const enhancedContext = await this.contextEnhancer.getEnhancedContext(userId, lat, lng);
+        context.data.enhancedContext = enhancedContext;
+        
+        // Also set individual context fields for easy template access
+        context.data.weather = enhancedContext.weather;
+        context.data.mealTime = enhancedContext.time.mealTime;
+        context.data.timeOfDay = enhancedContext.time.timeOfDay;
+        context.data.festival = enhancedContext.festival;
+        context.data.contextualGreeting = enhancedContext.greetingEnhancement;
+        
+        this.logger.log(`🌤️ Enhanced context injected: ${enhancedContext.weather.temperature}°C, ${enhancedContext.time.mealTime}, festival=${enhancedContext.festival.isToday}`);
+      } catch (err) {
+        this.logger.warn(`⚠️ Failed to get enhanced context: ${err.message}`);
       }
     }
 
@@ -723,6 +751,16 @@ export class FlowEngineService {
       flow = flows.find(f => f.trigger?.includes('greeting') && f.enabled !== false);
       if (flow) {
         this.logger.log(`✅ Keyword match (greeting): ${flow.name} (trigger: ${flow.trigger})`);
+        return flow;
+      }
+    }
+
+    // Chitchat keywords - handle "chitchat" intent and casual conversation
+    if (lowerIntent === 'chitchat' || lowerIntent.includes('chitchat')) {
+      this.logger.log(`🎯 Checking chitchat flow for intent: ${intent}`);
+      flow = flows.find(f => f.id === 'chitchat_v1' && f.enabled !== false);
+      if (flow) {
+        this.logger.log(`✅ Chitchat intent match: ${flow.name}`);
         return flow;
       }
     }

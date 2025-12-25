@@ -31,25 +31,34 @@ export class WhisperAsrService {
 
       // Handle audio URL vs raw data
       if (dto.audioUrl) {
+        this.logger.log(`📥 Downloading audio from URL: ${dto.audioUrl}`);
         audioPath = await this.downloadAudio(dto.audioUrl);
       } else if (dto.audioData) {
+        this.logger.log(`📥 Processing audio buffer: ${dto.audioData.length} bytes`);
         audioPath = await this.saveAudioBuffer(dto.audioData);
       } else {
         throw new Error('No audio data provided');
       }
 
+      this.logger.log(`🎤 Audio saved to: ${audioPath}`);
+
       // Create form data for Whisper API
       const formData = new FormData();
       formData.append('file', fs.createReadStream(audioPath));
-      formData.append('language', dto.language === 'auto' ? '' : dto.language);
+      formData.append('language', dto.language === 'auto' ? '' : (dto.language || 'hi'));
       formData.append('response_format', 'verbose_json');
+
+      this.logger.log(`🔊 Sending to Mercury ASR: ${this.whisperUrl}/transcribe`);
 
       // Call Whisper service - use /transcribe endpoint (not OpenAI-compatible /v1/audio/transcriptions)
       const response = await firstValueFrom(
         this.httpService.post(`${this.whisperUrl}/transcribe`, formData, {
           headers: formData.getHeaders(),
+          timeout: 30000, // 30 second timeout for transcription
         }),
       );
+
+      this.logger.log(`✅ Mercury ASR response received`);
 
       const data = response.data;
 
@@ -115,9 +124,36 @@ export class WhisperAsrService {
       fs.mkdirSync(tempDir, { recursive: true });
     }
 
-    const fileName = `audio_${Date.now()}.ogg`;
+    // Detect file format from magic bytes
+    let extension = 'ogg'; // default
+    if (buffer.length > 4) {
+      // Check for WebM signature (0x1A 0x45 0xDF 0xA3)
+      if (buffer[0] === 0x1A && buffer[1] === 0x45 && buffer[2] === 0xDF && buffer[3] === 0xA3) {
+        extension = 'webm';
+        this.logger.debug('Detected WebM audio format');
+      }
+      // Check for RIFF/WAV signature
+      else if (buffer[0] === 0x52 && buffer[1] === 0x49 && buffer[2] === 0x46 && buffer[3] === 0x46) {
+        extension = 'wav';
+        this.logger.debug('Detected WAV audio format');
+      }
+      // Check for OGG signature (OggS)
+      else if (buffer[0] === 0x4F && buffer[1] === 0x67 && buffer[2] === 0x67 && buffer[3] === 0x53) {
+        extension = 'ogg';
+        this.logger.debug('Detected OGG audio format');
+      }
+      // Check for MP3 signature (ID3 or 0xFF 0xFB)
+      else if ((buffer[0] === 0x49 && buffer[1] === 0x44 && buffer[2] === 0x33) || 
+               (buffer[0] === 0xFF && (buffer[1] & 0xE0) === 0xE0)) {
+        extension = 'mp3';
+        this.logger.debug('Detected MP3 audio format');
+      }
+    }
+
+    const fileName = `audio_${Date.now()}.${extension}`;
     const filePath = path.join(tempDir, fileName);
 
+    this.logger.log(`Saving audio file: ${fileName} (${buffer.length} bytes)`);
     fs.writeFileSync(filePath, buffer);
     return filePath;
   }

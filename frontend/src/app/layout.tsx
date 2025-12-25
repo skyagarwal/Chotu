@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ToastProvider } from "@/components/shared";
 import { ServiceWorkerRegistration } from "@/components/pwa/ServiceWorkerRegistration";
+import { ClientLogger } from "@/components/ClientLogger";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -68,6 +69,7 @@ export default function RootLayout({
         <ToastProvider>
           {children}
         </ToastProvider>
+        <ClientLogger />
         <ServiceWorkerRegistration />
       </body>
     </html>

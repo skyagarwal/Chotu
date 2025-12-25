@@ -166,10 +166,25 @@ export class AuthController {
 
     this.logger.log(`✅ User info updated for ${normalizedPhone}`);
 
+    // Fetch user profile to get the ID
+    let userId: number | undefined;
+    if (result.token) {
+      try {
+        const userProfile = await this.phpAuth.getUserProfile(result.token);
+        if (userProfile) {
+          userId = userProfile.id;
+          this.logger.log(`✅ Got user ID: ${userId}`);
+        }
+      } catch (err) {
+        this.logger.warn(`⚠️ Could not fetch user profile after update: ${err.message}`);
+      }
+    }
+
     return {
       success: true,
       token: result.token,
       user: {
+        id: userId,
         phone: normalizedPhone,
         f_name,
         l_name: l_name || '',

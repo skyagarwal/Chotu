@@ -3,6 +3,12 @@
  * 
  * This flow handles the initial greeting and introduces the platform.
  * Based on CONVERSATION_FLOW_SCRIPT.md - Act 1: Welcome & Greeting
+ * 
+ * ✨ NEW: Uses enhanced context for personalized greetings:
+ * - Weather-aware messages (hot/cold/rainy)
+ * - Meal-time suggestions (breakfast, lunch, dinner)
+ * - Festival greetings (Diwali, Holi, etc.)
+ * - Local Nashik knowledge
  */
 
 import { FlowDefinition } from '../types/flow.types';
@@ -28,22 +34,39 @@ export const greetingFlow: FlowDefinition = {
           id: 'generate_greeting',
           executor: 'llm',
           config: {
-            prompt: `Generate a very short personalized welcome message for Mangwale (Nashik's Super App).
+            prompt: `Generate a very short welcome message for Mangwale (Nashik's Super App).
 
+{{#if festival.isToday}}
+🎉 TODAY IS {{festival.name}}! Wish the user.
+{{/if}}
+
+{{#if weather}}
+Current weather: {{weather.temperature}}°C, {{weather.condition}}
+{{#if weather.isHot}}It's hot - suggest refreshing drinks{{/if}}
+{{#if weather.isCold}}It's cold - suggest warm food{{/if}}
+{{#if weather.isRainy}}It's rainy - perfect for snacks{{/if}}
+{{/if}}
+
+{{#if mealTime}}
+It's {{mealTime}} time.
+{{/if}}
+
+{{#if authenticated}}
 {{#if userPreferenceContext}}
 USER CONTEXT (use this to personalize):
 {{{userPreferenceContext}}}
 
 If returning customer with favorite store, mention it: "Welcome back! Order from [store] again?"
-If they have loyalty points > 100, mention: "You have [points] points to redeem!"
+{{/if}}
+{{#if user_name}}Welcome back, {{user_name}}!{{/if}}
 {{else}}
-New user - just say: "Welcome to Mangwale! How can I help you today?"
+New user - greet warmly in English and ask how you can help.
 {{/if}}
 
-Keep it under 20 words. Be warm and friendly.`,
-            systemPrompt: "You are Mangwale AI - Nashik's helpful super app assistant. Be professional, warm, and extremely brief.",
-            temperature: 0.5,
-            maxTokens: 60
+Keep it under 25 words. Be friendly. Respond in ENGLISH.`,
+            systemPrompt: "You are Chotu, Mangwale's friendly AI assistant. Be warm, helpful. Respond in ENGLISH unless user writes in Hindi.",
+            temperature: 0.6,
+            maxTokens: 100
           },
           output: 'greeting_text',
         },
@@ -53,10 +76,10 @@ Keep it under 20 words. Be warm and friendly.`,
           config: {
             message: "{{greeting_text}}",
             buttons: [
-              { id: 'btn_food', label: 'Order Food', value: 'order_food' },
-              { id: 'btn_parcel', label: 'Send Parcel', value: 'parcel_booking' },
-              { id: 'btn_shop', label: 'Shop Online', value: 'search_product' },
-              { id: 'btn_help', label: 'Help & Support', value: 'help' }
+              { id: 'btn_food', label: '🍔 Order Food', value: 'order_food' },
+              { id: 'btn_parcel', label: '📦 Send Parcel', value: 'parcel_booking' },
+              { id: 'btn_shop', label: '🛒 Shop Online', value: 'search_product' },
+              { id: 'btn_help', label: '❓ Help', value: 'help' }
             ]
           },
           output: '_last_response',
@@ -82,7 +105,8 @@ Keep it under 20 words. Be warm and friendly.`,
   metadata: {
     author: 'Mangwale AI Team',
     createdAt: '2025-11-15',
-    tags: ['greeting', 'welcome', 'onboarding'],
+    updatedAt: '2025-12-25',
+    tags: ['greeting', 'welcome', 'onboarding', 'contextual'],
     priority: 100,
   },
 };

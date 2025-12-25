@@ -112,7 +112,7 @@ export default function VoiceCharactersPage() {
   // Load active persona setting
   const loadActivePersona = async () => {
     try {
-      const res = await fetch(\`\${API_BASE}/settings/active-chatbot-persona\`);
+      const res = await fetch(`${API_BASE}/settings/active-chatbot-persona`);
       if (res.ok) {
         const data = await res.json();
         setActivePersona(data.value || 'chotu');
@@ -126,7 +126,7 @@ export default function VoiceCharactersPage() {
   const saveActivePersona = async (persona: string) => {
     setSavingPersona(true);
     try {
-      const res = await fetch(\`\${API_BASE}/settings/active-chatbot-persona\`, {
+      const res = await fetch(`${API_BASE}/settings/active-chatbot-persona`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ value: persona }),
@@ -144,7 +144,7 @@ export default function VoiceCharactersPage() {
   const loadCharacters = async () => {
     setLoading(true);
     try {
-      const res = await fetch(\`\${API_BASE}/voice-characters?includeInactive=true\`);
+      const res = await fetch(`${API_BASE}/voice-characters?includeInactive=true`);
       if (!res.ok) throw new Error('Failed to load characters');
       const data = await res.json();
       setCharacters(data);
@@ -161,7 +161,7 @@ export default function VoiceCharactersPage() {
   const createCharacter = async () => {
     setSaving(true);
     try {
-      const res = await fetch(\`\${API_BASE}/voice-characters\`, {
+      const res = await fetch(`${API_BASE}/voice-characters`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(newCharacter),
@@ -193,7 +193,7 @@ export default function VoiceCharactersPage() {
     if (!selectedCharacter) return;
     setSaving(true);
     try {
-      const res = await fetch(\`\${API_BASE}/voice-characters/\${selectedCharacter.id}\`, {
+      const res = await fetch(`${API_BASE}/voice-characters/${selectedCharacter.id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(updates),
@@ -212,7 +212,7 @@ export default function VoiceCharactersPage() {
   const deleteCharacter = async (id: string) => {
     if (!confirm('Are you sure you want to delete this character?')) return;
     try {
-      const res = await fetch(\`\${API_BASE}/voice-characters/\${id}\`, { method: 'DELETE' });
+      const res = await fetch(`${API_BASE}/voice-characters/${id}`, { method: 'DELETE' });
       if (!res.ok) throw new Error('Failed to delete character');
       setCharacters(characters.filter(c => c.id !== id));
       if (selectedCharacter?.id === id) {
@@ -230,7 +230,7 @@ export default function VoiceCharactersPage() {
     const displayName = prompt('Display name:', name);
     
     try {
-      const res = await fetch(\`\${API_BASE}/voice-characters/\${selectedCharacter.id}/emotions\`, {
+      const res = await fetch(`${API_BASE}/voice-characters/${selectedCharacter.id}/emotions`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -250,7 +250,7 @@ export default function VoiceCharactersPage() {
 
   const updateEmotionPreset = async (emotionId: string, updates: Partial<EmotionPreset>) => {
     try {
-      const res = await fetch(\`\${API_BASE}/voice-characters/emotions/\${emotionId}\`, {
+      const res = await fetch(`${API_BASE}/voice-characters/emotions/${emotionId}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(updates),
@@ -265,7 +265,7 @@ export default function VoiceCharactersPage() {
   const deleteEmotionPreset = async (emotionId: string) => {
     if (!confirm('Delete this emotion preset?')) return;
     try {
-      await fetch(\`\${API_BASE}/voice-characters/emotions/\${emotionId}\`, { method: 'DELETE' });
+      await fetch(`${API_BASE}/voice-characters/emotions/${emotionId}`, { method: 'DELETE' });
       await loadCharacters();
     } catch (err: any) {
       setError(err.message);
@@ -279,7 +279,7 @@ export default function VoiceCharactersPage() {
     const displayName = prompt('Display name:', name);
     
     try {
-      const res = await fetch(\`\${API_BASE}/voice-characters/\${selectedCharacter.id}/styles\`, {
+      const res = await fetch(`${API_BASE}/voice-characters/${selectedCharacter.id}/styles`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -299,7 +299,7 @@ export default function VoiceCharactersPage() {
 
   const updateStylePreset = async (styleId: string, updates: Partial<StylePreset>) => {
     try {
-      const res = await fetch(\`\${API_BASE}/voice-characters/styles/\${styleId}\`, {
+      const res = await fetch(`${API_BASE}/voice-characters/styles/${styleId}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(updates),
@@ -314,7 +314,7 @@ export default function VoiceCharactersPage() {
   const deleteStylePreset = async (styleId: string) => {
     if (!confirm('Delete this style preset?')) return;
     try {
-      await fetch(\`\${API_BASE}/voice-characters/styles/\${styleId}\`, { method: 'DELETE' });
+      await fetch(`${API_BASE}/voice-characters/styles/${styleId}`, { method: 'DELETE' });
       await loadCharacters();
     } catch (err: any) {
       setError(err.message);
@@ -325,7 +325,7 @@ export default function VoiceCharactersPage() {
     if (!selectedCharacter) return;
     setIsGenerating(true);
     try {
-      const res = await fetch(\`\${API_BASE}/voice-characters/synthesize\`, {
+      const res = await fetch(`${API_BASE}/voice-characters/synthesize`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -446,17 +446,17 @@ export default function VoiceCharactersPage() {
               <div
                 key={char.id}
                 onClick={() => setSelectedCharacter(char)}
-                className={\`p-3 rounded-lg cursor-pointer transition-all \${
+                className={`p-3 rounded-lg cursor-pointer transition-all ${
                   selectedCharacter?.id === char.id
                     ? 'bg-purple-100 border-2 border-purple-500'
                     : 'bg-gray-50 hover:bg-gray-100 border-2 border-transparent'
-                }\`}
+                }`}
               >
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <div className={\`w-8 h-8 rounded-full flex items-center justify-center \${
+                    <div className={`w-8 h-8 rounded-full flex items-center justify-center ${
                       char.isActive ? 'bg-green-100 text-green-600' : 'bg-gray-100 text-gray-400'
-                    }\`}>
+                    }`}>
                       <User className="w-4 h-4" />
                     </div>
                     <div>
@@ -492,11 +492,11 @@ export default function VoiceCharactersPage() {
                     <button
                       key={tab.id}
                       onClick={() => setActiveTab(tab.id as any)}
-                      className={\`px-4 py-3 flex items-center gap-2 border-b-2 transition-all \${
+                      className={`px-4 py-3 flex items-center gap-2 border-b-2 transition-all ${
                         activeTab === tab.id
                           ? 'border-purple-500 text-purple-600'
                           : 'border-transparent text-gray-500 hover:text-gray-700'
-                      }\`}
+                      }`}
                     >
                       <tab.icon className="w-4 h-4" />
                       {tab.label}

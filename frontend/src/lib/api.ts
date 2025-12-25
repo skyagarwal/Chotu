@@ -2,7 +2,36 @@ import axios, { AxiosInstance, AxiosError } from 'axios';
 
 type JsonRecord = Record<string, unknown>;
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4001/api';
+const resolveApiUrl = (): string => {
+  const envUrl = process.env.NEXT_PUBLIC_API_URL;
+  const fallback = envUrl || 'http://localhost:4001/api';
+
+  // During SSR we can't reliably infer the client's host.
+  if (typeof window === 'undefined') return fallback;
+
+  try {
+    // Supports both absolute and relative env values.
+    const url = new URL(fallback, window.location.origin);
+
+    const clientHost = window.location.hostname;
+    const clientIsLoopback = clientHost === 'localhost' || clientHost === '127.0.0.1';
+
+    const urlIsLoopback = url.hostname === 'localhost' || url.hostname === '127.0.0.1';
+
+    // If someone opens the UI from another device (LAN IP), `localhost` should
+    // resolve to the server host, not the client device.
+    if (urlIsLoopback && !clientIsLoopback) {
+      url.hostname = clientHost;
+    }
+
+    // Normalize trailing slash.
+    return url.toString().replace(/\/$/, '');
+  } catch {
+    return fallback;
+  }
+};
+
+const API_URL = resolveApiUrl();
 
 // Create axios instance
 const apiClient: AxiosInstance = axios.create({

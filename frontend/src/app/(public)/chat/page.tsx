@@ -1,7 +1,7 @@
 'use client'
 
-import { useState, useEffect, useRef, useMemo, Suspense } from 'react'
-import { Send, MapPin, User, RotateCcw, Menu, X, Plus, MessageSquare, ChevronDown, LogOut, Mic, ChevronLeft, ChevronRight, Sparkles } from 'lucide-react'
+import { useState, useEffect, useRef, useMemo, Suspense, useCallback } from 'react'
+import { Send, MapPin, User, RotateCcw, Menu, X, Plus, MessageSquare, ChevronDown, LogOut, Mic, ChevronLeft, ChevronRight, Sparkles, Phone, PhoneOff } from 'lucide-react'
 import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
 import Script from 'next/script'
@@ -63,15 +63,79 @@ function ChatContent() {
   const [userProfile, setUserProfile] = useState<any>(null)
   const [showLoginModal, setShowLoginModal] = useState(false)
   const [isSidebarOpen, setIsSidebarOpen] = useState(false)
-  const [useEnhancedVoice, setUseEnhancedVoice] = useState(true) // Enhanced voice mode with streaming
+  const [useEnhancedVoice, setUseEnhancedVoice] = useState(true) // Enhanced voice mode (upload-based)
   const [interimTranscript, setInterimTranscript] = useState('') // For showing interim results
   const [expandedCards, setExpandedCards] = useState<Record<string, boolean>>({}) // Track which card groups are expanded
+  const [voiceCallMode, setVoiceCallMode] = useState(false) // Voice call mode - auto TTS for responses
+  const [isTTSPlaying, setIsTTSPlaying] = useState(false) // TTS playback status
+  const audioRef = useRef<HTMLAudioElement | null>(null)
+
+  const lastAssistantMessage = useMemo(() => {
+    for (let i = messages.length - 1; i >= 0; i--) {
+      if (messages[i]?.role === 'assistant') return messages[i]
+    }
+    return null
+  }, [messages])
 
   const wsClientRef = useRef<any>(null)
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLTextAreaElement>(null)
   const profileRef = useRef<HTMLDivElement>(null)
   const cardScrollRefs = useRef<Record<string, HTMLDivElement | null>>({}) // For horizontal scrolling
+
+  // Auto-TTS playback for voice call mode
+  const playTTS = useCallback(async (text: string) => {
+    if (!voiceCallMode || isTTSPlaying) return
+    
+    try {
+      setIsTTSPlaying(true)
+      console.log('🔊 Auto-TTS: Playing response...')
+      
+      const response = await fetch('/api/tts/synthesize', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text, language: 'hi-IN' }),
+      })
+      
+      const result = await response.json()
+      
+      if (result.success && result.audio) {
+        // Convert base64 to audio blob
+        const audioData = atob(result.audio)
+        const arrayBuffer = new ArrayBuffer(audioData.length)
+        const view = new Uint8Array(arrayBuffer)
+        for (let i = 0; i < audioData.length; i++) {
+          view[i] = audioData.charCodeAt(i)
+        }
+        const blob = new Blob([arrayBuffer], { type: result.contentType || 'audio/wav' })
+        const audioUrl = URL.createObjectURL(blob)
+        
+        // Play audio
+        const audio = new Audio(audioUrl)
+        audioRef.current = audio
+        
+        audio.onended = () => {
+          setIsTTSPlaying(false)
+          URL.revokeObjectURL(audioUrl)
+          console.log('🔊 Auto-TTS: Playback complete')
+        }
+        
+        audio.onerror = () => {
+          setIsTTSPlaying(false)
+          URL.revokeObjectURL(audioUrl)
+          console.error('🔊 Auto-TTS: Playback error')
+        }
+        
+        await audio.play()
+      } else {
+        setIsTTSPlaying(false)
+        console.error('🔊 Auto-TTS: Synthesis failed', result.error)
+      }
+    } catch (error) {
+      setIsTTSPlaying(false)
+      console.error('🔊 Auto-TTS: Error', error)
+    }
+  }, [voiceCallMode, isTTSPlaying])
 
   // Logout handler - syncs across all channels
   const handleLogout = () => {
@@ -82,10 +146,26 @@ function ChatContent() {
       wsClientRef.current.syncAuthLogout(user.phone, sessionIdState)
     }
     
+    // Leave current WebSocket session
+    if (wsClientRef.current && sessionIdState) {
+      wsClientRef.current.leaveSession(sessionIdState)
+      wsClientRef.current.disconnect()
+    }
+    
     clearAuth()
+    
+    // Clear ALL user-related localStorage items
     localStorage.removeItem('mangwale-user-profile')
+    localStorage.removeItem('mangwale-chat-session-id')  // ← THIS WAS MISSING!
+    localStorage.removeItem('mangwale-user-location')
+    localStorage.removeItem('mangwale-user-zone-id')
+    localStorage.removeItem('user-location-captured')
+    
     setUserProfile(null)
     setShowProfile(false)
+    setMessages([])  // Clear messages from state
+    
+    // Reload to get completely fresh session
     window.location.reload()
   }
 
@@ -143,23 +223,30 @@ function ChatContent() {
   // Sync auth store user to local state
   useEffect(() => {
     if (user) {
+      // Safely handle undefined/null/empty names
+      const firstName = user.f_name || ''
+      const lastName = user.l_name || ''
+      const fullName = `${firstName} ${lastName}`.trim() || 'User'
       const profile = {
-        name: `${user.f_name} ${user.l_name || ''}`.trim(),
+        name: fullName,
         phone: user.phone
       }
       setUserProfile(profile)
       localStorage.setItem('mangwale-user-profile', JSON.stringify(profile))
+      console.log('📋 User profile synced:', profile)
     }
   }, [user])
 
   const authData = useMemo(() => {
     if (isAuthenticated && user) {
+      const firstName = user.f_name || ''
+      const lastName = user.l_name || ''
       return {
         userId: user.id,
         phone: user.phone,
         email: user.email,
         token: token || undefined,
-        name: `${user.f_name} ${user.l_name || ''}`.trim()
+        name: `${firstName} ${lastName}`.trim() || 'User'
       }
     }
     return undefined
@@ -168,6 +255,7 @@ function ChatContent() {
   // WebSocket connection setup
   useEffect(() => {
     if (!_hasHydrated) return
+    if (!sessionIdState) return
 
     const wsClient = getChatWSClient()
     wsClientRef.current = wsClient
@@ -245,8 +333,10 @@ function ChatContent() {
            setAuth(mappedUser, token);
            
            // Also update local profile state immediately
+           const firstName = mappedUser.f_name || ''
+           const lastName = mappedUser.l_name || ''
            const profile = {
-             name: `${mappedUser.f_name} ${mappedUser.l_name || ''}`.trim(),
+             name: `${firstName} ${lastName}`.trim() || 'User',
              phone: mappedUser.phone
            }
            setUserProfile(profile)
@@ -277,6 +367,14 @@ function ChatContent() {
             cards: message.cards || (message.metadata && message.metadata.cards) || undefined,
           }]
         })
+        
+        // Auto-TTS for voice call mode - play assistant responses
+        const isAssistantMessage = message.role === 'assistant' || (message as { sender?: string }).sender !== 'user'
+        if (isAssistantMessage && cleanText) {
+          // Delay slightly to ensure state updates first
+          setTimeout(() => playTTS(cleanText), 100)
+        }
+        
         setIsTyping(false)
       },
       onError: (error) => {
@@ -305,8 +403,8 @@ function ChatContent() {
         const { syncFromRemote } = useAuthStore.getState()
         syncFromRemote(data)
         
-        // Update local profile
-        const profile = { name: data.userName, phone: '' }
+        // Update local profile - ensure name is never undefined
+        const profile = { name: data.userName || 'User', phone: '' }
         setUserProfile(profile)
         localStorage.setItem('mangwale-user-profile', JSON.stringify(profile))
         
@@ -371,6 +469,7 @@ function ChatContent() {
     return () => {
       wsClient.leaveSession(sessionIdState)
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sessionIdState, _hasHydrated, authData])
 
   // Helper to check if a message is an internal action (should not be displayed)
@@ -1113,7 +1212,7 @@ function ChatContent() {
           </div>
 
           {/* Quick Actions - Above Input (shown when chatting) */}
-          {messages.length > 0 && (
+          {messages.length > 0 && !(lastAssistantMessage?.buttons && lastAssistantMessage.buttons.length > 0) && (
             <div className="w-full bg-gradient-to-t from-white via-white/95 to-transparent pt-1 pb-0.5 sm:pt-2 sm:pb-1">
               <div className="max-w-3xl mx-auto px-3 sm:px-4">
                 <div className="flex gap-1.5 sm:gap-2 overflow-x-auto pb-1.5 sm:pb-2 scrollbar-hide">
@@ -1171,7 +1270,7 @@ function ChatContent() {
                           setInterimTranscript(text)
                         }}
                         language="hi-IN"
-                        enableStreaming={true}
+                        enableStreaming={false}
                         showSettings={true}
                         autoSend={true}
                         className="p-2 text-gray-400 hover:text-orange-500 hover:bg-orange-50 rounded-xl transition-colors active:scale-95"
@@ -1212,10 +1311,33 @@ function ChatContent() {
                   <button 
                     onClick={() => setUseEnhancedVoice(!useEnhancedVoice)}
                     className={`px-1.5 sm:px-2 py-0.5 rounded text-[10px] sm:text-xs ${useEnhancedVoice ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-500'}`}
-                    title={useEnhancedVoice ? 'Using streaming voice' : 'Using basic voice'}
+                    title={useEnhancedVoice ? 'Using enhanced voice' : 'Using basic voice'}
                   >
                     <Mic className="w-2.5 h-2.5 sm:w-3 sm:h-3 inline mr-0.5" />
-                    <span className="hidden sm:inline">{useEnhancedVoice ? 'Streaming' : 'Basic'}</span>
+                    <span className="hidden sm:inline">{useEnhancedVoice ? 'Enhanced' : 'Basic'}</span>
+                  </button>
+                  <button 
+                    onClick={() => {
+                      setVoiceCallMode(!voiceCallMode)
+                      if (!voiceCallMode) {
+                        // Starting voice call mode
+                        console.log('📞 Voice call mode ON - Auto TTS enabled')
+                      } else {
+                        // Stopping voice call mode
+                        if (audioRef.current) {
+                          audioRef.current.pause()
+                          audioRef.current = null
+                        }
+                        setIsTTSPlaying(false)
+                        console.log('📞 Voice call mode OFF')
+                      }
+                    }}
+                    className={`px-1.5 sm:px-2 py-0.5 rounded text-[10px] sm:text-xs flex items-center gap-1 ${voiceCallMode ? 'bg-green-500 text-white animate-pulse' : 'bg-gray-100 text-gray-500'}`}
+                    title={voiceCallMode ? 'Voice call active - tap to end' : 'Start voice call mode'}
+                  >
+                    {voiceCallMode ? <PhoneOff className="w-2.5 h-2.5 sm:w-3 sm:h-3" /> : <Phone className="w-2.5 h-2.5 sm:w-3 sm:h-3" />}
+                    <span className="hidden sm:inline">{voiceCallMode ? 'End Call' : 'Voice Call'}</span>
+                    {isTTSPlaying && <span className="ml-1">🔊</span>}
                   </button>
                </div>
             </div>

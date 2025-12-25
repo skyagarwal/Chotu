@@ -135,6 +135,33 @@ Be quick, professional, and reassuring about driver details.`,
           required: [],
         },
       },
+      {
+        name: 'save_user_address',
+        description: 'Save a new address for the user. Use when user wants to save an address as home, office, or other. Requires location coordinates.',
+        parameters: {
+          type: 'object',
+          properties: {
+            latitude: {
+              type: 'number',
+              description: 'Latitude coordinate of the address',
+            },
+            longitude: {
+              type: 'number',
+              description: 'Longitude coordinate of the address',
+            },
+            address_type: {
+              type: 'string',
+              enum: ['home', 'office', 'other'],
+              description: 'Type of address - home, office, or other',
+            },
+            address_text: {
+              type: 'string',
+              description: 'Human-readable address text (optional)',
+            },
+          },
+          required: ['latitude', 'longitude', 'address_type'],
+        },
+      },
     ];
   }
 }

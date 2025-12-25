@@ -908,6 +908,88 @@ export class FunctionExecutorService {
       },
     });
 
-    this.logger.log('Registered 15 function executors');
+    // Save user address function
+    this.register({
+      name: 'save_user_address',
+      execute: async (args, context) => {
+        // Check if user is authenticated
+        if (!context.session?.authenticated || !context.session?.auth_token) {
+          return {
+            success: false,
+            error: 'User not authenticated',
+            message: 'Please login first to save addresses. Would you like to login now?',
+            requiresAuth: true
+          };
+        }
+
+        const { latitude, longitude, address_type, address_text, contact_name, contact_phone, landmark } = args;
+
+        // Validate required fields
+        if (!latitude || !longitude) {
+          return {
+            success: false,
+            error: 'Location coordinates required',
+            message: 'I need your exact location to save the address. Please share your location or paste a Google Maps link.'
+          };
+        }
+
+        // Get user info from session for contact details
+        const userInfo = context.session?.data?.user_info || {};
+        const contactName = contact_name || userInfo.f_name || 'User';
+        const contactPhone = contact_phone || context.phoneNumber?.replace('web-', '') || '';
+
+        this.logger.log(`📍 Saving address for user: type=${address_type}, lat=${latitude}, lng=${longitude}`);
+
+        try {
+          // Use reverse geocoding to get address text if not provided
+          let finalAddressText = address_text;
+          if (!finalAddressText) {
+            try {
+              const response = await fetch(
+                `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&zoom=18`
+              );
+              const data = await response.json();
+              finalAddressText = data.display_name || `Location at ${latitude}, ${longitude}`;
+            } catch (e) {
+              finalAddressText = `Location at ${latitude}, ${longitude}`;
+            }
+          }
+
+          const result = await this.phpAddressService.addAddress(context.session.auth_token, {
+            contactPersonName: contactName,
+            contactPersonNumber: contactPhone,
+            addressType: address_type || 'other',
+            address: finalAddressText,
+            latitude: String(latitude),
+            longitude: String(longitude),
+            landmark: landmark || '',
+          });
+
+          if (result.success) {
+            const typeEmoji = address_type === 'home' ? '🏠' : address_type === 'office' ? '🏢' : '📍';
+            return {
+              success: true,
+              addressId: result.addressId,
+              message: `${typeEmoji} Address saved as "${address_type || 'other'}"!\n\n📍 ${finalAddressText}\n\nYou can use this address for future orders.`
+            };
+          } else {
+            return {
+              success: false,
+              error: result.message || 'Failed to save address',
+              message: 'Sorry, I couldn\'t save the address. Please try again.'
+            };
+          }
+        } catch (error) {
+          this.logger.error(`Failed to save address: ${error.message}`);
+          return {
+            success: false,
+            error: error.message,
+            message: 'I had trouble saving the address. Please try again later.'
+          };
+        }
+      },
+    });
+
+    this.logger.log('Registered 16 function executors');
   }
 }

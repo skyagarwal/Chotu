@@ -15,6 +15,7 @@ import { NluTrainingDataService } from './services/nlu-training-data.service';
 import { ConversationCaptureService } from '../services/conversation-capture.service';
 import { LlmModule } from '../llm/llm.module';
 import { DatabaseModule } from '../database/database.module';
+import { LearningModule } from '../learning/learning.module'; // ✨ Self-learning integration
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { DatabaseModule } from '../database/database.module';
     ScheduleModule.forRoot(), // For cron job in IntentManagerService
     LlmModule,
     DatabaseModule,
+    LearningModule, // ✨ Self-learning for confidence-based auto-approval
   ],
   controllers: [NluController, IntentsController],
   providers: [

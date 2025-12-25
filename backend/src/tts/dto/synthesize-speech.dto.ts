@@ -6,12 +6,12 @@ export class SynthesizeSpeechDto {
   text: string;
 
   @IsOptional()
-  @IsEnum(['en', 'hi', 'mr'])
-  language?: string = 'en';
+  @IsString()
+  language?: string = 'hi';
 
   @IsOptional()
-  @IsEnum(['male', 'female'])
-  voice?: string = 'female';
+  @IsString()
+  voice?: string;
 
   @IsOptional()
   @IsEnum(['xtts', 'google', 'azure', 'auto'])

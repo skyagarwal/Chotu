@@ -66,7 +66,7 @@ export abstract class BaseAgent {
       // Call LLM with function definitions
       const config = this.getConfig();
       let response = await this.llmService.chat({
-        model: 'qwen8b',
+        model: 'Qwen/Qwen2.5-7B-Instruct-AWQ', // Local vLLM model
         messages,
         functions: this.getFunctions(),
         temperature: config.temperature,
@@ -113,7 +113,7 @@ export abstract class BaseAgent {
 
         // Get next response from LLM
         response = await this.llmService.chat({
-          model: 'qwen8b',
+          model: 'Qwen/Qwen2.5-7B-Instruct-AWQ', // Local vLLM model
           messages,
           functions: this.getFunctions(),
           temperature: config.temperature,

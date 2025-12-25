@@ -24,6 +24,24 @@ export class XttsService {
     // Get the language (first 2 chars for base language)
     const lang = (dto.language || 'en').split('-')[0];
 
+    const normalizeVoice = (voice?: string): string | undefined => {
+      if (!voice) return undefined;
+      const v = voice.trim().toLowerCase();
+      if (!v) return undefined;
+
+      // Mercury Chatterbox Hindi voices
+      if (lang === 'hi' || lang === 'mr') {
+        if (v === 'male') return 'chotu';
+        if (v === 'female') return 'tara';
+      }
+
+      // For English (Kokoro) we default to a known voice; keep passthrough if provided
+      if (v === 'male' || v === 'female') return 'af_bella';
+      return voice;
+    };
+
+    const mercuryVoice = normalizeVoice(dto.voice) || (lang === 'hi' || lang === 'mr' ? 'chotu' : 'af_bella');
+
     try {
       // Call Mercury TTS service at /synthesize endpoint
       // Supports Kokoro (en), Chatterbox (hi, mr, bn, gu, etc)
@@ -31,7 +49,7 @@ export class XttsService {
         this.httpService.post(`${this.xttsUrl}/synthesize`, {
           text: dto.text,
           language: lang,
-          voice: dto.voice || (lang === 'hi' ? 'chotu' : 'af_bella'),
+          voice: mercuryVoice,
           speed: dto.speed || 1.0,
           emotion: 'neutral',
           style: lang === 'hi' ? 'chotu_helpful' : 'default',
@@ -51,7 +69,7 @@ export class XttsService {
         duration: 0, // Duration not provided by service
         provider: 'mercury-tts',
         processingTimeMs: Date.now() - startTime,
-        voice: dto.voice || 'default',
+        voice: mercuryVoice,
         language: dto.language || 'en',
       };
     } catch (error) {

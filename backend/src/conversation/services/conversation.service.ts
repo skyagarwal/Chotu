@@ -936,10 +936,14 @@ export class ConversationService {
    * Uses PHP API response (is_personal_info) to determine if user exists
    */
   private async handleOtpCodeInput(phoneNumber: string, messageText: string): Promise<void> {
+    // Get platform from session for correct message routing
+    const session = await this.sessionService.getSession(phoneNumber);
+    const platform = (session?.data?.platform === 'web' ? Platform.WEB : Platform.WHATSAPP) as Platform;
+    
     // Validate OTP format
     const otpRegex = /^\d{6}$/;
     if (!otpRegex.test(messageText)) {
-      await this.messagingService.sendTextMessage(Platform.WHATSAPP, 
+      await this.messagingService.sendTextMessage(platform, 
         phoneNumber,
         '❌ Please enter a valid 6-digit OTP code:'
       );
@@ -969,9 +973,9 @@ export class ConversationService {
           
           await this.sessionService.setStep(phoneNumber, 'awaiting_name');
           
-          await this.messagingService.sendTextMessage(Platform.WHATSAPP, 
+          await this.messagingService.sendTextMessage(platform, 
             phoneNumber,
-            '🎉 Welcome to Mangwale!\n\nTo complete your registration, please tell me your full name:'
+            '🎉 Welcome to Mangwale! Thank you for joining us!\n\nTo personalize your experience, what should I call you? (Please enter your name)'
           );
           return;
         }
@@ -1046,10 +1050,16 @@ export class ConversationService {
             data: clearedData
           });
           
-          // Send success message and trigger the pending intent flow
-          await this.messagingService.sendTextMessage(Platform.WHATSAPP,
+          // ✅ Send personalized welcome message FIRST, then resume flow
+          // Determine if new or existing user based on is_personal_info
+          const isNewUser = result.data.is_personal_info === 0;
+          const welcomeMsg = isNewUser
+            ? `🎉 Welcome to Mangwale${userName ? `, ${userName}` : ''}! Great to have you with us! Let me continue with your request...`
+            : `✅ Welcome back${userName ? `, ${userName}` : ''}! Great to see you again. Resuming your request...`;
+          
+          await this.messagingService.sendTextMessage(platform,
             phoneNumber,
-            `✅ Login successful${userName ? `, ${userName}` : ''}!\n\nResuming your request...`
+            welcomeMsg
           );
           
           // Use original message if available, otherwise map intent to generic message
@@ -1080,16 +1090,25 @@ export class ConversationService {
           return;
         }
         
+        // No pending action - show welcome with modules
+        const isNewUser = result.data.is_personal_info === 0;
+        if (!isNewUser && userName) {
+          // Send personalized welcome for existing user
+          await this.messagingService.sendTextMessage(platform,
+            phoneNumber,
+            `✅ Welcome back, ${userName}! Great to see you again. 😊`
+          );
+        }
         await this.showModules(phoneNumber, { name: userName, phone: inputPhone });
       } else {
-        await this.messagingService.sendTextMessage(Platform.WHATSAPP, 
+        await this.messagingService.sendTextMessage(platform, 
           phoneNumber,
           '❌ Invalid OTP code. Please try again:'
         );
       }
     } catch (error) {
       this.logger.error('Error verifying OTP:', error);
-      await this.messagingService.sendTextMessage(Platform.WHATSAPP, 
+      await this.messagingService.sendTextMessage(platform, 
         phoneNumber,
         '❌ Unable to verify OTP. Please try again.'
       );

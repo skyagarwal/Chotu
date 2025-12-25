@@ -19,6 +19,7 @@ import { profileFlow } from './profile.flow';
 import { authFlow } from './auth.flow';
 import { orderTrackingFlow } from './order-tracking.flow';
 import { supportFlow } from './support.flow';
+import { addressManagementFlow } from './address-management.flow';
 
 /**
  * All available flow definitions
@@ -38,6 +39,7 @@ export const flowDefinitions: FlowDefinition[] = [
   orderTrackingFlow, // Priority 65 - Order tracking/history
   supportFlow,       // Priority 60 - Customer support
   profileFlow,
+  addressManagementFlow, // Address management
 ];
 
 /**
@@ -57,6 +59,7 @@ export const flowDefinitionsById: Record<string, FlowDefinition> = {
   [orderTrackingFlow.id]: orderTrackingFlow,
   [supportFlow.id]: supportFlow,
   [profileFlow.id]: profileFlow,
+  [addressManagementFlow.id]: addressManagementFlow,
 };
 
 /**
@@ -76,6 +79,7 @@ export const flowDefinitionsByTrigger: Record<string, FlowDefinition> = {
   [orderTrackingFlow.trigger]: orderTrackingFlow,
   [supportFlow.trigger]: supportFlow,
   [profileFlow.trigger]: profileFlow,
+  'manage_address': addressManagementFlow, // Address management by intent
 };
 
 /**

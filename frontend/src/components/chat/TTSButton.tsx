@@ -17,6 +17,7 @@ export const TTSButton: React.FC<TTSButtonProps> = ({
   const [isPlaying, setIsPlaying] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [audioElement, setAudioElement] = useState<HTMLAudioElement | null>(null);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const playAudio = useCallback(async () => {
     if (isPlaying && audioElement) {
@@ -28,6 +29,7 @@ export const TTSButton: React.FC<TTSButtonProps> = ({
     }
 
     setIsLoading(true);
+    setErrorMessage(null);
 
     try {
       // Request TTS synthesis
@@ -72,11 +74,11 @@ export const TTSButton: React.FC<TTSButtonProps> = ({
         setIsPlaying(true);
       } else {
         console.error('TTS synthesis failed:', result.error);
-        alert('Text-to-speech failed. Please try again.');
+        setErrorMessage(result.error || 'Text-to-speech failed');
       }
     } catch (error) {
       console.error('Error synthesizing speech:', error);
-      alert('Failed to synthesize speech. Please try again.');
+      setErrorMessage('Failed to synthesize speech');
     } finally {
       setIsLoading(false);
     }
@@ -87,13 +89,15 @@ export const TTSButton: React.FC<TTSButtonProps> = ({
       onClick={playAudio}
       disabled={isLoading}
       className={`tts-button ${className} ${isPlaying ? 'playing' : ''}`}
-      title={isPlaying ? 'Stop audio' : 'Play audio'}
+      title={errorMessage ? errorMessage : isPlaying ? 'Stop audio' : 'Play audio'}
       type="button"
     >
       {isLoading ? (
         <Loader2 className="w-4 h-4 animate-spin" />
       ) : isPlaying ? (
         <VolumeX className="w-4 h-4 text-blue-500" />
+      ) : errorMessage ? (
+        <VolumeX className="w-4 h-4 text-red-500" />
       ) : (
         <Volume2 className="w-4 h-4 text-gray-500" />
       )}

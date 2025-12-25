@@ -54,7 +54,7 @@ export class PreferenceExtractorService {
 
       // Call LLM to extract preferences
       const response = await this.llmService.chat({
-        model: 'qwen32b', // Use more powerful model for extraction
+        model: 'Qwen/Qwen2.5-7B-Instruct-AWQ', // Local vLLM model
         messages: [
           { role: 'system', content: systemPrompt },
           { role: 'user', content: userPrompt },

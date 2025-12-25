@@ -47,7 +47,7 @@ export class ConversationAnalyzerService {
             content: prompt
           }
         ],
-        model: 'qwen-32b',
+        model: 'Qwen/Qwen2.5-7B-Instruct-AWQ', // Local vLLM model
         temperature: 0.3,
         maxTokens: 2000,
         responseFormat: { type: 'json_object' }

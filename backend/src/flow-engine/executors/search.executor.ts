@@ -14,6 +14,25 @@ export class SearchExecutor implements ActionExecutor {
 
   constructor(private readonly searchService: SearchService) {}
 
+  /**
+   * Calculate distance between two coordinates using Haversine formula
+   */
+  private calculateDistance(lat1: number, lon1: number, lat2: number, lon2: number): number {
+    const R = 6371; // Radius of the earth in km
+    const dLat = this.deg2rad(lat2 - lat1);
+    const dLon = this.deg2rad(lon2 - lon1);
+    const a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(this.deg2rad(lat1)) * Math.cos(this.deg2rad(lat2)) *
+      Math.sin(dLon / 2) * Math.sin(dLon / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    return R * c; // Distance in km
+  }
+
+  private deg2rad(deg: number): number {
+    return deg * (Math.PI / 180);
+  }
+
   async execute(
     config: Record<string, any>,
     context: FlowContext
@@ -48,7 +67,7 @@ export class SearchExecutor implements ActionExecutor {
       const filters = config.filters ? [...config.filters] : [];
       const lat = config.lat;
       const lng = config.lng;
-      const radius = config.radius || '10km';
+      const radius = config.radius || '5km';  // Default 5km radius for nearby results
       const useIntentSearch = config.useIntentSearch || config.intentSearch || false;
 
       // Log filters for debugging
@@ -123,6 +142,11 @@ export class SearchExecutor implements ActionExecutor {
         ...item.source, // Spread all source fields (title, mrp, brand, category, etc.)
       }));
 
+      // Get user location for distance calculation
+      const parsedUserLat = typeof lat === 'string' ? parseFloat(lat) : lat;
+      const parsedUserLng = typeof lng === 'string' ? parseFloat(lng) : lng;
+      const hasUserLocation = !isNaN(parsedUserLat) && !isNaN(parsedUserLng);
+
       const output: any = {
         items: flattenedItems,
         total: results.total || 0,
@@ -148,29 +172,54 @@ export class SearchExecutor implements ActionExecutor {
 
       // Always generate UI cards for product results
       if (output.hasResults) {
-        output.cards = flattenedItems.slice(0, 10).map((item: any) => ({
-          id: item.id,
-          name: item.title || item.name,
-          description: item.description || item.category,
-          price: item.mrp ? `₹${item.mrp}` : (item.price ? `₹${item.price}` : undefined),
-          rawPrice: item.mrp || item.price, // Numeric price for order
-          image: getImageUrl(item),
-          rating: item.rating || item.avg_rating || 4.5,
-          deliveryTime: item.delivery_time || '30-45 min',
-          brand: item.brand,
-          category: item.category || item.category_name,
-          storeName: item.store_name,
-          storeId: item.store_id,
-          moduleId: item.module_id, // Important for order placement
-          // Store coordinates can be in store_location.lat/lon or store_latitude/store_longitude
-          storeLat: item.store_location?.lat || item.store_latitude,
-          storeLng: item.store_location?.lon || item.store_longitude,
-          veg: item.veg,
-          action: {
-            label: 'Add +',
-            value: `Add ${item.title || item.name} to cart`
+        output.cards = flattenedItems.slice(0, 10).map((item: any) => {
+          // Calculate distance from user if we have coordinates
+          const storeLat = item.store_location?.lat || item.store_latitude;
+          const storeLng = item.store_location?.lon || item.store_longitude;
+          let distanceKm: number | undefined;
+          let distanceText: string | undefined;
+          
+          if (hasUserLocation && storeLat && storeLng) {
+            distanceKm = this.calculateDistance(parsedUserLat, parsedUserLng, storeLat, storeLng);
+            distanceText = distanceKm < 1 
+              ? `${Math.round(distanceKm * 1000)}m away`
+              : `${distanceKm.toFixed(1)}km away`;
           }
-        }));
+          
+          return {
+            id: item.id,
+            name: item.title || item.name,
+            description: item.description || item.category,
+            price: item.mrp ? `₹${item.mrp}` : (item.price ? `₹${item.price}` : undefined),
+            rawPrice: item.mrp || item.price, // Numeric price for order
+            image: getImageUrl(item),
+            rating: item.rating || item.avg_rating || '0.0',
+            deliveryTime: item.delivery_time || '30-45 min',
+            brand: item.brand,
+            category: item.category || item.category_name,
+            storeName: item.store_name,
+            storeId: item.store_id,
+            moduleId: item.module_id, // Important for order placement
+            storeLat,
+            storeLng,
+            distanceKm,  // Numeric distance for sorting
+            distance: distanceText,  // Formatted text for display
+            veg: item.veg,
+            action: {
+              label: 'Add +',
+              value: `Add ${item.title || item.name} to cart`
+            }
+          };
+        });
+        
+        // Sort by distance if available (closest first)
+        if (hasUserLocation) {
+          output.cards.sort((a: any, b: any) => {
+            if (a.distanceKm === undefined) return 1;
+            if (b.distanceKm === undefined) return -1;
+            return a.distanceKm - b.distanceKm;
+          });
+        }
       }
 
       this.logger.debug(`Found ${output.total} results`);

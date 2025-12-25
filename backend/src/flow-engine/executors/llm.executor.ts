@@ -7,6 +7,12 @@ import * as Handlebars from 'handlebars';
  * LLM Executor
  * 
  * Generates AI responses using LLM (vLLM, OpenRouter, Groq, etc.)
+ * 
+ * ✨ NEW: Includes context injection for:
+ * - Weather awareness (temperature, conditions)
+ * - Meal time suggestions (breakfast, lunch, dinner)
+ * - Festival greetings and special food
+ * - Local knowledge (Nashik dishes, slang)
  */
 @Injectable()
 export class LlmExecutor implements ActionExecutor {
@@ -28,6 +34,30 @@ export class LlmExecutor implements ActionExecutor {
       this.logger.warn(`Template interpolation failed: ${e.message}`);
       return text;
     }
+  }
+
+  private detectPreferredResponseLanguage(userMessage: string): 'en' | 'hi' | 'mr' | 'hinglish' {
+    const msg = (userMessage || '').trim();
+    const lower = msg.toLowerCase();
+
+    // Explicit user constraints/preferences should always win.
+    if (
+      /(i\s*don't\s*know\s*hindi|i\s*do\s*not\s*know\s*hindi|dont\s*know\s*hindi|no\s*hindi|hindi\s+nahi\s+aati|hindi\s+nahi\s+ata|please\s*speak\s*english|speak\s*english|english\s*please|in\s*english)/i.test(
+        msg,
+      )
+    ) {
+      return 'en';
+    }
+
+    if (/(in\s*hindi|hindi\s*me|hindi\s*mein|हिंदी)/i.test(msg)) return 'hi';
+    if (/(in\s*marathi|मराठी)/i.test(msg)) return 'mr';
+    if (/(hinglish)/i.test(msg)) return 'hinglish';
+
+    // If the user is writing in Devanagari, assume Hindi/Marathi.
+    if (/\p{Script=Devanagari}/u.test(msg)) return 'hi';
+
+    // Safe default.
+    return 'en';
   }
 
   async execute(
@@ -53,6 +83,33 @@ export class LlmExecutor implements ActionExecutor {
         systemPrompt = this.interpolate(systemPrompt, context.data);
       }
 
+      // Get user message early (needed for language selection)
+      const userMessage = context.data._user_message || '';
+
+      // 🌤️ CONTEXT INJECTION - Weather, Time, Festivals, Local Knowledge
+      // If enhanced context exists in flow data, inject it
+      if (context.data.enhancedContext) {
+        const ctx = context.data.enhancedContext as any;
+        const contextBlock = `
+== CURRENT CONTEXT (Nashik, ${new Date().toLocaleDateString('en-IN')}) ==
+    Weather: ${ctx.weather?.temperature}°C, ${ctx.weather?.condition}
+    Time: ${ctx.time?.timeOfDay} (${ctx.time?.mealTime})
+    ${ctx.festival?.isToday ? `🎉 TODAY IS ${ctx.festival?.name || ctx.festival?.nameHindi}! Wish user and suggest: ${ctx.festival?.foods?.join(', ')}` : ''}
+    ${ctx.festival?.daysAway && ctx.festival?.daysAway <= 3 ? `📅 ${ctx.festival?.name || ctx.festival?.nameHindi} in ${ctx.festival?.daysAway} days` : ''}
+${ctx.weather?.isHot ? '🔥 Hot weather - suggest cold drinks: Lassi, Cold Coffee, Nimbu Pani' : ''}
+${ctx.weather?.isCold ? '❄️ Cold weather - suggest hot items: Chai, Coffee, Soup, Pakode' : ''}
+${ctx.weather?.isRainy ? '🌧️ Rainy - suggest: Pakode, Bhajiya, Maggi, Chai' : ''}
+
+Suggested foods for ${ctx.time?.mealTime}: ${ctx.suggestions?.timeBased?.join(', ') || 'local favorites'}
+`;
+        if (systemPrompt) {
+          systemPrompt += `\n${contextBlock}`;
+        } else {
+          systemPrompt = `You are a helpful AI assistant.\n${contextBlock}`;
+        }
+        this.logger.debug(`🌤️ Injected enhanced context (weather: ${ctx.weather?.temperature}°C, meal: ${ctx.time?.mealTime})`);
+      }
+
       // 🧠 PERSONALIZATION INJECTION
       // If user preference context exists in session data, append it to system prompt
       if (context.data.userPreferenceContext) {
@@ -65,9 +122,16 @@ export class LlmExecutor implements ActionExecutor {
         this.logger.debug(`🧠 Injected user preference context into system prompt`);
       }
 
-      // 🌍 MULTILINGUAL SUPPORT
-      // Append instruction to reply in user's language
-      const langInstruction = "\n\nIMPORTANT: Reply in the same language as the user (English, Hindi, Marathi, or Hinglish). If the user speaks Hinglish, reply in Hinglish.";
+      // 🌍 LANGUAGE SELECTION
+      // Default to English to avoid surprising users with Hindi.
+      const preferred = this.detectPreferredResponseLanguage(userMessage);
+      const langInstruction =
+        `\n\nLANGUAGE RULES:` +
+        `\n- Default to English.` +
+        `\n- If the user writes in Hindi/Marathi (Devanagari), reply in that language.` +
+        `\n- If the user explicitly asks for a language, comply.` +
+        `\n- If the user says they don't know Hindi (e.g., "hindi nahi aati"), reply in English.` +
+        `\n\nRespond in: ${preferred.toUpperCase()}.`;
       if (systemPrompt) {
         systemPrompt += langInstruction;
       } else {
@@ -75,9 +139,6 @@ export class LlmExecutor implements ActionExecutor {
       }
 
       this.logger.debug(`Generating LLM response with prompt: ${prompt.substring(0, 100)}...`);
-
-      // Get user message from context
-      const userMessage = context.data._user_message || '';
 
       // Build messages array
       const messages: any[] = [];

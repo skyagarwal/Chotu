@@ -1,21 +1,40 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+
+// The BeforeInstallPromptEvent type is not included in TS lib.dom by default.
+interface BeforeInstallPromptEvent extends Event {
+  prompt: () => Promise<void>;
+  userChoice: Promise<{ outcome: 'accepted' | 'dismissed'; platform?: string }>;
+}
+
+declare global {
+  interface Window {
+    mangwaleInstall?: () => Promise<boolean>;
+    mangwaleIsInstallable?: boolean;
+    mangwaleIsInstalled?: boolean;
+  }
+}
 
 export function ServiceWorkerRegistration() {
   const [isInstallable, setIsInstallable] = useState(false);
-  const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
-  const [isInstalled, setIsInstalled] = useState(false);
+  const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null);
+  const [isInstalled, setIsInstalled] = useState(() => {
+    if (typeof window === 'undefined') return false;
+    return window.matchMedia('(display-mode: standalone)').matches;
+  });
+  const didRegisterRef = useRef(false);
 
   useEffect(() => {
-    // Check if already installed
-    if (window.matchMedia('(display-mode: standalone)').matches) {
-      setIsInstalled(true);
-      return;
-    }
+    // Service workers in Next.js dev often cause confusing "page reset"/cache behavior.
+    // Only register in production.
+    if (process.env.NODE_ENV !== 'production') return;
 
     // Register service worker
     if ('serviceWorker' in navigator) {
+      if (didRegisterRef.current) return;
+      didRegisterRef.current = true;
+
       navigator.serviceWorker
         .register('/sw.js')
         .then((registration) => {
@@ -42,7 +61,7 @@ export function ServiceWorkerRegistration() {
     // Handle install prompt
     const handleBeforeInstall = (e: Event) => {
       e.preventDefault();
-      setDeferredPrompt(e);
+      setDeferredPrompt(e as BeforeInstallPromptEvent);
       setIsInstallable(true);
       console.log('[PWA] App is installable');
     };
@@ -66,7 +85,7 @@ export function ServiceWorkerRegistration() {
 
   // Expose install function globally for use in UI
   useEffect(() => {
-    (window as any).mangwaleInstall = async () => {
+    window.mangwaleInstall = async () => {
       if (!deferredPrompt) return false;
       
       deferredPrompt.prompt();
@@ -81,8 +100,8 @@ export function ServiceWorkerRegistration() {
       return false;
     };
 
-    (window as any).mangwaleIsInstallable = isInstallable;
-    (window as any).mangwaleIsInstalled = isInstalled;
+    window.mangwaleIsInstallable = isInstallable;
+    window.mangwaleIsInstalled = isInstalled;
   }, [deferredPrompt, isInstallable, isInstalled]);
 
   return null;
@@ -95,8 +114,8 @@ export function usePWA() {
 
   useEffect(() => {
     const checkStatus = () => {
-      setIsInstallable((window as any).mangwaleIsInstallable || false);
-      setIsInstalled((window as any).mangwaleIsInstalled || false);
+      setIsInstallable(window.mangwaleIsInstallable || false);
+      setIsInstalled(window.mangwaleIsInstalled || false);
     };
 
     checkStatus();
@@ -105,8 +124,8 @@ export function usePWA() {
   }, []);
 
   const install = async () => {
-    if ((window as any).mangwaleInstall) {
-      return (window as any).mangwaleInstall();
+    if (window.mangwaleInstall) {
+      return window.mangwaleInstall();
     }
     return false;
   };

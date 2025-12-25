@@ -8,8 +8,10 @@
 import puppeteer, { Browser, Page } from 'puppeteer';
 import * as cheerio from 'cheerio';
 import { Pool } from 'pg';
-import { RedisClientType } from 'redis';
 import { Logger } from 'winston';
+
+// Use any for Redis client to avoid type conflicts
+type RedisClient = any;
 
 export interface ZomatoRestaurant {
   id: string;
@@ -56,7 +58,7 @@ export class ZomatoScraper {
 
   constructor(
     private readonly pool: Pool,
-    private readonly redis: RedisClientType,
+    private readonly redis: RedisClient,
     private readonly logger: Logger
   ) {}
 
@@ -68,8 +70,8 @@ export class ZomatoScraper {
 
     // Use puppeteer-extra with stealth plugin in production
     this.browser = await puppeteer.launch({
-      headless: 'new',
-      executablePath: process.env.CHROMIUM_PATH || '/usr/bin/chromium-browser',
+      headless: true,
+      executablePath: process.env.CHROMIUM_PATH || '/usr/bin/chromium',
       protocolTimeout: 60000, // 60 seconds timeout
       args: [
         '--no-sandbox',
@@ -80,6 +82,23 @@ export class ZomatoScraper {
         '--window-size=1920x1080',
         '--single-process', // Helps in container environments
         '--no-zygote',
+        '--disable-background-networking',
+        '--disable-breakpad',
+        '--disable-component-extensions-with-background-pages',
+        '--disable-extensions',
+        '--disable-features=TranslateUI',
+        '--disable-hang-monitor',
+        '--disable-ipc-flooding-protection',
+        '--disable-popup-blocking',
+        '--disable-prompt-on-repost',
+        '--disable-renderer-backgrounding',
+        '--disable-sync',
+        '--force-color-profile=srgb',
+        '--metrics-recording-only',
+        '--safebrowsing-disable-auto-update',
+        '--disable-crashpad',
+        '--enable-crash-reporter=false',
+        '--crash-dumps-dir=/tmp',
       ]
     });
 

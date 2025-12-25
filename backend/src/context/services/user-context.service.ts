@@ -563,6 +563,40 @@ export class UserContextService implements OnModuleInit {
     return this.getDefaultNashikKnowledge();
   }
 
+  // ============ PUBLIC API METHODS ============
+
+  /**
+   * Public: Get weather context
+   */
+  async getWeatherContext(lat?: number, lng?: number): Promise<WeatherContext> {
+    return this.getWeather(lat, lng);
+  }
+
+  /**
+   * Public: Get city knowledge
+   */
+  async getCityKnowledge(cityName: string): Promise<LocalKnowledge> {
+    return this.getLocalKnowledge(cityName);
+  }
+
+  /**
+   * Public: Get upcoming festivals
+   */
+  async getUpcomingFestivals(daysAhead: number = 30): Promise<any[]> {
+    const now = new Date();
+    return this.festivals
+      .filter(f => {
+        const festivalDate = new Date(f.date);
+        const diffDays = Math.ceil((festivalDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
+        return diffDays >= 0 && diffDays <= daysAhead;
+      })
+      .map(f => ({
+        ...f,
+        daysAway: Math.ceil((new Date(f.date).getTime() - now.getTime()) / (1000 * 60 * 60 * 24)),
+      }))
+      .sort((a, b) => a.daysAway - b.daysAway);
+  }
+
   /**
    * Default Nashik knowledge
    */

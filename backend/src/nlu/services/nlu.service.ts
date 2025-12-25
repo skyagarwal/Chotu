@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger, Optional } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { IntentClassifierService } from './intent-classifier.service';
 import { EntityExtractorService } from './entity-extractor.service';
@@ -6,6 +6,7 @@ import { ToneAnalyzerService } from './tone-analyzer.service';
 import { LlmIntentExtractorService } from './llm-intent-extractor.service';
 import { NluTrainingDataService } from './nlu-training-data.service';
 import { ConversationCaptureService } from '../../services/conversation-capture.service';
+import { SelfLearningService } from '../../learning/services/self-learning.service';
 import { ClassifyTextDto } from '../dto/classify-text.dto';
 import { ClassificationResultDto } from '../dto/classification-result.dto';
 
@@ -25,6 +26,7 @@ export class NluService {
     private readonly llmIntentExtractor: LlmIntentExtractorService,
     private readonly trainingDataService: NluTrainingDataService,
     private readonly conversationCapture: ConversationCaptureService,
+    @Optional() private readonly selfLearningService: SelfLearningService,
   ) {
     this.nluEnabled = this.config.get('NLU_AI_ENABLED', 'true') === 'true';
     this.confidenceThreshold = parseFloat(this.config.get('NLU_CONFIDENCE_THRESHOLD', '0.7'));
@@ -97,6 +99,11 @@ export class NluService {
       // Capture conversation for training (async, don't block)
       this.captureConversationAsync(dto, result).catch((err) =>
         this.logger.warn(`Failed to capture conversation: ${err.message}`)
+      );
+
+      // ✨ Self-Learning: Process prediction for confidence-based auto-approval
+      this.processSelfLearning(dto, result).catch((err) =>
+        this.logger.warn(`Self-learning processing failed: ${err.message}`)
       );
 
       this.logger.log(
@@ -207,6 +214,58 @@ export class NluService {
     } else {
       // Default to food (most common)
       return { moduleId: 4, moduleType: 'food' };
+    }
+  }
+
+  /**
+   * ✨ Self-Learning Pipeline Integration
+   * 
+   * Processes NLU predictions for the self-learning system:
+   * - High confidence (≥0.9) → Auto-approve for training
+   * - Medium confidence (0.7-0.9) → Queue for human review
+   * - Low confidence (<0.7) → Priority review + Label Studio
+   */
+  private async processSelfLearning(
+    dto: ClassifyTextDto,
+    result: ClassificationResultDto
+  ): Promise<void> {
+    if (!this.selfLearningService) {
+      return; // Self-learning not available
+    }
+
+    // Skip common greetings and short messages
+    const skipPatterns = ['hi', 'hello', 'hey', 'ok', 'yes', 'no', 'thanks', 'bye'];
+    if (skipPatterns.includes(dto.text.trim().toLowerCase()) || dto.text.length < 3) {
+      return;
+    }
+
+    // Skip unknown intents with very low confidence
+    if (result.intent === 'unknown' && result.confidence < 0.3) {
+      return;
+    }
+
+    try {
+      const learningResult = await this.selfLearningService.processPrediction({
+        text: dto.text,
+        intent: result.intent,
+        confidence: result.confidence,
+        entities: Object.entries(result.entities || {}).map(([entity, value]) => ({
+          entity,
+          value: String(value),
+          confidence: result.confidence,
+          start: 0,
+          end: dto.text.length,
+        })),
+        conversationId: dto.sessionId,
+        userId: dto.userId,
+        timestamp: new Date(),
+      });
+
+      this.logger.debug(
+        `Self-learning: ${learningResult.action} - ${learningResult.message}`
+      );
+    } catch (error: any) {
+      this.logger.warn(`Self-learning error: ${error.message}`);
     }
   }
 }

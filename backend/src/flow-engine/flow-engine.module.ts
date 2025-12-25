@@ -55,6 +55,8 @@ import { OrderModule } from '../order/order.module';
 import { PricingModule } from '../pricing/pricing.module';
 import { ProfilesModule } from '../profiles/profiles.module';
 import { AuthModule } from '../auth/auth.module';
+import { ContextModule } from '../context/context.module';
+import { ContextEnhancerService } from './services/context-enhancer.service';
 
 @Module({
   imports: [
@@ -70,6 +72,7 @@ import { AuthModule } from '../auth/auth.module';
     PricingModule,
     ProfilesModule,
     AuthModule, // For CentralizedAuthService in AuthExecutor
+    ContextModule, // ✨ User Context (Weather, Festivals, City Knowledge)
     forwardRef(() => AgentsModule), // Use forwardRef to avoid circular dependency
   ],
   controllers: [FlowBuilderController, FlowsController],
@@ -83,6 +86,7 @@ import { AuthModule } from '../auth/auth.module';
     YamlFlowLoaderService, // Load flows from YAML files
     YamlV2FlowLoaderService, // Load YAML V2 flows (vendor/driver)
     FlowVersionManagerService, // A/B testing and version control
+    ContextEnhancerService, // ✨ Context enhancement for personalized responses
 
     // Executors
     LlmExecutor,
@@ -118,6 +122,7 @@ import { AuthModule } from '../auth/auth.module';
     ExecutorRegistryService,
     YamlFlowLoaderService,
     YamlV2FlowLoaderService,
+    ContextEnhancerService, // ✨ For use in other modules
     FlowVersionManagerService,
   ],
 })

@@ -218,38 +218,51 @@ export const foodOrderFlow: FlowDefinition = {
           id: 'extract_food_details',
           executor: 'llm',
           config: {
-            systemPrompt: 'You are a JSON extractor. Extract food order details including quantities and special instructions. Return JSON only, no explanations.',
+            systemPrompt: 'You are a JSON extractor. Extract food order details ONLY if user explicitly mentions specific food items. Return JSON only, no explanations.',
             // 💾 Use original_food_query if available (preserved before location request), otherwise use current message
             prompt: `User message: "{{#if original_food_query}}{{original_food_query}}{{else}}{{user_message}}{{/if}}"
 
 Extract into JSON:
 {
-  "items": [{"name": "food item", "quantity": 1}],  // Array of items with quantities
+  "items": [{"name": "food item", "quantity": 1}],  // Array of items with quantities - ONLY if user explicitly names a food
   "restaurant": "restaurant/cafe name if mentioned (e.g., 'from Inayat Cafe'), otherwise null",
   "search_query": "ONLY the food items to search for, WITHOUT restaurant name or quantities",
   "special_instructions": "any special requests like 'not oily', 'extra spicy', 'jaldi chahiye', 'less salt', etc. or null"
 }
 
-IMPORTANT: 
+⚠️ CRITICAL RULES:
+- ONLY extract items that user EXPLICITLY mentions by name (pizza, biryani, burger, momos, etc.)
+- DO NOT invent or guess food items from vague queries like "kuch khana hai", "let's eat", "I'm hungry", "aaj kuch aacha khate hai"
+- If user says something vague about eating/ordering without naming specific foods, return EMPTY items array: "items": []
 - Extract QUANTITY from patterns like "2 pizza", "two paneer", "ek biryani", "do butter naan"
 - Hindi numbers: ek=1, do=2, teen=3, char=4, paanch=5
 - Default quantity is 1 if not specified
 - search_query should NOT include quantities or "from [restaurant]"
+- search_query should be EMPTY if no specific food is mentioned
 - Restaurant/cafe names like "Inayat Cafe", "McDonald's", "Dominos" go in "restaurant" field
 
-Examples:
+Examples - SPECIFIC FOOD MENTIONED (extract items):
 - "2 paneer tikka from inayat cafe" → {"items":[{"name":"paneer tikka","quantity":2}],"restaurant":"Inayat Cafe","search_query":"paneer tikka","special_instructions":null}
 - "I want 3 pizzas and 2 burgers" → {"items":[{"name":"pizza","quantity":3},{"name":"burger","quantity":2}],"restaurant":null,"search_query":"pizza burger","special_instructions":null}
 - "order biryani" → {"items":[{"name":"biryani","quantity":1}],"restaurant":null,"search_query":"biryani","special_instructions":null}
 - "do butter naan aur ek paneer tikka" → {"items":[{"name":"butter naan","quantity":2},{"name":"paneer tikka","quantity":1}],"restaurant":null,"search_query":"butter naan paneer tikka","special_instructions":null}
 - "teen plate momos" → {"items":[{"name":"momos","quantity":3}],"restaurant":null,"search_query":"momos","special_instructions":null}
-- "mujhe inyat se khana mangwana hai" → {"items":[],"restaurant":"inyat","search_query":"","special_instructions":null}
 - "inyat cafe se pizza order karna hai" → {"items":[{"name":"pizza","quantity":1}],"restaurant":"inyat cafe","search_query":"pizza","special_instructions":null}
 - "dominos se 2 burger chahiye" → {"items":[{"name":"burger","quantity":2}],"restaurant":"dominos","search_query":"burger","special_instructions":null}
-- "McDonald's se order karo" → {"items":[],"restaurant":"McDonald's","search_query":"","special_instructions":null}
 - "paneer tikka from inayat, not oily please" → {"items":[{"name":"paneer tikka","quantity":1}],"restaurant":"inayat","search_query":"paneer tikka","special_instructions":"not oily"}
 - "2 biryani jaldi chahiye, kam masala" → {"items":[{"name":"biryani","quantity":2}],"restaurant":null,"search_query":"biryani","special_instructions":"jaldi chahiye, kam masala"}
 - "pizza with extra cheese, need it fast" → {"items":[{"name":"pizza","quantity":1}],"restaurant":null,"search_query":"pizza","special_instructions":"extra cheese, need it fast"}
+
+Examples - VAGUE QUERIES (return empty items - user hasn't decided what to eat):
+- "chalo aaj kuch aacha khate hai" → {"items":[],"restaurant":null,"search_query":"","special_instructions":null}
+- "let's order some food" → {"items":[],"restaurant":null,"search_query":"","special_instructions":null}
+- "I'm hungry, order something" → {"items":[],"restaurant":null,"search_query":"","special_instructions":null}
+- "kuch khana mangwa do" → {"items":[],"restaurant":null,"search_query":"","special_instructions":null}
+- "mujhe inyat se khana mangwana hai" → {"items":[],"restaurant":"inyat","search_query":"","special_instructions":null}
+- "McDonald's se order karo" → {"items":[],"restaurant":"McDonald's","search_query":"","special_instructions":null}
+- "bhook lagi hai" → {"items":[],"restaurant":null,"search_query":"","special_instructions":null}
+- "dinner order karna hai" → {"items":[],"restaurant":null,"search_query":"","special_instructions":null}
+- "kuch tasty khana hai" → {"items":[],"restaurant":null,"search_query":"","special_instructions":null}
 
 HINDI RESTAURANT PATTERNS: "[name] se khana/order/mangwana" means ordering from that restaurant
 SPECIAL INSTRUCTIONS: Extract phrases like "not oily", "less spicy", "extra cheese", "jaldi chahiye", "kam masala", "need it fast"
@@ -269,8 +282,95 @@ JSON:`,
         browse_menu: 'check_restaurant_filter',
         browse_category: 'check_restaurant_filter',
         ask_recommendation: 'show_recommendations',
-        ask_famous: 'check_restaurant_filter',
-        check_availability: 'check_restaurant_filter',
+        ask_famous: 'check_search_query_exists',
+        check_availability: 'check_search_query_exists',
+        default: 'check_search_query_exists',
+      },
+    },
+
+    // 🆕 Check if user provided specific food items to search
+    check_search_query_exists: {
+      type: 'decision',
+      description: 'Check if user mentioned specific food items or just a vague request',
+      conditions: [
+        {
+          // If search_query is empty/null, user hasn't said what they want to eat
+          expression: '!context.extracted_food?.search_query || context.extracted_food.search_query.trim() === ""',
+          event: 'vague_query',
+        }
+      ],
+      transitions: {
+        vague_query: 'ask_what_to_eat',  // Ask user what they want
+        default: 'check_restaurant_filter',  // Has specific food, proceed to search
+      },
+    },
+
+    // 🆕 Ask user what they want to eat (vague query handler)
+    ask_what_to_eat: {
+      type: 'wait',
+      description: 'Ask user what specific food they want when query is vague',
+      onEntry: [
+        {
+          id: 'ask_food_choice',
+          executor: 'response',
+          config: {
+            message: 'Kya khana hai aaj? 🍽️ Aap kuch specific batao jaise pizza, biryani, momos, ya kuch aur!',
+            responseType: 'text',
+            buttons: [
+              { id: 'btn_popular', label: '🔥 Popular items', value: 'popular' },
+              { id: 'btn_browse', label: '📋 Browse menu', value: 'browse_menu' },
+              { id: 'btn_surprise', label: '🎲 Surprise me', value: 'surprise' }
+            ]
+          },
+          output: '_last_response',
+        }
+      ],
+      actions: [],
+      transitions: {
+        user_message: 'process_specific_food',
+        browse_menu: 'show_categories',
+        popular: 'show_recommendations',
+        surprise: 'show_recommendations',
+        cancel: 'cancelled',
+        default: 'process_specific_food',
+      },
+    },
+
+    // 🆕 Process user's specific food choice
+    process_specific_food: {
+      type: 'action',
+      description: 'Re-extract food details from user response with specific food item',
+      actions: [
+        {
+          id: 'extract_specific_food',
+          executor: 'llm',
+          config: {
+            systemPrompt: 'You are a JSON extractor. Extract the food item user mentioned. Return JSON only.',
+            prompt: `User wants to order: "{{user_message}}"
+
+Extract into JSON:
+{
+  "items": [{"name": "food item", "quantity": 1}],
+  "restaurant": null,
+  "search_query": "the food item(s) mentioned",
+  "special_instructions": null
+}
+
+Examples:
+- "pizza" → {"items":[{"name":"pizza","quantity":1}],"restaurant":null,"search_query":"pizza","special_instructions":null}
+- "2 biryani" → {"items":[{"name":"biryani","quantity":2}],"restaurant":null,"search_query":"biryani","special_instructions":null}
+- "momos and burger" → {"items":[{"name":"momos","quantity":1},{"name":"burger","quantity":1}],"restaurant":null,"search_query":"momos burger","special_instructions":null}
+
+JSON:`,
+            temperature: 0.1,
+            maxTokens: 200,
+            parseJson: true
+          },
+          output: 'extracted_food',
+        }
+      ],
+      transitions: {
+        success: 'check_restaurant_filter',
         default: 'check_restaurant_filter',
       },
     },
@@ -362,7 +462,7 @@ JSON:`,
             formatForUi: true,
             lat: '{{location.lat}}',
             lng: '{{location.lng}}',
-            radius: '10km',  // 10km radius for nearby restaurants
+            radius: '5km',  // 5km radius for nearby restaurants (reduced from 10km)
           },
           output: 'search_results',
         },
@@ -966,6 +1066,7 @@ Ask: "Would you like me to send a rider to pick it up for you?"`,
     },
 
     // Request phone for authentication
+    // IMPROVED: Added escape buttons so users can modify cart or cancel
     request_phone: {
       type: 'wait',
       description: 'Ask user for phone number to authenticate',
@@ -976,6 +1077,10 @@ Ask: "Would you like me to send a rider to pick it up for you?"`,
           config: {
             message: 'To complete your order, please provide your phone number for verification.',
             responseType: 'request_phone',
+            buttons: [
+              { id: 'btn_modify', label: '✏️ Modify Cart', value: 'modify' },
+              { id: 'btn_cancel', label: '❌ Cancel', value: 'cancel' },
+            ],
           },
           output: '_last_response',
         },
@@ -988,9 +1093,10 @@ Ask: "Would you like me to send a rider to pick it up for you?"`,
     },
 
     // Parse phone from user message
+    // IMPROVED: Check for escape commands (add_more, modify, cancel) BEFORE phone validation
     parse_phone: {
       type: 'action',
-      description: 'Extract phone number from user message',
+      description: 'Extract phone number from user message, with escape command support',
       actions: [
         {
           id: 'validate_phone_action',
@@ -1002,11 +1108,76 @@ Ask: "Would you like me to send a rider to pick it up for you?"`,
           output: 'phone_result',
         },
       ],
+      conditions: [
+        // Escape commands - allow user to go back to modify cart without completing auth
+        {
+          expression: 'context._user_message?.toLowerCase().includes("add_more") || context._user_message?.toLowerCase().includes("add more")',
+          event: 'add_more',
+        },
+        {
+          expression: 'context._user_message?.toLowerCase().includes("modify") || context._user_message?.toLowerCase().includes("change") || context._user_message?.toLowerCase().includes("edit")',
+          event: 'modify',
+        },
+        {
+          expression: 'context._user_message?.toLowerCase().includes("cancel") || context._user_message?.toLowerCase().includes("nevermind") || context._user_message?.toLowerCase().includes("back")',
+          event: 'cancel',
+        },
+        {
+          expression: 'context._user_message?.toLowerCase().includes("clear") || context._user_message?.toLowerCase().includes("empty") || context._user_message?.toLowerCase().includes("remove all")',
+          event: 'clear_cart',
+        },
+      ],
       transitions: {
         valid: 'send_otp',
-        invalid: 'request_phone',
+        invalid: 'invalid_phone_with_help',
+        add_more: 'show_results',      // Go back to search/browse
+        modify: 'show_results',         // Go back to modify cart
         cancel: 'cancelled',
+        clear_cart: 'clear_cart_state',
         error: 'request_phone',
+      },
+    },
+
+    // Better UX: Show help when phone is invalid instead of just re-asking
+    invalid_phone_with_help: {
+      type: 'action',
+      description: 'Show helpful message when phone is invalid',
+      actions: [
+        {
+          id: 'invalid_phone_help',
+          executor: 'response',
+          config: {
+            message: '❌ That doesn\'t look like a valid phone number.\n\n📱 Please enter your 10-digit mobile number (e.g., 9876543210)\n\nOr type:\n• "modify" to edit your cart\n• "cancel" to start over',
+          },
+          output: '_last_response',
+        },
+      ],
+      transitions: {
+        default: 'request_phone',
+      },
+    },
+
+    // Clear cart state
+    clear_cart_state: {
+      type: 'action',
+      description: 'Clear the cart and start fresh',
+      actions: [
+        {
+          id: 'clear_cart_action',
+          executor: 'response',
+          config: {
+            message: '🗑️ Cart cleared! What would you like to order?',
+            saveToContext: {
+              cart_items: [],
+              selected_items: [],
+              auto_selected_items: [],
+            },
+          },
+          output: '_last_response',
+        },
+      ],
+      transitions: {
+        default: 'search_food',
       },
     },
 

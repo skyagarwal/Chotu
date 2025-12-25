@@ -409,8 +409,10 @@ export class AgentOrchestratorService {
              prependResponse = authResult.response;
              authMetadata = authResult.metadata || {};
              
-             // Clear message so it doesn't interfere with the resumed flow (e.g. OTP code)
-             message = ''; 
+             // ✅ FIX: Don't clear message here - we'll restore it from pendingMessage later
+             // The pendingMessage contains the original message with Google Maps links etc.
+             // Setting message = '' here caused the flow to lose context
+             // message = ''; // REMOVED - pendingMessage will be restored in "Resume Pending Intent" block
              
              // Fall through to normal processing (which will hit "Resume Pending Intent" block)
         } else {
@@ -480,8 +482,18 @@ export class AgentOrchestratorService {
       if (session?.data?.authenticated && session?.data?.pendingIntent) {
         const pendingIntent = session.data.pendingIntent;
         const pendingEntities = session.data.pendingEntities || {};
+        const pendingMessage = session.data.pendingMessage || '';
         
         this.logger.log(`🔄 Resuming pending intent: ${pendingIntent}`);
+        this.logger.log(`📝 Restoring pending message: ${pendingMessage.substring(0, 100)}...`);
+        
+        // ✅ CRITICAL FIX: Restore the original message so flows get the full context
+        // This ensures Google Maps links, addresses, etc. are available to the flow
+        if (pendingMessage && pendingMessage.length > 0) {
+          message = pendingMessage;
+          context.message = pendingMessage;
+          this.logger.log(`✅ Message restored from pendingMessage for flow context`);
+        }
         
         // Construct routing result from pending data
         routing = {
@@ -499,7 +511,8 @@ export class AgentOrchestratorService {
             pendingAction: null,
             pendingModule: null,
             pendingIntent: null,
-            pendingEntities: null
+            pendingEntities: null,
+            pendingMessage: null, // Also clear pending message
           }
         });
       } else {
@@ -2770,12 +2783,22 @@ ${systemPrompt}`;
             user: userProfile
           };
 
+          // Determine if this is a NEW user (is_personal_info === 0 means new registration)
+          const isNewUser = authResult.data.is_personal_info === 0;
+          const userName = userProfile?.firstName || '';
+
           // Resume pending action FIRST - profile can be completed later
           // This allows the parcel/food flow to continue even for new users
           if (session.data.pendingAction || session.data.pendingIntent) {
-             this.logger.log(`🔄 Resuming pending action for new/incomplete user - profile will be completed later`);
+             this.logger.log(`🔄 Resuming pending action for ${isNewUser ? 'new' : 'existing'} user - profile will be completed later`);
+             
+             // ✅ Personalized resume message
+             const welcomePart = isNewUser 
+               ? `🎉 Welcome to Mangwale${userName ? `, ${userName}` : ''}! Great to have you with us! ` 
+               : `✅ Welcome back${userName ? `, ${userName}` : ''}! `;
+             
              return {
-               response: `Login successful! Resuming your request.`,
+               response: `${welcomePart}Let me continue with your request...`,
                executionTime: Date.now() - startTime,
                metadata: {
                  auth_data: authData
@@ -2784,8 +2807,8 @@ ${systemPrompt}`;
           }
 
           // Check if personal info is missing (is_personal_info === 0) - only if no pending action
-          if (authResult.data.is_personal_info === 0) {
-            this.logger.log(`👤 User profile incomplete. Asking for name.`);
+          if (isNewUser) {
+            this.logger.log(`👤 New user registration - asking for name.`);
             
             // Set step to awaiting_name
             await this.sessionService.setStep(phoneNumber, 'awaiting_name', {
@@ -2795,7 +2818,7 @@ ${systemPrompt}`;
             });
 
             return {
-              response: 'Login successful! To complete your profile, how should I address you? (Please enter your name)',
+              response: '🎉 Welcome to Mangwale! Thank you for joining us!\n\nTo personalize your experience, what should I call you? (Please enter your name)',
               executionTime: Date.now() - startTime,
               metadata: {
                 auth_data: authData // Send token so frontend updates UI immediately
@@ -2803,8 +2826,9 @@ ${systemPrompt}`;
             };
           }
           
+          // Existing user - personalized welcome back
           return {
-            response: 'Login successful! How can I help you today?',
+            response: `✅ Welcome back${userName ? `, ${userName}` : ''}! Great to see you again. How can I help you today? 😊`,
             executionTime: Date.now() - startTime,
             metadata: {
               auth_data: authData

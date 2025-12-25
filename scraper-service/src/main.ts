@@ -345,8 +345,7 @@ app.post('/api/scrape/bulk', async (req: Request, res: Response) => {
     for (const row of result.rows) {
       if (row.zomato_url) {
         await scraperQueue.addJob({
-          id: uuidv4(),
-          type: 'zomato',
+          source: 'zomato',
           url: row.zomato_url,
           storeId: row.store_id,
           priority: 'normal'
@@ -355,8 +354,7 @@ app.post('/api/scrape/bulk', async (req: Request, res: Response) => {
       }
       if (row.swiggy_url) {
         await scraperQueue.addJob({
-          id: uuidv4(),
-          type: 'swiggy',
+          source: 'swiggy',
           url: row.swiggy_url,
           storeId: row.store_id,
           priority: 'normal'
@@ -404,8 +402,7 @@ async function main() {
       
       for (const row of result.rows) {
         await scraperQueue.addJob({
-          id: uuidv4(),
-          type: 'zomato',
+          source: 'zomato',
           storeId: row.store_id,
           priority: 'low'
         });
